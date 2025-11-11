@@ -1,10 +1,16 @@
 package top.blogapi.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.blogapi.dto.request.category.CategoryQueryRequest;
 import top.blogapi.dto.response.category.CategoryResponse;
 import top.blogapi.entity.Category;
 import top.blogapi.exception.BaseException;
@@ -22,16 +28,37 @@ import java.util.stream.Collectors;
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 public class CategoryServiceImpl implements CategoryService {
     CategoryRepository categoryRepository;
-    CategoryMapper categoryMapper;
     @Override
-    public List<CategoryResponse> getCategoryList() {
-        return categoryRepository.getCategoryList().stream().map(categoryMapper::toCategoryResponse).toList();
+    public List<Category> getCategoryList() {
+        return categoryRepository.getCategoryList();
+    }
+
+    @Override
+    public PageInfo<Category> getCategoryList(CategoryQueryRequest request) {
+        try(Page<Object> page = PageHelper.startPage(request.getPageNum(), request.getPageSize(),
+                request.getSortBy() + " " + request.getSortOrder());){
+            return new PageInfo<>(categoryRepository.getCategoryList()) ;
+
+        }catch (DataAccessException e) {
+            throw CategoryServiceException.builder()
+                    .dataRetrievalFailed("Lỗi lấy danh sách thể loại")
+                    .cause(e.getCause())
+                    .context("pageSize", request.getPageSize())
+                    .context("pageNum", request.getPageNum())
+                    .build();
+        }
     }
 
     @Transactional
     @Override
-    public int saveCategory(Category category) {
-        return categoryRepository.saveCategory(category);
+    public Category saveCategory(String categoryName) {
+        Category category = new Category(categoryName);
+        int r = categoryRepository.saveCategory(category);
+        if(r == 1)
+            return category;
+        throw CategoryServiceException.builder()
+                .operationCategoryUnsuccessful("BLOG", HttpStatus.INTERNAL_SERVER_ERROR,"Thêm thể loại không thành công")
+                .build();
     }
 
     @Override
@@ -54,11 +81,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public int deleteCategoryById(Long id) {
-        return 0;
+        return categoryRepository.deleteCategoryById(id);
     }
 
     @Override
     public int updateCategory(Category category) {
-        return 0;
+        int r = categoryRepository.updateCategory(category);
+        if(r == 1)
+            return r;
+        throw CategoryServiceException.builder()
+                .operationCategoryUnsuccessful("CATEGORY",HttpStatus.INTERNAL_SERVER_ERROR,"Cập nhật thể loại không thành công !!")
+                .build();
     }
 }

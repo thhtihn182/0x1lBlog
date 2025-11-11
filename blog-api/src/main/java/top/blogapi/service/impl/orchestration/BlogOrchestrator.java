@@ -2,12 +2,20 @@ package top.blogapi.service.impl.orchestration;
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.blogapi.dto.request.blog.BlogQueryRequest;
+import top.blogapi.dto.response.blog.BlogSummaryResponse;
+import top.blogapi.dto.response.category.CategoryResponse;
+import top.blogapi.dto.response.page.BlogListPageResponse;
 import top.blogapi.entity.Blog;
 import top.blogapi.entity.Category;
 import top.blogapi.entity.Tag;
@@ -15,6 +23,8 @@ import top.blogapi.entity.User;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
 import top.blogapi.exception.business_exception.domain_exception.TagServiceException;
+import top.blogapi.mapper.BlogMapper;
+import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
 import top.blogapi.service.TagService;
@@ -34,6 +44,37 @@ public class BlogOrchestrator {
     CategoryService categoryService;
     TagService tagService;
 
+    BlogMapper blogMapper;
+    CategoryMapper categoryMapper;
+
+    public BlogListPageResponse getListByTitleOrCategory(BlogQueryRequest blogQueryRequest) {
+        validateBlogQuery(blogQueryRequest);
+
+        PageInfo<BlogSummaryResponse> pageInfoResponse =
+                blogService.getListByTitleOrCategory(blogQueryRequest).convert(blogMapper::toBlogSummaryResponse);
+
+        List<CategoryResponse> categoryResponses =
+                categoryService.getCategoryList().stream().map(categoryMapper::toCategoryResponse).toList();
+
+        return new BlogListPageResponse(pageInfoResponse, categoryResponses);
+
+    }
+
+    private void validateBlogQuery(BlogQueryRequest request) {
+        if(request.getPageNum() <= 0)
+            throw BlogServiceException.builder()
+                    .errorCode("BLOG_INVALID_PAGE")
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message("Không thể chọn trang nhỏ hơn 1")
+                    .context("providedPage", request.getPageNum())
+                    .build();
+        if(request.getQuery() != null && request.getQuery().length() > 100)
+            throw BlogServiceException.builder()
+                    .invalidQuery(request.getQuery(),"Vướt quá độ dài tìm kiếm")
+                    .context("length",100)
+                    .context("actualLength",request.getQuery().length())
+                    .build();
+    }
     public String getResult(Map<String, Object> map , String type){
         try{
             Map<String, Object> blogMap = (Map<String, Object>) map.get("blog");
@@ -66,15 +107,8 @@ public class BlogOrchestrator {
                 blog.setCategory(category);
             }else if(cate instanceof String) {
                 categoryService.getCategoryByName((String) cate);
-                Category category = new Category();
-                category.setName((String) cate);
-                int r = categoryService.saveCategory(category);
-                if(r == 1) // Thêm thể loại thành công
-                    blog.setCategory(category);
-                else // Không thêm thể loại được
-                    throw CategoryServiceException.builder()
-                        .blogDoesntAddCategories("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Thêm thể loại không thành công")
-                        .build();
+                Category category  = categoryService.saveCategory((String) cate);
+                blog.setCategory(category); // Thêm thể loại thành công
             }else
                 throw CategoryServiceException.builder()
                         .blogDoesntAddCategories("BLOG",HttpStatus.BAD_REQUEST,"Lỗi thêm thể loại")

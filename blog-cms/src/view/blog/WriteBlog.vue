@@ -120,7 +120,7 @@
           />
         </el-form-item>
 
-        <el-form-item label="Thời gian đọc (tùy chọn)" prop="readTime">
+        <el-form-item label="Thời gian đọc (tùy chọn)" >
 <!--          v-model = :value(truyền dynamic data từ js) + @input(lắng nghe sự kiện input thay đổi)-->
           <el-input
               v-model="form.readTime"
@@ -233,7 +233,9 @@ const editor = useEditor({
   ],
   onUpdate: ({ editor }) => {
     form.content = editor.getHTML() // Tự động cập nhật nội dung form
-    form.words = editor.getText().trim().length
+    const  wordLength = ref(editor.getText().trim().length)
+    form.words = wordLength.value
+    form.readTime =Math.round(wordLength.value/200.0) + 5
   },
 })
 

@@ -13,9 +13,9 @@ public interface CategoryRepository {
     @Select("SELECT c.id, c.name FROM category c ORDER BY id DESC ")
     List<Category> getCategoryList();
 
-    @Insert("INSERT INTO category (name) VALUES (#{category.name})")
-    @Options(useGeneratedKeys = true, keyProperty = "category.id")
-    int saveCategory(@Param("category") Category category);
+    @Insert("INSERT INTO category (name) VALUES (#{name})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    int saveCategory(Category category);
 
     @Select("SELECT c.id, c.name FROM category c WHERE c.id = #{id}")
     Optional<Category> getCategoryById(Long id);

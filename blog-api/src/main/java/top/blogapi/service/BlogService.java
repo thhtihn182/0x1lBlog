@@ -1,5 +1,6 @@
 package top.blogapi.service;
 
+import com.github.pagehelper.PageInfo;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BlogService {
-    BlogListPageResponse getListByTitleOrCategory(BlogQueryRequest blogQueryRequest);
+    PageInfo<Blog> getListByTitleOrCategory(BlogQueryRequest blogQueryRequest);
 
     int deleteBlogById(Long id);
 

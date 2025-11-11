@@ -17,4 +17,8 @@ public class Category {
     Long id;
     String name;
     List<Blog> blogs = new ArrayList<>();
+
+    public Category(String name) {
+        this.name = name;
+    }
 }

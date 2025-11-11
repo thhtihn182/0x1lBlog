@@ -29,7 +29,29 @@ public class CategoryServiceException extends DomainException {
                     .errorCode("BLOG_DOES_NOT_ADD_CATEGORIES")
                     .httpStatus(httpStatus)
                     .message(msg)
-                    .messageKey("blog.blog_doesnt_add_categories",new Object[]{operation});
+                    .messageKey(domain.toLowerCase()+".blog_doesnt_add_categories",new Object[]{operation});
+        }
+
+        public CategoryServiceExceptionBuilder dataRetrievalFailed(String msg, String ...operation) {
+            return this.errorCode("CATEGORY_DATA_RETRIEVAL_FAILED")
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message(msg)
+                    .messageKey("category.data_retrieval_failed",new Object[]{operation});
+        }
+
+        public CategoryServiceExceptionBuilder categoryExistBlogs(String domain, String msg, String ...operation) {
+            return this.domain(domain)
+                    .errorCode("CATEGORY_EXIST_BLOGS")
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message(msg)
+                    .messageKey(domain.toLowerCase()+".category_exist_blogs",new Object[]{operation});
+        }
+
+        public CategoryServiceExceptionBuilder operationCategoryUnsuccessful(String domain, HttpStatus httpStatus, String msg, String ...operation) {
+            return this.domain(domain)
+                    .httpStatus(httpStatus)
+                    .message(msg)
+                    .messageKey(domain.toLowerCase()+".operation_category_unsuccessful",new Object[]{operation});
         }
 
         @Override

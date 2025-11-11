@@ -5,6 +5,7 @@ import Welcome from "@/view/Welcome.vue";
 import BlogList from "@/view/blog/BlogList.vue";
 import WriteBlog from "@/view/blog/WriteBlog.vue";
 import { useAppStore } from '@/store/index.js'
+import CategoryList from "@/view/category/CategoryList.vue";
 
 const routes = [
     {
@@ -42,6 +43,13 @@ const routes = [
                 component: WriteBlog,
                 meta: {
                     title: 'Chỉnh sửa Blog'
+                }
+            },
+            {
+                path: '/categories',
+                component: CategoryList,
+                meta: {
+                    title: "Danh sách thể loại"
                 }
             },
             {

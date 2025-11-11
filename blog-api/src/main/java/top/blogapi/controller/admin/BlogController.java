@@ -18,6 +18,7 @@ import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
 import top.blogapi.service.TagService;
 import top.blogapi.service.impl.orchestration.BlogOrchestrator;
+import top.blogapi.service.impl.orchestration.CategoryOrchestrator;
 import top.blogapi.util.Result;
 import top.blogapi.util.StringUtils;
 
@@ -34,13 +35,13 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin")
 public class BlogController {
     BlogService blogService;
-    CategoryService categoryService;
     TagService tagService;
+    CategoryOrchestrator categoryOrchestrator;
     BlogOrchestrator blogOrchestrator;
     @GetMapping("/blogs")
     public Result<?> blogs(@ModelAttribute BlogQueryRequest blogQueryRequest) {
         System.out.println(blogQueryRequest);
-        return Result.ok("Yêu cầu thành công",blogService.getListByTitleOrCategory(blogQueryRequest));
+        return Result.ok("Yêu cầu thành công",blogOrchestrator.getListByTitleOrCategory(blogQueryRequest));
     }
 
     @GetMapping("/blog/{id}")
@@ -68,7 +69,7 @@ public class BlogController {
     @GetMapping("/categoryAndTag")
     public Result<?> categoryAndTag() {
         try{
-            List<CategoryResponse> categories = categoryService.getCategoryList();
+            List<CategoryResponse> categories = categoryOrchestrator.getCategoryResponsesList();
             List<Tag> tags = tagService.getTagList();
             Map<String,Object> map = new HashMap<>();
             map.put("categories", categories);

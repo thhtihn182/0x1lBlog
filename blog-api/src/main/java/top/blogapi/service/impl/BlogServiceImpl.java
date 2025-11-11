@@ -37,26 +37,19 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BlogServiceImpl implements BlogService {
     BlogRepository blogRepository;
-    BlogMapper blogMapper;
-    CategoryRepository categoryRepository;
-    CategoryMapper categoryMapper;
 
     @Override
-    public BlogListPageResponse getListByTitleOrCategory(BlogQueryRequest blogQueryRequest) {
-        validateBlogQuery(blogQueryRequest);
+    public PageInfo<Blog> getListByTitleOrCategory(BlogQueryRequest blogQueryRequest) {
         try(Page<Object> page = PageHelper.startPage(
                 blogQueryRequest.getPageNum()
                 , blogQueryRequest.getPageSize(),
                 blogQueryRequest.getSortBy() + " " + blogQueryRequest.getSortOrder())) {
-            PageInfo<Blog> pageInfo = new PageInfo<>(
+            return new PageInfo<>(
                     blogRepository.getListByTitleOrCategory(
                             blogQueryRequest.getQuery(),
                             blogQueryRequest.getCategoryId()
                     )
             );
-            PageInfo<BlogSummaryResponse> pageInfoResponse =
-                    pageInfo.convert(blogMapper::toBlogSummaryResponse);
-            return new BlogListPageResponse(pageInfoResponse, retrieveCategories());
         }catch (DataAccessException e){
             throw BlogServiceException.builder()
                     .dataRetrievalFailed("getListByTitleOrCategory")
@@ -68,30 +61,6 @@ public class BlogServiceImpl implements BlogService {
         }
     }
 
-    private void validateBlogQuery(BlogQueryRequest request) {
-        if(request.getPageNum() <= 0)
-            throw BlogServiceException.builder()
-                    .errorCode("BLOG_INVALID_PAGE")
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message("Không thể chọn trang nhỏ hơn 1")
-                    .context("providedPage", request.getPageNum())
-                    .build();
-        if(request.getQuery() != null && request.getQuery().length() > 100)
-            throw BlogServiceException.builder()
-                    .invalidQuery(request.getQuery(),"Vướt quá độ dài tìm kiếm")
-                    .context("length",100)
-                    .context("actualLength",request.getQuery().length())
-                    .build();
-    }
-    private List<CategoryResponse> retrieveCategories(){
-        try{
-            return categoryRepository.getCategoryList().stream()
-                    .map(categoryMapper::toCategoryResponse).toList();
-        } catch (Exception e) {
-            log.warn("Failed to retrieve categories, returning empty list", e);
-            return List.of();
-        }
-    }
 
     @Transactional
     @Override
@@ -163,7 +132,7 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public int countBlogByCategoryId(Long categoryId) {
-        return 0;
+        return blogRepository.countBlogByCategoryId(categoryId);
     }
 
 }
