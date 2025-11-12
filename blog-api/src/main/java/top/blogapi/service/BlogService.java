@@ -4,12 +4,7 @@ import com.github.pagehelper.PageInfo;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
-import top.blogapi.dto.response.blog.BlogSummaryResponse;
-import top.blogapi.dto.response.page.BlogListPageResponse;
 import top.blogapi.entity.Blog;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface BlogService {
     PageInfo<Blog> getListByTitleOrCategory(BlogQueryRequest blogQueryRequest);
@@ -31,4 +26,6 @@ public interface BlogService {
     void updateBlogRecommendById(BlogUpdateRecommendRequest blogUpdateRecommendRequest);
 
     int countBlogByCategoryId(Long categoryId);
+
+    int countBlogByTagId(Long tagId);
 }

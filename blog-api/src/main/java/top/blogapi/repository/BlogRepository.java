@@ -101,4 +101,7 @@ public interface BlogRepository {
 
     @Select("SELECT COUNT(b.category_id) FROM blog b WHERE b.category_id = #{categoryId}")
     int countBlogByCategoryId(Long categoryId);
+
+    @Select("SELECT COUNT(bt.tag_id) FROM blog_tag bt WHERE bt.tag_id = #{tagId} ")
+    int countBlogByTagId(Long tagId);
 }

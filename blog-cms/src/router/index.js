@@ -6,6 +6,7 @@ import BlogList from "@/view/blog/BlogList.vue";
 import WriteBlog from "@/view/blog/WriteBlog.vue";
 import { useAppStore } from '@/store/index.js'
 import CategoryList from "@/view/category/CategoryList.vue";
+import TagList from "@/view/tag/TagList.vue";
 
 const routes = [
     {
@@ -59,6 +60,13 @@ const routes = [
                     title: 'Danh sách Blog'
                 }
             },
+            {
+                path: '/tags',
+                component: TagList,
+                meta: {
+                    title: 'Danh sách Tag'
+                }
+            },
         ]
     }
 ]
@@ -78,7 +86,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.meta.title) {
-        document.title = to.meta.title
+        document.title = to.meta.title + ' | thinhh0x1\'Blog'
     }
     const store = useAppStore()
     store.saveNavState(to.path)

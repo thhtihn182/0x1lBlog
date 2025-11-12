@@ -16,4 +16,10 @@ public class Tag {
     String name;
     String color; //Màu tag (tương ứng với màu do Semantic UI cung cấp, tùy chọn)
     List<Blog> blogs = new ArrayList<>(); //Các bài đăng trên blog có tag này
+
+    public Tag(String name, String color) {
+        this.name = name;
+        this.color = color;
+
+    }
 }

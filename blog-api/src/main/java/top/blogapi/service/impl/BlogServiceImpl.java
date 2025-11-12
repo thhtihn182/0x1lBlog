@@ -8,28 +8,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
-import top.blogapi.dto.response.blog.BlogSummaryResponse;
-import top.blogapi.dto.response.category.CategoryResponse;
-import top.blogapi.dto.response.page.BlogListPageResponse;
 import top.blogapi.entity.Blog;
 import top.blogapi.entity.Tag;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
-import top.blogapi.mapper.BlogMapper;
-import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.repository.BlogRepository;
-import top.blogapi.repository.CategoryRepository;
 import top.blogapi.service.BlogService;
-import top.blogapi.util.Result;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -133,6 +124,11 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public int countBlogByCategoryId(Long categoryId) {
         return blogRepository.countBlogByCategoryId(categoryId);
+    }
+
+    @Override
+    public int countBlogByTagId(Long tagId) {
+        return blogRepository.countBlogByTagId(tagId);
     }
 
 }

@@ -11,12 +11,13 @@ import top.blogapi.exception.BaseException;
 public abstract class DomainException extends BaseException {
     String domain;
     String entityId;
-
+    String msgCause;
 
     public DomainException(DomainExceptionBuilder<?> builder) {
         super(builder);
         this.domain = builder.domain;
         this.entityId = builder.entityId;
+        this.msgCause = builder.msgCause;
     }
 
     @FieldDefaults(level = AccessLevel.PROTECTED)
@@ -24,6 +25,7 @@ public abstract class DomainException extends BaseException {
             extends BaseException.Builder<T> {
             String domain;
             String entityId;
+            String msgCause;
 
             public T domain(String domain) {
                 this.domain = domain;
@@ -31,6 +33,11 @@ public abstract class DomainException extends BaseException {
             }
             public T entityId(String entityId) {
                 this.entityId = entityId;
+                return this.self();
+            }
+
+            public T msgCause(String msgCause) {
+                this.msgCause = msgCause;
                 return this.self();
             }
 

@@ -1,4 +1,4 @@
-package top.blogapi.dto.response.page;
+package top.blogapi.dto.response._page;
 
 
 import com.github.pagehelper.PageInfo;

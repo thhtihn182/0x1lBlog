@@ -2,20 +2,17 @@ package top.blogapi.service.impl.orchestration;
 
 
 import com.alibaba.fastjson2.JSONObject;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.response.blog.BlogSummaryResponse;
 import top.blogapi.dto.response.category.CategoryResponse;
-import top.blogapi.dto.response.page.BlogListPageResponse;
+import top.blogapi.dto.response._page.BlogListPageResponse;
 import top.blogapi.entity.Blog;
 import top.blogapi.entity.Category;
 import top.blogapi.entity.Tag;
@@ -28,7 +25,6 @@ import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
 import top.blogapi.service.TagService;
-import top.blogapi.util.Result;
 import top.blogapi.util.StringUtils;
 
 import java.util.ArrayList;
@@ -124,7 +120,7 @@ public class BlogOrchestrator {
                     tagService.getTagByName(t.toString());
                     Tag tag = new Tag();
                     tag.setName((String) t);
-                    int r = tagService.saveTag(tag);
+                    int r = tagService.saveTag(tag.getName(),tag.getColor());
                     if(r == 1) // Thêm tag thành công
                         tags.add(tag);
                     else

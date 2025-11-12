@@ -1,4 +1,5 @@
-package top.blogapi.dto.request.common;
+package top.blogapi.dto.response._common;
+
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -8,12 +9,13 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PaginationRequest {
+public class PaginationResponse {
     @Min(0)
-    Integer pageNum = 1;
+    Integer pageNum;
     @Max(100)
     @Min(1)
-    Integer pageSize = 10;
+    Integer pageSize;
     String sortBy = "create_time";
     String sortOrder = "DESC";
+
 }

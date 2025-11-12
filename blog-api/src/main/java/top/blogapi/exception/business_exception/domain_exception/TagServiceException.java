@@ -27,6 +27,22 @@ public class TagServiceException extends DomainException {
                     .messageKey(domain.toLowerCase()+".tag_not_exist", new Object[]{operations});
         }
 
+        public TagServiceExceptionBuilder operationTagUnsuccessful(String domain, String operation, HttpStatus httpStatus, String msg, String ...operations) {
+            return this.domain(domain)
+                    .errorCode(operation)
+                    .httpStatus(httpStatus)
+                    .message(msg)
+                    .messageKey(domain.toLowerCase()+"."+operation.toLowerCase(), new Object[]{operation});
+
+        }
+        public TagServiceExceptionBuilder dataRetrievalFailed(String domain, String msg, String ...operations) {
+            return this.domain(domain)
+                    .errorCode("DATA_RETRIEVAL_FAILED")
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message(msg)
+                    .messageKey(domain+".data_retrieval_failed",new Object[]{operations});
+        }
+
         public TagServiceExceptionBuilder nameTagIncorrect(String domain, HttpStatus httpStatus, String msg, String ...operations) {
             return this.domain(domain)
                     .errorCode("NAME_TAG_INCORRECT")

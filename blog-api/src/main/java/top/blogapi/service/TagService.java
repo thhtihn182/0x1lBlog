@@ -1,5 +1,7 @@
 package top.blogapi.service;
 
+import com.github.pagehelper.PageInfo;
+import top.blogapi.dto.request.tag.TagQueryRequest;
 import top.blogapi.entity.Tag;
 
 import java.util.List;
@@ -7,9 +9,15 @@ import java.util.List;
 public interface TagService {
     List<Tag> getTagList();
 
-    int saveTag(Tag tag);
+    PageInfo<Tag> getTagList(TagQueryRequest tagQueryRequest);
+
+    int saveTag(String name, String color);
 
     Tag getTagById(Long id);
 
     Tag getTagByName(String name);
+
+    void deleteTagById(Long tagId);
+
+    void updateTag(String name, String color, Long id);
 }

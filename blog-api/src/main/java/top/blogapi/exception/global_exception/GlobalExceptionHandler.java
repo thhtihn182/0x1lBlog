@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
-import top.blogapi.dto.response.common.ErrorResponse;
+import top.blogapi.dto.response._common.ErrorResponse;
 import top.blogapi.exception.business_exception.DomainException;
 
 import java.time.LocalDateTime;
@@ -28,6 +28,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .entityId(ex.getEntityId())
                 .msg(ex.getMessage())
+                .cause(ex.getMsgCause())
                 .build();
         return ResponseEntity.status(ex.getHttpStatus()).body(error);
     }
