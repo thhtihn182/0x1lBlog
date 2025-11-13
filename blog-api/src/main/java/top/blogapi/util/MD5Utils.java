@@ -176,14 +176,7 @@ public class MD5Utils {
         }
         Node(){}
     }
-    public static void main(String[] args) {
-        gcd();
-        extendGcd();
-        System.out.println(32321*2170-2812*26513);
-        System.out.println(32321*2170-2812*26513);
-        System.out.println(32321*-8040+10245*26513);
 
-    }
 
     public static long getRGBbyte(int red, int green, int blue) {
         return (red* 65536L)+(green* 256L)+blue ;
@@ -333,5 +326,16 @@ public class MD5Utils {
             System.out.print(temp.val + " -> ");
             temp = temp.next;
         }
+    }
+    public static void modular(){
+        long x= 1;
+        int y = 5;
+        for(int i = 1; i <= 16 ; i++){
+            x *=y;
+        }
+        System.out.println(x%17 );
+    }
+    public static void main(String[] args) {
+        modular();
     }
 }
