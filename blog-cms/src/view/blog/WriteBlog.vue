@@ -269,7 +269,7 @@ const getData = async () => {
   try {
     const res = await getCategoryAndTag()
     if (res.code === 200) {
-      proxy.$msgSuccess(res.msg)
+      console.log(res.msg)
       categoryList.value = res.data.categories
       tagList.value = res.data.tags
     } else {

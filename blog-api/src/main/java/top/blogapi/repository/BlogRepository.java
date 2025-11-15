@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import top.blogapi.entity.Blog;
 import top.blogapi.entity.Tag;
+import top.blogapi.vo.BlogIdAndTitle;
 
 import java.util.List;
 import java.util.Optional;
@@ -104,4 +105,7 @@ public interface BlogRepository {
 
     @Select("SELECT COUNT(bt.tag_id) FROM blog_tag bt WHERE bt.tag_id = #{tagId} ")
     int countBlogByTagId(Long tagId);
+
+    @Select("SELECT b.title, b.id FROM blog b ORDER BY create_time DESC ")
+    List<BlogIdAndTitle> getIdAndTitleList();
 }

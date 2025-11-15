@@ -103,4 +103,9 @@ public class BlogController {
         blogService.updateBlogPublishedById(blogUpdatePublishedRequest);
         return Result.ok("Cập nhật thành công");
     }
+
+    @GetMapping("/blogIdAndTitle")
+    public Result<?> getBlogIdAndTitle() {
+        return Result.ok("getBlogIdAndTitle",blogOrchestrator.getIdAndTitleList());
+    }
 }

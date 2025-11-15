@@ -26,6 +26,7 @@ import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
 import top.blogapi.service.TagService;
 import top.blogapi.util.StringUtils;
+import top.blogapi.vo.BlogIdAndTitle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -184,5 +185,9 @@ public class BlogOrchestrator {
         }catch (Exception ignored){
         }
         return null;
+    }
+
+    public List<BlogIdAndTitle> getIdAndTitleList() {
+        return blogService.getIdAndTitleList();
     }
 }

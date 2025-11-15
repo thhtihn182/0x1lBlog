@@ -7,6 +7,7 @@ import WriteBlog from "@/view/blog/WriteBlog.vue";
 import { useAppStore } from '@/store/index.js'
 import CategoryList from "@/view/category/CategoryList.vue";
 import TagList from "@/view/tag/TagList.vue";
+import CommentList from "@/view/comment/CommentList.vue";
 
 const routes = [
     {
@@ -65,6 +66,13 @@ const routes = [
                 component: TagList,
                 meta: {
                     title: 'Danh sách Tag'
+                }
+            },
+            {
+                path: '/comments',
+                component: CommentList,
+                meta: {
+                    title: 'Danh sách Commnet'
                 }
             },
         ]

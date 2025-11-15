@@ -1,10 +1,8 @@
 package top.blogapi.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import top.blogapi.vo.BlogIdAndTitle;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString
 public class Comment {
     Long id;
     String nickname; // Biệt danh (tên hiển thị của người bình luận)
@@ -27,8 +26,8 @@ public class Comment {
     Integer page; // 0: bài viết thông thường, 1: trang "Giới thiệu về tôi"
     boolean notice; // Có nhận thông báo qua email hay không
 
-    Blog blog; // Bài viết mà bình luận này thuộc về
-    Comment parentComment; // Bình luận cha (nếu là trả lời)
+    BlogIdAndTitle blog; // Bài viết mà bình luận này thuộc về
+    Long parentCommentId; // Bình luận cha (nếu là trả lời)
     List<Comment> replyComments = new ArrayList<>(); // Danh sách các bình luận trả lời bình luận này
 
 }

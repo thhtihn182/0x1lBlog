@@ -134,7 +134,7 @@ const getData = async () => {
     const res = await getDataQuery(queryInfo.query, queryInfo.categoryId, queryInfo.pageNum, queryInfo.pageSize)
 
     if (res.code === 200) {
-      proxy.$msgSuccess(res.msg)
+      console.log(res.msg)
       blogList.value = res.data.blogs.list
       categoryList.value = res.data.categories
       total.value = res.data.blogs.total

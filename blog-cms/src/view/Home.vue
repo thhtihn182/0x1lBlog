@@ -37,7 +37,7 @@
             :index="String(item.id)"
           >
             <template #title>
-              <i class="iconfont" :class="iconsObj[item.id]"></i>
+              <el-button class="iconfont" size="small"  style="max-width: 8px" :icon="iconsObj[item.id]"></el-button>
               <span>  {{ item.title }}</span>
             </template>
 
@@ -49,7 +49,7 @@
               @click="store.saveNavState(subItem.path)"
             >
               <template #title>
-                <i :class="iconsObj[subItem.id]"></i>
+                <el-button style="max-width: 14px"  size="small"  :icon="iconsObj[subItem.id]"></el-button>
                 <span>{{ subItem.title }}</span>
               </template>
 
@@ -166,20 +166,35 @@ const menuList = [
   }
 ]
 
+import {
+  Menu,
+  Tickets,
+  DataAnalysis,
+  Tools,
+  Edit,
+  Opportunity,
+  Discount,
+  DocumentCopy,
+  Delete,
+  TrendCharts,
+  View,
+  Document
+} from '@element-plus/icons-vue'
+
 const iconsObj = {
-  '1': 'el-icon-menu',
-  '2': 'el-icon-s-order',
-  '3': 'el-icon-s-data',
-  '4': 'el-icon-s-tools',
-  '11': 'el-icon-edit',
-  '12': 'el-icon-s-order',
-  '13': 'el-icon-s-opportunity',
-  '14': 'el-icon-discount',
-  '21': 'el-icon-tickets',
-  '22': 'el-icon-delete',
-  '31': 'el-icon-s-marketing',
-  '32': 'el-icon-view',
-  '41': 'el-icon-document',
+  '1': Menu,
+  '2': Tickets,
+  '3': DataAnalysis,
+  '4': Tools,
+  '11': Edit,
+  '12': Tickets,
+  '13': Opportunity,
+  '14': Discount,
+  '21': DocumentCopy,
+  '22': Delete,
+  '31': TrendCharts,
+  '32': View,
+  '41': Document
 }
 
 // Lifecycle
@@ -234,7 +249,7 @@ const toggleCollapse = () => {
 }
 
 .iconfont{
-  margin-right: 20px;
+  margin-right: 5px;
   font-size: 20px;
 }
 
@@ -251,7 +266,4 @@ const toggleCollapse = () => {
 .toggle-button:hover {
   background-color: #5a6074;
 }
-
-
-
 </style>

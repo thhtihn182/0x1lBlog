@@ -29,6 +29,7 @@
           </template>
         </el-table-column>
       </el-table>
+    </el-card>
 <!--      Dialog thêm danh mục-->
       <el-dialog title="Thêm thể loai" width="50%" v-model="addDialogVisible"
         :close-on-click-modal="false" @close="addDialogClose">
@@ -54,7 +55,7 @@
           <el-button type="primary" @click="editCategory">Chỉnh sửa</el-button>
         </el-form>
       </el-dialog>
-    </el-card>
+
   </div>
 </template>
 
@@ -91,7 +92,7 @@ const getData = async () =>{
     const res = await getDataQuery(queryInfo)
     console.log(res)
     if(res.code === 200){
-      proxy.$msgSuccess(res.msg)
+      console.log(res.msg)
       categoryList.value = res.data.list
       total.value = res.data.total
     }else

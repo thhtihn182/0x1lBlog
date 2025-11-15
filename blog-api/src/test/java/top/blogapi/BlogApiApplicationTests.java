@@ -5,12 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.blogapi.entity.Blog;
 import top.blogapi.entity.Category;
+import top.blogapi.entity.Comment;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.repository.CategoryRepository;
+import top.blogapi.repository.CommentRepository;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 @SpringBootTest
@@ -30,6 +33,8 @@ class BlogApiApplicationTests {
 	@Autowired
 	BlogRepository blogRepository;
 	@Autowired
+	CommentRepository commentRepository;
+	@Autowired
 	CategoryRepository categoryRepository;
 
 
@@ -42,6 +47,18 @@ class BlogApiApplicationTests {
 		});
 		System.out.println(blog);
 
+	}
+	@Test
+	void test5(){
+		List<Comment> commentList = commentRepository.getListByPageAndParentCommentId(0,null,2L);
+		for (Comment comment : commentList) {
+			comment.setReplyComments(commentRepository.getListByPageAndParentCommentId(0,comment.getId(),2L));
+		}
+		System.out.println(commentList);
+	}
+	@Test
+	void test6(){
+		System.out.println(blogRepository.getIdAndTitleList().size());
 	}
 
 	@Test

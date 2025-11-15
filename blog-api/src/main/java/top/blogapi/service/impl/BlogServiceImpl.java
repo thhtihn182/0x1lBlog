@@ -18,6 +18,7 @@ import top.blogapi.entity.Tag;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.service.BlogService;
+import top.blogapi.vo.BlogIdAndTitle;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -129,6 +130,11 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public int countBlogByTagId(Long tagId) {
         return blogRepository.countBlogByTagId(tagId);
+    }
+
+    @Override
+    public List<BlogIdAndTitle> getIdAndTitleList() {
+        return blogRepository.getIdAndTitleList();
     }
 
 }
