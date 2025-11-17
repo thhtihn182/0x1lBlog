@@ -4,8 +4,8 @@ import com.github.pagehelper.PageInfo;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
-import top.blogapi.entity.Blog;
-import top.blogapi.vo.BlogIdAndTitle;
+import top.blogapi.model.entity.Blog;
+import top.blogapi.model.vo.BlogIdAndTitle;
 
 import java.util.List;
 

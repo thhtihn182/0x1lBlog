@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import top.blogapi.entity.User;
+import top.blogapi.model.entity.User;
 import top.blogapi.repository.UserRepository;
 
 @Service

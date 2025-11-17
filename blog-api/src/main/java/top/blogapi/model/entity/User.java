@@ -1,4 +1,4 @@
-package top.blogapi.entity;
+package top.blogapi.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

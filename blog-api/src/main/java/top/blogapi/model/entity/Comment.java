@@ -1,8 +1,8 @@
-package top.blogapi.entity;
+package top.blogapi.model.entity;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import top.blogapi.vo.BlogIdAndTitle;
+import top.blogapi.model.vo.BlogIdAndTitle;
 
 import java.util.ArrayList;
 import java.util.Date;

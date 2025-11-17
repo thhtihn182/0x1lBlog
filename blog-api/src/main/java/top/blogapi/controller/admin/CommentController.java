@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.blogapi.dto.request.comment.CommentQueryRequest;
-import top.blogapi.entity.Comment;
+import top.blogapi.model.entity.Comment;
 import top.blogapi.service.impl.orchestration.CommentOrchestrator;
 import top.blogapi.util.Result;
 

@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.comment.CommentQueryRequest;
-import top.blogapi.entity.Comment;
+import top.blogapi.model.entity.Comment;
 import top.blogapi.service.CommentService;
 
 import java.util.List;

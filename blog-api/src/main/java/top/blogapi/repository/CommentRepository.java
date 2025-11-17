@@ -1,11 +1,8 @@
 package top.blogapi.repository;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-import top.blogapi.entity.Comment;
+import top.blogapi.model.entity.Comment;
 
 import java.util.List;
 
@@ -40,4 +37,10 @@ public interface CommentRepository {
             @Result(property = "blog.title", column = "blog_title"),
     })
     List<Comment> getListByPageAndParentCommentId(Integer page, Long parentCommentId, Long blogId);
+
+    @Update("UPDATE comment SET is_published = #{published} WHERE id = #{id}")
+    int updateCommentPublishedById(Long id, boolean published);
+
+    @Update("UPDATE comment SET is_notice = #{notice} WHERE id = #{id}")
+    int updateCommentNoticeById(Long id, boolean notice);
 }

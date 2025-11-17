@@ -1,6 +1,6 @@
 package top.blogapi.service;
 
-import top.blogapi.entity.Comment;
+import top.blogapi.model.entity.Comment;
 
 import java.util.List;
 

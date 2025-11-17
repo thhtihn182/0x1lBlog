@@ -9,14 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.category.CategoryQueryRequest;
 import top.blogapi.dto.response.category.CategoryResponse;
-import top.blogapi.entity.Category;
+import top.blogapi.model.entity.Category;
 import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
 import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

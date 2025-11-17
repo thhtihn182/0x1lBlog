@@ -2,9 +2,9 @@ package top.blogapi.repository;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-import top.blogapi.entity.Blog;
-import top.blogapi.entity.Tag;
-import top.blogapi.vo.BlogIdAndTitle;
+import top.blogapi.model.entity.Blog;
+import top.blogapi.model.entity.Tag;
+import top.blogapi.model.vo.BlogIdAndTitle;
 
 import java.util.List;
 import java.util.Optional;

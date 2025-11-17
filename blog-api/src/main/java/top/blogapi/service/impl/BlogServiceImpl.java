@@ -13,12 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
-import top.blogapi.entity.Blog;
-import top.blogapi.entity.Tag;
+import top.blogapi.model.entity.Blog;
+import top.blogapi.model.entity.Tag;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.service.BlogService;
-import top.blogapi.vo.BlogIdAndTitle;
+import top.blogapi.model.vo.BlogIdAndTitle;
 
 import java.time.LocalDateTime;
 import java.util.List;

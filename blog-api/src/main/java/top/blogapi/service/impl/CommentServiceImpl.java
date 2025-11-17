@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import top.blogapi.entity.Comment;
+import top.blogapi.model.entity.Comment;
 import top.blogapi.repository.CommentRepository;
 import top.blogapi.service.CommentService;
 

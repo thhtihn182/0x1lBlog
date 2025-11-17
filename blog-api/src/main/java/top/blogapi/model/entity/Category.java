@@ -1,4 +1,4 @@
-package top.blogapi.entity;
+package top.blogapi.model.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

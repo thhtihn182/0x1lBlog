@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import top.blogapi.dto.response.tag.TagResponse;
-import top.blogapi.entity.Tag;
+import top.blogapi.model.entity.Tag;
 
 @Mapper(componentModel = "spring")
 public interface TagMapper {
