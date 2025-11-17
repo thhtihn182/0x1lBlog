@@ -23,7 +23,7 @@
                            @confirm="deleteCategoryByIdVue(scope.row.id)"
                            confirm-button-text="Xóa" confirm-button-type="danger" cancel-button-text="Hủy">
               <template #reference  >
-                <el-button size="small" type="danger">Xóa</el-button>
+                <el-button size="small" type="danger"  :icon="Delete">Xóa</el-button>
               </template>
             </el-popconfirm>
           </template>
@@ -110,6 +110,7 @@ const showEditDialog = (row) => {
 
 const addCategory = async (name) => {
   try{
+    await addFormRef.value.validate()
     const res = await createCategory(name)
     if(res.code === 200){
       addDialogClose()
@@ -125,6 +126,7 @@ const addCategory = async (name) => {
 
 const editCategory = async () => {
   try{
+    await editFormRef.value.validate()
     const res = await updateCategoryById(editForm.id, editForm.name)
     console.log(res)
     if(res.code === 200){
@@ -171,7 +173,8 @@ onMounted(()=>{
 
 
 <style scoped>
- .el-button{
-   margin-right: 10px
- }
+.el-button{
+  margin-left: 10px;
+}
+
 </style>

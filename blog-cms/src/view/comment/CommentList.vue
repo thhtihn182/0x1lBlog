@@ -1,81 +1,178 @@
 <template>
   <div>
-    <!--面包屑导航-->
-    <Breadcrumb parentTitle="评论管理"/>
+    <Breadcrumb parent-title="Quản lý bình luận"/>
 
     <el-card>
-      <!--搜索-->
       <el-row>
         <el-col :span="6">
-          <el-select v-model="pageId" placeholder="请选择页面" :filterable="true" :clearable="true" @change="search">
-            <el-option :label="item.title" :value="item.id" v-for="item in blogList" :key="item.id"></el-option>
+          <el-select
+            v-model="pageId"
+            placeholder="Chọn trang"
+            filterable
+            clearable
+            @change="search"
+          >
+            <el-option
+              v-for="item in blogList"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id"/>
           </el-select>
         </el-col>
       </el-row>
 
-      <el-table :data="commentList" row-key="id" :tree-props="{children: 'replyComments'}" border stripe>
-        <el-table-column label="序号" type="index" width="50"></el-table-column>
-        <el-table-column label="昵称" prop="nickname">
+      <el-table
+        :data="commentList"
+        row-key="id"
+        :tree-props="{ children : 'replyComments'}"
+        border
+        stripe
+      >
+        <el-table-column label="STT" type="index" width="60"/>
+        <el-table-column label="Tên" prop="nickname">
           <template #default="scope">
-            {{ scope.row.nickname }}
-            <el-tag v-if="scope.row.adminComment" size="mini" effect="dark" style="margin-left: 5px">我</el-tag>
+            {{scope.row.nickname}}
+            <el-tag
+              v-if="scope.row.adminComment"
+              size="small"
+              effect="dark"
+              style="margin-left: 5px">
+              Tôi
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="头像" width="80">
+        <el-table-column label="Avatar" width="80">
           <template #default="scope">
-<!--            <el-avatar shape="square" :size="60" fit="contain" :src="getAvatarUrl(scope.row.avatar)"></el-avatar>-->
-            <el-avatar shape="square" :size="60" fit="contain" :src="getAvatarUrl(scope.row.avatar)"></el-avatar>
+            <el-avatar
+              shape="square"
+              :size="60"
+              fit="contain"
+              :src="getAvatarUrl(scope.row.avatar)"/>
           </template>
         </el-table-column>
-        <el-table-column label="邮箱" prop="email"></el-table-column>
-        <el-table-column label="ip" prop="ip" width="130"></el-table-column>
-        <el-table-column label="评论内容" prop="content"></el-table-column>
-        <el-table-column label="所在页面">
+        <el-table-column label="Email" prop="email"/>
+        <el-table-column label="IP" prop="ip" width="130"/>
+        <el-table-column label="Nội dung" prop="content"/>
+        <el-table-column label="Trang">
           <template #default="scope">
-            <el-link type="success" href="" target="_blank" v-if="scope.row.page==0">{{ scope.row.blog.title }}</el-link>
-            <el-link type="success" href="" target="_blank" v-else-if="scope.row.page==1">关于我</el-link>
+            <el-link
+              type="success"
+              href=""
+              target="_blank"
+              v-if="scope.row.page === 0"
+            >
+              {{ scope.row.blog?.title }}
+            </el-link>
+            <el-link
+              type="success"
+              href=""
+              target="_blank"
+              v-if="scope.row.page === 1"
+            >
+              Về tôi
+            </el-link>
           </template>
         </el-table-column>
-        <el-table-column label="发表时间" width="170">
-          <template #default="scope">{{ formatDate(scope.row.createTime) }}</template>
-        </el-table-column>
-        <el-table-column label="是否公开" width="80">
+        <el-table-column label="Thời gian" width="170">
           <template #default="scope">
-            <el-switch v-model="scope.row.published" @change="commentPublishedChanged(scope.row)"></el-switch>
+            {{ formatDate(scope.row.createTime) }}
           </template>
         </el-table-column>
-        <el-table-column label="邮件提醒" width="80">
+        <el-table-column label="Công khai" width="80">
           <template #default="scope">
-            <el-switch v-model="scope.row.notice" @change="commentNoticeChanged(scope.row)"></el-switch>
+            <el-switch
+              v-model="scope.row.published"
+              @change="commentPublishedChanged(scope.row)"
+            />
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="190">
+        <el-table-column label="Thông báo email" width="80">
           <template #default="scope">
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="">编辑</el-button>
-            <el-popconfirm title="确定删除吗？" icon="el-icon-delete" iconColor="red" @confirm="deleteCommentById(scope.row.id)">
-              <el-button size="mini" type="danger" icon="el-icon-delete" slot="reference">删除</el-button>
+            <el-switch
+                v-model="scope.row.notice"
+                @change="commentNoticeChanged(scope.row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="Thao tác" width="190">
+          <template #default="scope">
+            <el-button
+                type="primary"
+                :icon="Edit"
+                size="small"
+                @click="showEditDialog(scope.row)"
+            >
+              Sửa
+            </el-button>
+            <el-popconfirm
+                title="Bạn có chắc chắn muốn xóa không?"
+                :icon="Delete"
+                icon-color="red"
+                confirm-button-text="Xóa" confirm-button-type="danger" cancel-button-text="Hủy"
+                @confirm="deleteComment(scope.row.id)"
+            >
+              <template #reference>
+                <el-button
+                    size="small"
+                    type="danger"
+                    :icon="Delete"
+                >
+                  Xóa
+                </el-button>
+              </template>
             </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
-
-      <!--分页-->
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pageNum"
-                     :page-sizes="[5, 10, 15, 20]" :page-size="queryInfo.pageSize" :total="total"
-                     layout="total, sizes, prev, pager, next, jumper" background>
-      </el-pagination>
     </el-card>
+
+    <el-dialog
+      title="Chỉnh sửa Comment"
+      width="50%"
+      v-model="editDialogVisible"
+      :close-on-click-modal="false"
+      @close="editDialogClose"
+    >
+      <el-form ref="editFormRel" :model="editForm" :rules="formRules" label-width="80px">
+        <el-form-item label="Nickname" prop="nickname">
+          <el-input v-model="editForm.nickname"/>
+        </el-form-item>
+        <el-form-item label="Email" prop="email">
+          <el-input v-model="editForm.email"/>
+        </el-form-item>
+        <el-form-item label="IP" prop="ip">
+          <el-input v-model="editForm.ip"/>
+        </el-form-item>
+        <el-form-item label="Nội dung" prop="content">
+          <el-input v-model="editForm.content" type="textarea" maxlength="255" show-word-limit/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span >
+          <el-button @click="editDialogClose">Huỷ</el-button>
+          <el-button @click="submitEditComment" type="primary">Chỉnh sửa</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
-import Breadcrumb from "@/components/Breadcrumb.vue"
-import { getCommentListByQuery, getBlogList} from '@/network/comment'
+import Breadcrumb from "@/components/Breadcrumb.vue";
 import { getCurrentInstance } from "vue";
+import { ref , reactive , onMounted } from "vue";
+import { formatDate } from '@/util/dateTimeFormatUtils.js'
+import {
+  deleteCommentById,
+  getBlogList,
+  getCommentListByQuery, updateComment,
+  updateCommentNoticeById,
+  updateCommentPublishedById
+} from "@/network/comment.js";
+import {Delete, Edit} from "@element-plus/icons-vue";
+import {checkEmail} from "@/common/reg.js";
 
 const { proxy } = getCurrentInstance()
-// 响应式数据
 const pageId = ref(null)
 const queryInfo = reactive({
   page: 0,
@@ -86,39 +183,59 @@ const queryInfo = reactive({
 const total = ref(0)
 const commentList = ref([])
 const blogList = ref([])
+const editDialogVisible = ref(false);
+const editFormRel = ref(null)
+const editForm = reactive({})
+const formRules = {
+  content: [{required: true, message: 'Vui lòng nhập bình luận', trigger:'blur'}],
+  ip:[{required: true, message: 'Vui lòng nhập địa chỉ IP', trigger:'blur'}],
+  nickname:[{required: true, message: 'Vui lòng nhập Nickname', trigger:'blur'}],
+  email:[{validator: checkEmail,  trigger:'blur'}],
+}
 
-// 方法
+const submitEditComment = async () => {
+  await editFormRel.value.validate()
+  try{
+    const res = await updateComment(editForm)
+    if(res.code === 200){
+      editDialogClose()
+      await getCommentList()
+      await getBlogListData()
+      proxy.$msgSuccess(res.msg)
+    }
+
+  }catch (error){
+    proxy.$msgError(error.response.data.msg)
+  }
+}
+
+
 const getCommentList = async () => {
   try {
     const res = await getCommentListByQuery(queryInfo)
-    console.log(res)
     if (res.code === 200) {
-      proxy.$msgSuccess(res.msg)
+      console.log(res.msg)
       commentList.value = res.data.list
       total.value = res.data.total
     } else {
       proxy.$msgError(res.msg)
     }
-  } catch {
-    proxy.$msgError("请求失败")
+  } catch (error) {
+    proxy.$msgError(error.response.data.msg)
   }
 }
-
-const getBlogListData = async () => {
-  try {
+const getBlogListData = async () =>{
+  try{
     const res = await getBlogList()
-    console.log(res)
-    if (res.code === 200) {
-      blogList.value = res.data
-      blogList.value.unshift({id: -1, title: '关于我'})
-    } else {
+    if(res.code === 200){
+      console.log(res.msg)
+      blogList.value = [{id: -1, title: 'Về tôi'},...res.data]
+    }else
       proxy.$msgError(res.msg)
-    }
-  } catch {
-    proxy.$msgError("请求失败")
+  }catch (error) {
+    proxy.$msgError(error.response.data.msg)
   }
 }
-
 const search = () => {
   if (pageId.value === -1) {
     queryInfo.page = 1
@@ -132,86 +249,55 @@ const search = () => {
   getCommentList()
 }
 
-const handleSizeChange = (newSize) => {
-  queryInfo.pageSize = newSize
-  getCommentList()
+const showEditDialog = (row) => {
+  Object.assign(editForm ,row)
+  editDialogVisible.value = true
 }
 
-const handleCurrentChange = (newPage) => {
-  queryInfo.pageNum = newPage
-  getCommentList()
+const editDialogClose = () => {
+  editFormRel.value.resetFields()
+  editDialogVisible.value = false;
+}
+const commentPublishedChanged = async (row) => {
+  try{
+    const res = await updateCommentPublishedById(row.id, row.published)
+    await getCommentList()
+    proxy.$msgSuccess(res.msg)
+  }catch (error){
+    proxy.$msgError(error.response.data.msg);
+  }
+}
+const commentNoticeChanged = async (row) => {
+  try{
+    const res = await updateCommentNoticeById(row.id, row.notice)
+    await getCommentList()
+    proxy.$msgSuccess(res.msg)
+  }catch (error){
+    proxy.$msgError(error.response.data.msg);
+  }
+}
+const deleteComment = async (id) => {
+  try{
+    const res = await deleteCommentById(id)
+    await getCommentList()
+    proxy.$msgSuccess(res.msg)
+  }catch (error){
+    proxy.$msgError(error.response.data.msg);
+  }
 }
 
-// const commentPublishedChanged = async (row) => {
-//   try {
-//     const res = await updatePublished(row.id, row.published)
-//     if (res.code === 200) {
-//       proxy.$msgSuccess(res.msg)
-//     } else {
-//       proxy.$msgError(res.msg)
-//     }
-//   } catch {
-//     proxy.$msgError("请求失败")
-//   }
-// }
-//
-// const commentNoticeChanged = async (row) => {
-//   try {
-//     const res = await updateNotice(row.id, row.notice)
-//     if (res.code === 200) {
-//       proxy.$msgSuccess(res.msg)
-//     } else {
-//       proxy.$msgError(res.msg)
-//     }
-//   } catch {
-//     msgError("请求失败")
-//   }
-// }
-//
-// const deleteCommentById = async (id) => {
-//   try {
-//     const res = await deleteCommentById(id)
-//     console.log(res)
-//     if (res.code === 200) {
-//       msgSuccess(res.msg)
-//       getCommentList()
-//     } else {
-//       msgError(res.msg)
-//     }
-//   } catch {
-//     msgError("请求失败")
-//   }
-// }
-
-// 工具函数
-// const getAvatarUrl = (avatar) => {
-//   return require(`@/assets/img/comment-avatar/${avatar}`)
-// }
 const getAvatarUrl = (avatar) => {
-  console.log(avatar)
-  const images = import.meta.glob('@/assets/img/comment-avatar/*', {
-    eager: true,
-    import: 'default'
-  })
-
-  const path = `/src/assets/img/comment-avatar/${avatar}`
-  console.log(path)
-  return images[path] || '/src/assets/img/comment-avatar/default-avatar.png'
+  return new URL(`/src/assets/img/comment-avatar/${avatar}`, import.meta.url).href
 }
-const formatDate = (dateString) => {
-
-  return new Date(dateString).toLocaleString('zh-CN')
-}
-
-// 生命周期
-onMounted(() => {
-  getCommentList()
-  getBlogListData()
+onMounted(async ()=> {
+  await getCommentList()
+  await getBlogListData()
 })
 </script>
 
 <style scoped>
-.el-button {
-  margin-right: 10px;
+.el-button{
+  margin-left: 10px;
 }
+
 </style>

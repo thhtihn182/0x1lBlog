@@ -41,7 +41,7 @@
                            @confirm="deleteTagByIdVue(row.tagId)"
                            confirm-button-text="Xóa" confirm-button-type="danger" cancel-button-text="Hủy">
               <template #reference>
-                <el-button type="danger" size="small">Xóa</el-button>
+                <el-button type="danger" size="small"  :icon="Delete">Xóa</el-button>
               </template>
             </el-popconfirm>
           </template>
@@ -302,8 +302,8 @@ onMounted(() =>{
   flex-shrink: 0;
 }
 
-.el-button {
-  margin-right: 10px;
+.el-button{
+  margin-left: 10px;
 }
 
 </style>

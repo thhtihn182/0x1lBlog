@@ -206,7 +206,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.el-button {
-  margin-right: 10px;
+.el-button{
+  margin-left: 10px;
 }
+
 </style>

@@ -25,6 +25,23 @@ public class CommentServiceException extends DomainException {
                     .messageKey("comment.data_retrival_failed",operations);
         }
 
+        public CommentServiceExceptionBuilder operationCommentUnsuccessful(String domain,String errorCode, String msg,
+                                                                           HttpStatus httpStatus  , String ...operations) {
+            return this.domain(domain)
+                    .errorCode(errorCode)
+                    .message(msg)
+                    .httpStatus(httpStatus)
+                    .messageKey(domain.toLowerCase()+"."+errorCode.toLowerCase(),operations);
+        }
+
+        public CommentServiceExceptionBuilder invalidParameters(String id,String msg, String ...operations) {
+            return this.errorCode("COMMENT_INVALID_PARAMETERS")
+                    .message(msg)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .entityId(id)
+                    .messageKey("comment.invalid_parameters",operations);
+        }
+
         @Override
         protected CommentServiceExceptionBuilder self() {
             return null;

@@ -43,4 +43,10 @@ public interface CommentRepository {
 
     @Update("UPDATE comment SET is_notice = #{notice} WHERE id = #{id}")
     int updateCommentNoticeById(Long id, boolean notice);
+
+    @Delete("DELETE FROM comment WHERE id = #{id}")
+    int deleteCommentById(Long id);
+
+    @Update("UPDATE comment SET nickname = #{nickname}, email = #{email}, content = #{content}, ip = #{ip} WHERE id =#{id}")
+    int updateComment(Long id,String nickname, String email, String content, String ip);
 }

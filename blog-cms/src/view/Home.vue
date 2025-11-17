@@ -37,7 +37,7 @@
             :index="String(item.id)"
           >
             <template #title>
-              <el-button class="iconfont" size="small"  style="max-width: 8px" :icon="iconsObj[item.id]"></el-button>
+<!--              <el-button class="iconfont" size="small"  style="max-width: 8px" :icon="iconsObj[item.id]"></el-button>-->
               <span>  {{ item.title }}</span>
             </template>
 
@@ -49,7 +49,7 @@
               @click="store.saveNavState(subItem.path)"
             >
               <template #title>
-                <el-button style="max-width: 14px"  size="small"  :icon="iconsObj[subItem.id]"></el-button>
+<!--                <el-button style="max-width: 14px"  size="small"  :icon="iconsObj[subItem.id]"></el-button>-->
                 <span>{{ subItem.title }}</span>
               </template>
 

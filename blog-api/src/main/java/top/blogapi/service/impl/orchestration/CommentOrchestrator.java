@@ -9,8 +9,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.comment.CommentQueryRequest;
+import top.blogapi.dto.request.comment.CommentUpdateRequest;
 import top.blogapi.model.entity.Comment;
 import top.blogapi.service.CommentService;
+import top.blogapi.util.StringUtils;
 
 import java.util.List;
 
@@ -27,9 +29,28 @@ public class CommentOrchestrator {
             List<Comment> comments = commentService.getListByPageAndParentCommentId(request.getPage(),
                     null,request.getBlogId());
             return new PageInfo<>(comments );
-        }catch (Exception e){
+        }catch (Exception ignored){
 
         }
         return null;
     }
+
+    public String updateCommentPublishedById(Long id, boolean published){
+        commentService.updateCommentPublishedById(id, published);
+        return "Cập nhật thành công!!";
+    }
+    public String updateCommentNoticeById(Long id, boolean notice){
+        commentService.updateCommentNoticeById(id, notice);
+        return "Cập nhật thành công!!";
+    }
+    public String deleteCommentById(Long id){
+        commentService.deleteCommentById(id);
+        return "Xóa thành công!!";
+    }
+
+    public String updateComment(CommentUpdateRequest request){
+        commentService.updateComment(request);
+        return "Cập nhật Comment thành công!!";
+    }
+
 }

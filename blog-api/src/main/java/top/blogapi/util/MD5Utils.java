@@ -335,7 +335,27 @@ public class MD5Utils {
         }
         System.out.println(x%17 );
     }
+    public static boolean kLengthApart(int[] nums, int k) {
+        int i =0;
+        while(i< nums.length && nums[i] == 1){
+            if(nums[i] == 1 )
+                break;
+            i++;
+        }
+        int j = i++;
+        while(i < nums.length){
+            if(nums[i] == 1){
+                if(i-j-1>=k){
+                    j = i;
+                }else{
+                    return false;
+                }
+            }
+            i++;
+        }
+        return true;
+    }
     public static void main(String[] args) {
-        modular();
+        System.out.println(kLengthApart(new int[]{0, 1, 0, 1}, 1));
     }
 }
