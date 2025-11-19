@@ -7,4 +7,11 @@ const router = createRouter({
     routes
 })
 
+router.beforeEach((to, from, next) => {
+    if(to.meta.title){
+        document.title = to.meta.title + ' | thinhh0x1\'s Blog'
+    }
+    next()
+})
+
 export default router
