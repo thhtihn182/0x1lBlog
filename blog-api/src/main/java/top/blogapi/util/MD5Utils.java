@@ -4,6 +4,7 @@ import org.springframework.util.DigestUtils;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MD5Utils {
     private static final String SALT = "mySecret";
@@ -355,7 +356,20 @@ public class MD5Utils {
         }
         return true;
     }
+
+    public static void findFinalValue(){
+
+        int[] nums =  new int []{8,19,4,2,15,3};
+        int original = 2;
+
+        int j = 0;
+        int[][] map = new int [nums.length][2];
+        for (int i = 0; i < nums.length; i++) {
+            System.out.println(original<<i);
+            System.out.println((19>>i) +"f");
+        }
+    }
     public static void main(String[] args) {
-        System.out.println(kLengthApart(new int[]{0, 1, 0, 1}, 1));
+        findFinalValue();
     }
 }

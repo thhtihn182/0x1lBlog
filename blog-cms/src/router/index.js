@@ -94,7 +94,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.meta.title) {
-        document.title = to.meta.title + ' | thinhh0x1\'Blog'
+        document.title = to.meta.title + ' | thinhh0x1\'s Blog'
     }
     const store = useAppStore()
     store.saveNavState(to.path)
