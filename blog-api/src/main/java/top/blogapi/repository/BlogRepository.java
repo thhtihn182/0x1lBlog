@@ -41,9 +41,9 @@ public interface BlogRepository {
     @Delete("DELETE FROM blog_tag WHERE blog_id = #{blogId} ")
     int deleteBlogTagByBlogId(@Param("blogId") Long blogId);
 
-    @Insert("INSERT INTO blog (title, content, first_picture, description, flag, is_published, is_recommend, is_appreciation, " +
+    @Insert("INSERT INTO blog (title, content, description, flag, is_published, is_recommend, is_appreciation, " +
             "     is_share_statement, is_comment_enabled, create_time, update_time, views, words, read_time, category_id, user_id) " +
-            "VALUES (#{title}, #{content}, #{firstPicture}, #{description}, #{flag}, #{published}, #{recommend}, #{appreciation}, " +
+            "VALUES (#{title}, #{content}, #{description}, #{flag}, #{published}, #{recommend}, #{appreciation}, " +
             "     #{shareStatement}, #{commentEnabled}, #{createTime}, #{updateTime}, #{views}, #{words}, #{readTime}, #{category.id}, #{user.id}) ")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int saveBlog(Blog blog);
@@ -57,7 +57,7 @@ public interface BlogRepository {
     @Update("UPDATE blog SET is_recommend = #{recommend} WHERE id = #{id}")
     int updateBlogRecommendById(@Param("id")Long id, @Param("recommend") boolean recommend);
 
-    @Select("SELECT b.id, b.title, b.content, b.first_picture, b.description, b.flag, b.is_published, b.is_recommend, " +
+    @Select("SELECT b.id, b.title, b.content, b.description, b.flag, b.is_published, b.is_recommend, " +
             "b.is_appreciation, b.is_share_statement, b.is_comment_enabled, b.create_time, b.update_time, " +
             "b.views, b.words, b.read_time, " +
             "c.id as category_id, c.name as category_name " +
@@ -83,7 +83,6 @@ public interface BlogRepository {
 
     @Update("UPDATE blog SET title = #{title}, " +
             "content = #{content}, " +
-            "first_picture = #{firstPicture}, " +
             "description = #{description}, " +
             "flag = #{flag}, " +
             "is_published = #{published}, " +

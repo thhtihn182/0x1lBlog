@@ -23,6 +23,9 @@ public interface TagRepository {
     @Select("SELECT t.id, t.name, t.color FROM tag t WHERE t.name LIKE #{name}")
     Optional<Tag> getTagByName(String name);
 
+    @Select("SELECT * FROM tag WHERE name = #{name}")
+    Optional<Tag> tagExist(String name);
+
     @Delete("DELETE FROM tag WHERE id = #{tagId}")
     int deleteTagById(Long tagId);
 

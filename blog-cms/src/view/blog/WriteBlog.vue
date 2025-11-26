@@ -27,12 +27,38 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item prop="content"
-                    >
-          <!-- TipTap Editor - CSS tối giản -->
+        <!-- Editor cho mô tả -->
+        <el-form-item label="Mô tả Blog" prop="description">
+          <div style="border: 1px solid #DCDFE6; border-radius: 4px; background: white;">
+            <!-- Thanh công cụ cho mô tả -->
+            <div v-if="descriptionEditor" style="padding: 8px; border-bottom: 1px solid #DCDFE6; background: #F5F7FA; display: flex; gap: 4px;">
+              <el-button
+                  size="small"
+                  :type="descriptionEditor.isActive('bold') ? 'primary' : ''"
+                  @click="descriptionEditor.chain().focus().toggleBold().run()"
+              >
+                B
+              </el-button>
+              <el-button
+                  size="small"
+                  :type="descriptionEditor.isActive('italic') ? 'primary' : ''"
+                  @click="descriptionEditor.chain().focus().toggleItalic().run()"
+              >
+                I
+              </el-button>
+            </div>
+            <editor-content
+                :editor="descriptionEditor"
+                style="padding: 16px; min-height: 120px; outline: none; min-width: 500px"
+            />
+          </div>
+        </el-form-item>
+
+        <!-- Editor cho nội dung chính -->
+        <el-form-item label="Nội dung Blog" prop="content">
           <div style="border: 1px solid #DCDFE6; border-radius: 4px; background: white;">
             <!-- Thanh công cụ đơn giản -->
-            <div v-if="editor" style="padding: 8px; border-bottom: 1px solid #DCDFE6; background: #F5F7FA; display: flex; gap: 4px;">
+            <div v-if="editor" style="padding: 8px; border-bottom: 1px solid #DCDFE6; background: #F5F7FA; display: flex; gap: 4px; flex-wrap: wrap;">
               <el-button
                   size="small"
                   :type="editor.isActive('bold') ? 'primary' : ''"
@@ -68,7 +94,7 @@
         </el-form-item>
 
         <!-- Các mục form khác giữ nguyên -->
-        <el-form-item label="Danh mục" prop="cate">
+        <el-form-item label="Thể loại (có thể thêm thể loại mới)" prop="cate" >
           <el-select
               v-model="form.cate"
               placeholder="Vui lòng chọn thể loại"
@@ -85,7 +111,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Thẻ" prop="tagList">
+        <el-form-item label="Tag (có thể thêm tag mới)" prop="tagList">
           <el-select
               v-model="form.tagList"
               placeholder="Vui lòng chọn Tag"
@@ -103,14 +129,6 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="Ảnh bìa" prop="firstPicture">
-          <el-input
-              v-model="form.firstPicture"
-              placeholder="Vui lòng nhập URL ảnh bìa"
-              style="width: 50%;"
-          />
-        </el-form-item>
-
         <el-form-item label="Số từ" prop="words">
           <el-input
               v-model="form.words"
@@ -121,7 +139,6 @@
         </el-form-item>
 
         <el-form-item label="Thời gian đọc (tùy chọn)" >
-<!--          v-model = :value(truyền dynamic data từ js) + @input(lắng nghe sự kiện input thay đổi)-->
           <el-input
               v-model="form.readTime"
               placeholder="Vui lòng nhập thời gian đọc. Mặc định Math.round(words/200)"
@@ -132,21 +149,10 @@
 
         <el-form-item label="Lượt xem (tùy chọn)" prop="views">
           <el-input
-            v-model="form.views"
-            placeholder="Vui lòng nhập số lượt xem. Mặc đinh là 0"
-            type="number"
-            style="width: 50%"
-          />
-
-        </el-form-item>
-
-        <el-form-item label="Mô tả bài viết" prop="description">
-          <el-input
-              v-model="form.description"
-              type="textarea"
-              placeholder="Vui lòng nhập mô tả Blog..."
-              :maxlength="255"
-              show-word-limit
+              v-model="form.views"
+              placeholder="Vui lòng nhập số lượt xem. Mặc đinh là 0"
+              type="number"
+              style="width: 50%"
           />
         </el-form-item>
 
@@ -164,23 +170,19 @@
       </el-form>
     </el-card>
   </div>
-
 </template>
 
 <script setup>
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter , useRoute} from 'vue-router'
 import { getCategoryAndTag, saveBlog , getBlogById , updateBlog} from '@/network/blog'
-import { ArrowRight } from "@element-plus/icons-vue";
 import { getCurrentInstance} from "vue";
-import {watch} from "vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 
 const { proxy } = getCurrentInstance()
-
 const route = useRoute()
 const router = useRouter()
 const formRef = ref()
@@ -194,75 +196,98 @@ const form = reactive({
   title: '',
   flag: null,
   content: '',
+  description: '',
   cate: null,
   tagList: [],
   readTime: null,
   views: 0,
-  firstPicture: '',
   words: null,
-  description: '',
   shareStatement: false,
   appreciation: false,
   recommend: false,
   commentEnabled: false,
   published: false
 })
+
+// Watch cho cả content và description
 watch(() => form.content, (newContent) => {
   if (editor.value && newContent !== editor.value.getHTML()) {
-    console.log('🔄 Updating editor with new content:', newContent)
+    console.log('🔄 Updating content editor with new content')
     editor.value.commands.setContent(newContent, false)
   }
 })
 
+watch(() => form.description, (newDescription) => {
+  if (descriptionEditor.value && newDescription !== descriptionEditor.value.getHTML()) {
+    console.log('🔄 Updating description editor with new content')
+    descriptionEditor.value.commands.setContent(newDescription, false)
+  }
+})
 
 const formRules = {
   title: [{ required: true, message: 'Vui lòng nhập tiêu đề', trigger: 'change' }],
   cate: [{ required: true, message: 'Vui lòng chọn danh mục', trigger: 'change' }],
   tagList: [{ required: true, message: 'Vui lòng chọn thẻ', trigger: 'change' }],
-  firstPicture: [{ required: true, message: 'Vui lòng nhập URL ảnh bìa', trigger: 'change' }],
   words: [{ required: true, message: 'Vui lòng nhập số từ bài viết', trigger: 'change' }],
   description: [{ required: true, message: 'Vui lòng nhập mô tả bài viết', trigger: 'change' }],
 }
 
-// TipTap Editor - Thiết lập đơn giản
+// TipTap Editor cho nội dung chính
 const editor = useEditor({
   content: form.content,
   extensions: [
-    StarterKit, // Cung cấp mọi thứ cần thiết
-    Image,       // Thêm hỗ trợ hình ảnh
+    StarterKit,
+    Image,
   ],
-  onUpdate: ({ editor }) => {
-    form.content = editor.getHTML() // Tự động cập nhật nội dung form
-    const  wordLength = ref(editor.getText().trim().length)
-    form.words = wordLength.value
-    form.readTime =Math.round(wordLength.value/200.0) + 5
+  onUpdate: ({editor}) => {
+    form.content = editor.getHTML()
+    const wordLength = editor.getText().trim().length
+    form.words = wordLength
+    form.readTime = Math.round(wordLength / 200.0) + 5
   },
 })
 
+// TipTap Editor cho mô tả
+const descriptionEditor = useEditor({
+  content: form.description,
+  extensions: [
+    StarterKit.configure({
+      // Giới hạn các tính năng cho mô tả
+      heading: false,
+      codeBlock: false,
+      blockquote: false,
+      bulletList: false,
+      orderedList: false,
+    }),
+  ],
+  onUpdate: ({editor}) => {
+    form.description = editor.getHTML()
+  },
+})
 
 const addImage = () => {
   const url = window.prompt('Vui lòng nhập URL hình ảnh: ')
   if (url) {
-    editor.value.chain().focus().setImage({ src: url }).run()
+    editor.value.chain().focus().setImage({src: url}).run()
   }
 }
 
 const getBlog = async (id) => {
-  try{
+  try {
     const res = await getBlogById(id);
     if (res.code === 200) {
       computeCategoryAndTag(res.data)
-      Object.assign(form,res.data)
+      Object.assign(form, res.data)
     }
-  }catch (e){
-
+  } catch (e) {
+    console.error('Lỗi khi lấy blog:', e)
   }
 }
 
 const computeCategoryAndTag = (blog) => {
   blog.cate = blog.category.id;
   blog.tagList = []
-  blog.tags.forEach( tag => blog.tagList.push(tag.id) )
+  blog.tags.forEach(tag => blog.tagList.push(tag.id))
 }
 
 const getData = async () => {
@@ -288,9 +313,9 @@ const submit = async (published) => {
 
     console.log('Dữ liệu gửi:', form)
     let res
-    if(route.params.id){
+    if (route.params.id) {
       res = await updateBlog(form);
-    }else{
+    } else {
       res = await saveBlog(form)
     }
     if (res.code === 200) {
@@ -309,23 +334,23 @@ const submit = async (published) => {
   }
 }
 
-
 onMounted(() => {
   getData()
-  if(route.params.id)
+  if (route.params.id)
     getBlog(route.params.id)
-
 })
 
 onUnmounted(() => {
   if (editor.value) {
     editor.value.destroy()
   }
+  if (descriptionEditor.value) {
+    descriptionEditor.value.destroy()
+  }
 })
 </script>
 
 <style>
-
 .ProseMirror {
   outline: none;
   min-height: 400px;
@@ -333,9 +358,30 @@ onUnmounted(() => {
   line-height: 1.6;
 }
 
-.ProseMirror h1 { font-size: 2em; margin: 0.67em 0; }
-.ProseMirror h2 { font-size: 1.5em; margin: 0.83em 0; }
-.ProseMirror h3 { font-size: 1.17em; margin: 1em 0; }
-.ProseMirror p { margin: 1em 0; }
-.ProseMirror img { max-width: 100%; }
+.ProseMirror:first-child {
+  min-height: 120px;
+}
+
+.ProseMirror h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+}
+
+.ProseMirror h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+}
+
+.ProseMirror p {
+  margin: 1em 0;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+}
 </style>

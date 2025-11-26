@@ -17,7 +17,6 @@ public class Blog {
     Long id;
     String title; // Tiêu đề bài viết
     String content; // Nội dung bài viết
-    String firstPicture; // Ảnh bìa bài viết
     String description; // Mô tả
     String flag; // Loại bài viết (nguyên tác, chuyển tải, dịch thuật)
     boolean published; // Đã xuất bản hay bản nháp

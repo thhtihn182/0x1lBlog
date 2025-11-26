@@ -29,4 +29,7 @@ public interface CategoryRepository {
     @Update("UPDATE category SET name = #{name} WHERE id = #{id}")
     int updateCategory(Category category);
 
+    @Select("SELECT * FROM category WHERE name = #{categoryName}")
+    Optional<Category> categoryExist(String categoryName);
+
 }

@@ -49,10 +49,12 @@ public class TagServiceImpl implements TagService {
 
     @Transactional
     @Override
-    public int saveTag(String name, String color) {
+    public Tag saveTag(String name, String color) {
 
         try{
-            return tagRepository.saveTag(new Tag(name,color));
+            Tag t =new Tag(name,color);
+            tagRepository.saveTag(t);
+            return  t;
         }catch (Exception e){
             throw TagServiceException.builder()
                     .operationTagUnsuccessful("TAG",
@@ -80,6 +82,11 @@ public class TagServiceImpl implements TagService {
                 TagServiceException.builder()
                         .tagNotExist("BLOG",HttpStatus.BAD_REQUEST,"Không thể thêm Tag hiện có !!")
                         .build());
+    }
+
+    @Override
+    public boolean tagExist(String name) {
+        return tagRepository.tagExist(name).isPresent();
     }
 
     @Override

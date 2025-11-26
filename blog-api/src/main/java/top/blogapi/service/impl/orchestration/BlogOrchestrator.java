@@ -82,7 +82,6 @@ public class BlogOrchestrator {
             if(StringUtils.isEmpty(
                     blog.getTitle(),
                     blog.getContent(),
-                    blog.getFirstPicture(),
                     blog.getDescription(),
                     blog.getFlag())
                     || blog.getWords() == null || blog.getWords() < 0){
@@ -103,9 +102,10 @@ public class BlogOrchestrator {
                 Category category = categoryService.getCategoryById(((Integer) cate).longValue());
                 blog.setCategory(category);
             }else if(cate instanceof String) {
-                categoryService.getCategoryByName((String) cate);
-                Category category  = categoryService.saveCategory((String) cate);
-                blog.setCategory(category); // Thêm thể loại thành công
+                if(!categoryService.categoryExist((String) cate)){
+                    Category category  = categoryService.saveCategory((String) cate);
+                    blog.setCategory(category); // Thêm thể loại thành công
+                }
             }else
                 throw CategoryServiceException.builder()
                         .blogDoesntAddCategories("BLOG",HttpStatus.BAD_REQUEST,"Lỗi thêm thể loại")
@@ -118,16 +118,16 @@ public class BlogOrchestrator {
                     Tag tag = tagService.getTagById(((Integer)t).longValue());
                     tags.add(tag);
                 } else if (t instanceof String) {
-                    tagService.getTagByName(t.toString());
-                    Tag tag = new Tag();
-                    tag.setName((String) t);
-                    int r = tagService.saveTag(tag.getName(),tag.getColor());
-                    if(r == 1) // Thêm tag thành công
-                        tags.add(tag);
-                    else
-                        throw TagServiceException.builder()
-                                .addTagNotSuccess("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Thêm tag không thành công")
-                                .build();
+                    if (!tagService.tagExist(t.toString())){
+                        Tag tag = tagService.saveTag((String) t,null);
+                        System.out.println(tag);
+                        if(tag.getId()!=null) // Thêm tag thành công
+                            tags.add(tag);
+                        else
+                            throw TagServiceException.builder()
+                                    .addTagNotSuccess("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Thêm tag không thành công")
+                                    .build();
+                    }
                 }else
                     throw TagServiceException.builder()
                             .nameTagIncorrect("BLOG",HttpStatus.BAD_REQUEST,"Tên Tag không chính xác")
@@ -180,9 +180,10 @@ public class BlogOrchestrator {
                                 .createBlogFailed("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Cập nhật Blog không thành công !!")
                                 .build();
                 }
-                return "Cập nhật Blog không thành công !!";
+                return "Cập nhật Blog thành công !!";
             }
-        }catch (Exception ignored){
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return null;
     }

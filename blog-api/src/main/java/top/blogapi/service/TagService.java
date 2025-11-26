@@ -11,11 +11,13 @@ public interface TagService {
 
     PageInfo<Tag> getTagList(TagQueryRequest tagQueryRequest);
 
-    int saveTag(String name, String color);
+    Tag saveTag(String name, String color);
 
     Tag getTagById(Long id);
 
     Tag getTagByName(String name);
+
+    boolean tagExist (String name);
 
     void deleteTagById(Long tagId);
 
