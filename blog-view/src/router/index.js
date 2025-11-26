@@ -1,6 +1,16 @@
 import {createRouter, createWebHistory} from "vue-router";
+import Index from "@/view/Index.vue";
 
-const routes = []
+const routes = [
+    {
+        path: '/',
+        redirect:'/index'
+    },
+    {
+        path: '/index',
+        component: Index,
+    },
+]
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
