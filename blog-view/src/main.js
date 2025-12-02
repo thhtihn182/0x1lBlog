@@ -11,7 +11,9 @@ import Divider from 'primevue/divider'
 import Menubar from 'primevue/menubar'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
+import Badge from "primevue/badge";
 import Aura from '@primevue/themes/aura'
+
 import 'primeicons/primeicons.css'
 import 'primevue'
 import 'primeflex/primeflex.css'
@@ -27,7 +29,7 @@ app.use(PrimeVue, {
     // theme: {
     //     preset: Aura,
     //     options: {
-    //         darkModeSelector: true
+    //         darkModeSelector: false,
     //     }
     // }
 })
@@ -38,6 +40,7 @@ const PrimeVueComponents = {
         app.component('Menubar', Menubar)
         app.component('InputText', InputText)
         app.component('Button', Button)
+        app.component('Badge', Badge)
     }
 }
 app.use(PrimeVueComponents)
