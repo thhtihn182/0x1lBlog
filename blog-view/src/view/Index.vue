@@ -2,7 +2,9 @@
   <div class="site">
     <Nav :blogName="blogName"/>
 
-    <div class="main"/>
+    <div class="main">
+      <router-view/>
+    </div>
 
     <Footer :footer="footer"/>
 
@@ -121,4 +123,15 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.main {
+  opacity: 0.9;
+  flex: 1;
+}
+</style>

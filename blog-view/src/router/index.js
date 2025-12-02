@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "@/view/Index.vue";
+import Home from "@/view/home/Home.vue";
 
 const routes = [
     {
@@ -9,6 +10,16 @@ const routes = [
     {
         path: '/index',
         component: Index,
+        redirect: '/home',
+        children: [
+            {
+                path: '/home',
+                component: Home,
+                meta:{
+                    title: ''
+                }
+            }
+        ]
     },
 ]
 
