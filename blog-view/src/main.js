@@ -17,6 +17,10 @@ import Aura from '@primevue/themes/aura'
 import 'primeicons/primeicons.css'
 import 'primevue'
 import 'primeflex/primeflex.css'
+
+import ElementPlus, {ElMessage} from 'element-plus'
+import 'element-plus/dist/index.css'
+
 import '@/assets/css/base.css'
 import '@/assets/css/badge.css'
 
@@ -25,6 +29,7 @@ const pinia = createPinia()
 
 app.use(router)
 app.use(pinia)
+app.use(ElementPlus)
 app.use(PrimeVue, {
     // theme: {
     //     preset: Aura,

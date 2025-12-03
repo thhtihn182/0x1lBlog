@@ -2,14 +2,20 @@
   <div>
    <BlogItem :blog-list="blogList"/>
 
-    <Pagination/>
+    <Pagination :get-blog-list="getBlogList"/>
   </div>
 </template>
 <script setup >
  import BlogItem from "@/components/BlogItem.vue";
  import Pagination from "@/components/Pagination.vue";
- import {reactive} from "vue";
+ import {reactive, onMounted} from "vue";
 
+ const getBlogList = (val) => {
+   console.log('getBlogList '+ val)
+ }
+ onMounted(() => {
+   getBlogList(2)
+ })
  const blogList = reactive([
    {
      id: 1,
