@@ -1,10 +1,17 @@
 <template>
   <div class="m-padded-tb-big">
     <div class="p-container">
-      <div class="p-grid p-gutter">
-        <div class="p-col-12 p-md-8 p-lg-9">
+      <!-- Thêm style inline override -->
+      <div style="display: flex; flex-direction: row; width: 100%;">
+
+        <div style="flex: 0 0 25%;">
+          <Introduction/>
+        </div>
+
+        <div style="flex: 0 0 75%;">
           <BlogList/>
         </div>
+
       </div>
     </div>
   </div>
@@ -13,6 +20,7 @@
 
 <script setup>
 import BlogList from "@/view/home/BlogList.vue";
+import Introduction from "@/components/sidebar/Introduction.vue";
 </script>
 
 
@@ -21,6 +29,11 @@ import BlogList from "@/view/home/BlogList.vue";
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+.p-grid > div {
+  border: 1px solid #41c5ff;
+  min-height: 400px;
+  padding: 20px;
 }
 </style>
 

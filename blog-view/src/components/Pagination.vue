@@ -1,5 +1,5 @@
 <template>
-  <div v-if="queryInfo.pageTotal > 1" style="text-align:center; margin-top: 1em;">
+  <div  style="text-align:center; margin-top: 1em;">
     <el-pagination
         @current-change="handleCurrentPage"
         :current-page="queryInfo.pageNum"
@@ -7,6 +7,7 @@
         layout="total, prev, pager, next"
         :total="queryInfo.pageSize * queryInfo.pageTotal"
         background
+        hide-on-single-page
         small
     />
   </div>
@@ -33,7 +34,7 @@ const props = defineProps({
 const queryInfo = reactive({
   pageNum: 1,
   pageSize: 10,
-  pageTotal: 10,
+  pageTotal: 1,
 })
 
 const handleCurrentPage = (newPage) => {

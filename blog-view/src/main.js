@@ -12,6 +12,8 @@ import Menubar from 'primevue/menubar'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Badge from "primevue/badge";
+import Accordion from "primevue/accordion";
+import AccordionTab from "primevue/accordiontab";
 import Aura from '@primevue/themes/aura'
 
 import 'primeicons/primeicons.css'
