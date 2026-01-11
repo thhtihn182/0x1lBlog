@@ -50,9 +50,8 @@ public class TagServiceImpl implements TagService {
     @Transactional
     @Override
     public Tag saveTag(String name, String color) {
-
         try{
-            Tag t =new Tag(name,color);
+            Tag t =new Tag (name,color);
             tagRepository.saveTag(t);
             return  t;
         }catch (Exception e){
@@ -113,5 +112,10 @@ public class TagServiceImpl implements TagService {
                             "Cập nhật tag không thành công!! [id:"+ id+"]")
                     .entityId(id.toString())
                     .build();
+    }
+
+    @Override
+    public List<Tag> getTagListByBlogId(Long blogId) {
+        return tagRepository.getTagListByBlogId(blogId);
     }
 }

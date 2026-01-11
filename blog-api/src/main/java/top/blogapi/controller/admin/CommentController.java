@@ -10,7 +10,7 @@ import top.blogapi.dto.request.comment.CommentQueryRequest;
 import top.blogapi.dto.request.comment.CommentUpdateRequest;
 import top.blogapi.model.entity.Comment;
 import top.blogapi.service.impl.orchestration.CommentOrchestrator;
-import top.blogapi.util.Result;
+import top.blogapi.model.vo.Result;
 
 @RestController
 @RequiredArgsConstructor

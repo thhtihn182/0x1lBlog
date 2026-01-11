@@ -123,6 +123,36 @@
 			<artifactId>mapstruct-processor</artifactId>
 			<version>1.6.3</version>
 		</dependency>
+<!--		Markdown-->
+		<!-- https://mvnrepository.com/artifact/org.commonmark/commonmark -->
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>0.27.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-tables</artifactId>
+			<version>0.27.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.commonmark/commonmark-ext-gfm-strikethrough -->
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-strikethrough</artifactId>
+			<version>0.27.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.commonmark/commonmark-ext-task-list-items -->
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-task-list-items</artifactId>
+			<version>0.27.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.commonmark/commonmark-ext-heading-anchor -->
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-heading-anchor</artifactId>
+			<version>0.27.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

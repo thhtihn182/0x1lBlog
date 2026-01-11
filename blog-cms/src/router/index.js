@@ -8,6 +8,8 @@ import { useAppStore } from '@/store/index.js'
 import CategoryList from "@/view/category/CategoryList.vue";
 import TagList from "@/view/tag/TagList.vue";
 import CommentList from "@/view/comment/CommentList.vue";
+import Site from "@/view/site/SiteSetting.vue";
+import SiteSetting from "@/view/site/SiteSetting.vue";
 
 const routes = [
     {
@@ -48,33 +50,40 @@ const routes = [
                 }
             },
             {
-                path: '/categories',
-                component: CategoryList,
-                meta: {
-                    title: "Danh sách thể loại"
-                }
-            },
-            {
                 path: '/blogs',
                 component: BlogList,
                 meta: {
-                    title: 'Danh sách Blog'
+                    title: 'Quản lý Blog'
+                }
+            },
+            {
+                path: '/categories',
+                component: CategoryList,
+                meta: {
+                    title: "Quản lý thể loại"
                 }
             },
             {
                 path: '/tags',
                 component: TagList,
                 meta: {
-                    title: 'Danh sách Tag'
+                    title: 'Quản lý Tag'
                 }
             },
             {
                 path: '/comments',
                 component: CommentList,
                 meta: {
-                    title: 'Danh sách Commnet'
+                    title: 'Quản lý Commnet'
                 }
             },
+            {
+                path: '/siteSettings',
+                component: SiteSetting,
+                meta: {
+                    title: 'Quản lý trang Web'
+                }
+            }
         ]
     }
 ]
@@ -94,7 +103,7 @@ router.beforeEach((to, from, next) => {
     }
 
     if (to.meta.title) {
-        document.title = to.meta.title + ' | thinhh0x1\'s Blog'
+        document.title = to.meta.title + ' | think\'s Blog'
     }
     const store = useAppStore()
     store.saveNavState(to.path)

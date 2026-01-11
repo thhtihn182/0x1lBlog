@@ -1,11 +1,20 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "@/view/Index.vue";
 import Home from "@/view/home/Home.vue";
+import GridL from "@/view/GridL.vue";
+import {useAppStore} from "@/store/index.js";
 
 const routes = [
     {
         path: '/',
         redirect:'/index'
+    },
+    {
+        path: '/grid',
+        component: GridL,
+        meta:{
+            title: 'GridL'
+        }
     },
     {
         path: '/index',
@@ -16,9 +25,10 @@ const routes = [
                 path: '/home',
                 component: Home,
                 meta:{
-                    title: ''
+                    title: 'Trang chủ'
                 }
-            }
+            },
+
         ]
     },
 ]
@@ -29,8 +39,14 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+    const store =  useAppStore()
     if(to.meta.title){
-        document.title = to.meta.title + ' | thinhh0x1\'s Blog'
+        if(store.webTitleSuffix !== ''){
+            document.title = to.meta.title + ' | ' + store.webTitleSuffix
+        }
+        else {
+            document.title = to.meta.title
+        }
     }
     next()
 })

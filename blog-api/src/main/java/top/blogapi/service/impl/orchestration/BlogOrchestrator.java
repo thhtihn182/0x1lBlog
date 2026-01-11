@@ -2,6 +2,8 @@ package top.blogapi.service.impl.orchestration;
 
 
 import com.alibaba.fastjson2.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,22 +15,23 @@ import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.response.blog.BlogSummaryResponse;
 import top.blogapi.dto.response.category.CategoryResponse;
 import top.blogapi.dto.response._page.BlogListPageResponse;
-import top.blogapi.model.entity.Blog;
-import top.blogapi.model.entity.Category;
-import top.blogapi.model.entity.Tag;
-import top.blogapi.model.entity.User;
+import top.blogapi.model.entity.*;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
 import top.blogapi.exception.business_exception.domain_exception.TagServiceException;
 import top.blogapi.mapper.BlogMapper;
 import top.blogapi.mapper.CategoryMapper;
+import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
+import top.blogapi.service.SiteSettingService;
 import top.blogapi.service.TagService;
 import top.blogapi.util.StringUtils;
 import top.blogapi.model.vo.BlogIdAndTitle;
+import top.blogapi.util.markdown.MarkdownUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +43,7 @@ public class BlogOrchestrator {
     BlogService blogService;
     CategoryService categoryService;
     TagService tagService;
+    SiteSettingService siteSettingService;
 
     BlogMapper blogMapper;
     CategoryMapper categoryMapper;
@@ -119,7 +123,7 @@ public class BlogOrchestrator {
                     tags.add(tag);
                 } else if (t instanceof String) {
                     if (!tagService.tagExist(t.toString())){
-                        Tag tag = tagService.saveTag((String) t,null);
+                        Tag tag = tagService.saveTag((String) t,"black");
                         System.out.println(tag);
                         if(tag.getId()!=null) // Thêm tag thành công
                             tags.add(tag);
@@ -188,7 +192,30 @@ public class BlogOrchestrator {
         return null;
     }
 
+    public String deleteBlogById(Long id){
+        blogService.deleteBlogById(id);
+        return "Xóa blog thành công !!";
+    }
     public List<BlogIdAndTitle> getIdAndTitleList() {
         return blogService.getIdAndTitleList();
+    }
+
+    public List<BlogInfo> getBlogInfoListByIsPublished(){
+        List<BlogInfo> blogInfos = blogService.getBlogInfoListByIsPublished();
+        blogInfos.forEach(blogInfo -> {
+            blogInfo.setTags(tagService.getTagListByBlogId(blogInfo.getId()));
+            blogInfo.setDescription(MarkdownUtils.markdownToHtmlExtensions(blogInfo.getDescription()));
+        });
+        return blogInfos;
+    }
+
+    public List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend(){
+        try(Page<Object> page1 = PageHelper.startPage(1, 3)) {
+            List<BlogIdAndTitle> blogIdAndTitles = blogService.getIdAndTitleListByIsPublishedAndIsRecommend();
+            return blogIdAndTitles;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return List.of();
     }
 }

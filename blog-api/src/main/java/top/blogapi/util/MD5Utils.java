@@ -4,7 +4,10 @@ import org.springframework.util.DigestUtils;
 
 import java.math.BigInteger;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MD5Utils {
     private static final String SALT = "mySecret";
@@ -369,7 +372,141 @@ public class MD5Utils {
             System.out.println((19>>i) +"f");
         }
     }
-    public static void main(String[] args) {
-        findFinalValue();
+    public static int specialTriplets(int[] nums) {
+        long count = 0;
+        Map<Integer, Integer> map2 = new HashMap<>();
+        Map<Integer, Integer> map1 = new HashMap<>();
+        map1.put(nums[0],1);
+        for(int i = 2; i < nums.length; i++){
+            map2.put(nums[i], map2.getOrDefault(nums[i], 0) + 1);
+        }
+        for (int i = 1; i < nums.length -1; i++) {
+            int key = nums[i] * 2;
+            if(map2.containsKey(key) && map1.containsKey(key)){
+                count += (long) map1.get(key) * map2.get(key);
+            }
+            map1.put(nums[i], map1.getOrDefault(nums[i], 0) + 1);
+            map2.computeIfPresent(nums[i + 1] , (k,v)->  v > 1 ? v - 1 : null);
+        }
+        return (int) count;
     }
+    public static boolean matchesWordPattern(String input) {
+        // Tương đương với Pattern.matches("[\\w]+", input)
+        if (input == null || input.isEmpty()) {
+            return false; // [\w]+ yêu cầu ít nhất 1 ký tự
+        }
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+
+            // Kiểm tra ký tự thuộc \w (word character):
+            // 1. Chữ cái: a-z, A-Z
+            // 2. Số: 0-9
+            // 3. Dấu gạch dưới: _
+            if (!(Character.isLetterOrDigit(c) || c == '_')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static void backtrack(List<Integer> list , int k,int n){
+        if(list.size() == n)
+            return;
+        for(int i = list.getLast()+1 ; i <= n+1 ; i++){
+            list.add(i);
+            backtrack(list , k , n);
+            list.removeLast();
+        }
+    }
+
+    public static List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> ans = new ArrayList<>();
+
+        for(int i = 1 ; i <= n-k+1 ; i++){
+            List<Integer> list = new ArrayList<>();
+            list.add(i);
+            backtrack(list,k,n);
+            ans.add(list);
+        }
+        return ans;
+    }
+    public static int totalSteps( int[] nums) {
+        int ans = 0;
+        int max = nums[0];
+        int tempMax = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if(nums[i] >= max){
+                max = nums[i];
+                ans = Math.max(ans, tempMax);
+                tempMax = 0;
+            }else{
+                tempMax++;
+            }
+        }
+        return Math.max(ans, tempMax);
+
+    }
+
+    public static void smallerNumbersThanCurrent(int[] nums) {
+        int[][] arr = new int[nums.length][3]; //0.val,1.pre,2.index;
+        for(int i= 0 ; i< nums.length ; i++){
+            arr[i][0] = nums[i];
+            arr[i][2] = i;
+        }
+        Arrays.sort(arr,(a1,a2) -> a1[0]-a2[0]);
+        for(int i = 1 ; i < nums.length ; i++){
+            if(arr[i][0] > arr[i-1][0])
+                arr[i][1] = i;
+            else
+                arr[i][1] = arr[i-1][1];
+        }
+        int[] ans = new int[nums.length];
+        for(int[] a : arr)
+            ans[a[2]] = a[1];
+        for (int[] a: arr)
+            System.out.println(Arrays.toString(a));
+        System.out.println(Arrays.toString(ans));
+
+    }
+    static List<Integer> sfsd (){
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        return list;
+    }
+    static List<Integer> st(){
+        Stack<Integer> stack = new Stack<>();
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        System.out.println(stack);
+
+        stack.pop();
+        System.out.println(stack);
+        return stack;
+    }
+    public static void main(String[] args) {
+        maximalRectangle(new int[][]{
+                {1,0,1,0,0},
+                {1,0,1,1,1},
+                {1,1,1,1,1},
+                {1,0,0,1,0}
+        });
+    }
+    public static void maximalRectangle(int[][] matrix) {
+        int[][]dp= new int[matrix.length+1][matrix[0].length+1];
+        for(int i = 1 ; i< dp.length;i++){
+
+            for(int j = 1 ; j < dp[0].length;j++){
+                int k = matrix[i-1][j-1];
+                dp[i][j] = (dp[i-1][j] + k)*k ;
+                System.out.print(dp[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
 }

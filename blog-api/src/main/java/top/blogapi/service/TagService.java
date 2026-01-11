@@ -1,6 +1,7 @@
 package top.blogapi.service;
 
 import com.github.pagehelper.PageInfo;
+import org.apache.ibatis.annotations.Param;
 import top.blogapi.dto.request.tag.TagQueryRequest;
 import top.blogapi.model.entity.Tag;
 
@@ -22,4 +23,6 @@ public interface TagService {
     void deleteTagById(Long tagId);
 
     void updateTag(String name, String color, Long id);
+
+    List<Tag> getTagListByBlogId(Long blogId);
 }

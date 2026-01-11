@@ -6,7 +6,7 @@
       <router-view/>
     </div>
 
-    <Footer :footer="footer"/>
+    <Footer :siteInfo="siteInfo" :badges="badges" :newBlogList="newBlogList" :hitokoto="hitokoto"/>
 
   </div>
 
@@ -15,14 +15,24 @@
 
 <script setup>
 import Nav from "@/components/index/Nav.vue";
-import {onMounted, ref} from "vue";
+import {getCurrentInstance, onMounted, ref, watch} from "vue";
 import Footer from "@/components/index/Footer.vue";
-import {getHitokoto, translateUrl} from "@/network/index.js";
+import {getHitokoto, getSite, translateUrl} from "@/network/index.js";
+import {useAppStore} from "@/store/index.js";
+import {useRoute} from "vue-router";
 
 
-const blogName = ref('Blog\'s thinhh0x1l')
+const route = useRoute()
+
+const siteInfo = ref({})
+const badges = ref([])
+const newBlogList= ref([])
+const hitokoto= ref({})
+
+const blogName = ref('Think\'s Blog')
+const siteT = ref({})
 const footer = ref({
-  mobileQRSrc: new URL('/src/assets/img/qrSimple.png', import.meta.url).href,
+  mobileQRSrc: new URL('/src/assets/img/qr.png', import.meta.url).href,
   newBlogList: [
     {
       href: '/',
@@ -48,7 +58,7 @@ const footer = ref({
       href: 'https://spring.io/projects/spring-boot/',
       title: 'Được cung cấp bởi Spring Boot',
       subject: 'Backend',
-      value: 'Spring Boot',
+      value: 'Spring Boot ',
       color: 'blue',
     },
     {
@@ -101,25 +111,55 @@ const getHitokotoData = async () => {
     const res = await getHitokoto()
     console.log(res)
     footer.value.hitokoto = res
-    const trans1 = await translateUrl(footer.value.hitokoto.hitokoto)
-    const trans2 =    await translateUrl(footer.value.hitokoto.from)
-    footer.value.hitokoto.hitokoto = trans1[0][0][0]
-    footer.value.hitokoto.from = trans2[0][0][0]
+    hitokoto.value = res
+    console.log(hitokoto.value)
+    const trans1 = await translateUrl(hitokoto.value.hitokoto)
+    const trans2 =    await translateUrl(hitokoto.value.from)
+    hitokoto.value.hitokoto = trans1[0][0][0]
+    hitokoto.value.from = trans2[0][0][0]
 
   } catch (error) {
     console.error('Lấy hitokoto thất bại:', error)
     // Cung cấp hitokoto mặc định nếu request thất bại
-    footer.value.hitokoto = {
+    hitokoto.value = {
       hitokoto: 'Hãy viết code bằng cả trái tim',
       from: 'Lập trình viên'
     }
   }
 
 }
+const store = useAppStore()
+
+
+const site = async () => {
+  try{
+    const res = await getSite();
+    if(res.code === 200){
+
+      badges.value = res.data.badges
+      siteInfo.value = res.data.siteInfo
+      newBlogList.value = res.data.newBlogList
+      store.saveIntroduction(res.data.introduction)
+      store.saveWebTitleSuffix(res.data.siteInfo.webTitleSuffix)
+      watch(
+          [()=>route.meta?.title , () => store.webTitleSuffix],
+          ([title,suffix]) => {
+            document.title = `${title ||''} | ${suffix}`;
+          },
+          { immediate : true}
+      )
+    }
+
+  }catch (e){
+    console.error(e)
+  }
+}
 
 // Lifecycle hook
 onMounted(() => {
+  site()
   getHitokotoData()
+
 })
 </script>
 

@@ -2,6 +2,7 @@ package top.blogapi.repository;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
+import top.blogapi.dto.internal.CommentTree;
 import top.blogapi.model.entity.Comment;
 
 import java.util.List;
@@ -38,6 +39,14 @@ public interface CommentRepository {
     })
     List<Comment> getListByPageAndParentCommentId(Integer page, Long parentCommentId, Long blogId);
 
+    @Select("select * from comment where parent_comment_id is null")
+    @Results({
+            @Result(property = "published" , column = "is_published"),
+            @Result(property = "adminComment" , column = "is_admin_comment"),
+            @Result(property = "notice" , column = "is_notice")
+    })
+    List<Comment> getParentComment();
+
     @Update("UPDATE comment SET is_published = #{published} WHERE id = #{id}")
     int updateCommentPublishedById(Long id, boolean published);
 
@@ -49,4 +58,31 @@ public interface CommentRepository {
 
     @Update("UPDATE comment SET nickname = #{nickname}, email = #{email}, content = #{content}, ip = #{ip} WHERE id =#{id}")
     int updateComment(Long id,String nickname, String email, String content, String ip);
+
+                @Select("""
+            
+                        with recursive comment_tree as (
+                select
+                    *,
+                    id as thread_root,
+                    0 as is_reply
+                from comment
+                where parent_comment_id is null
+                union all
+                select
+                    c.*,
+                    ct.thread_root,
+                    1 as is_reple
+                from comment c
+                inner join comment_tree ct
+                on  c.parent_comment_id = ct.id
+            )
+            select * from comment_tree
+        """)
+    @Results({
+            @Result(property = "published" , column = "is_published"),
+            @Result(property = "adminComment" , column = "is_admin_comment"),
+            @Result(property = "notice" , column = "is_notice")
+    })
+    List<CommentTree> commentTreeFlat();
 }

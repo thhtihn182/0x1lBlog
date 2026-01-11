@@ -1,4 +1,4 @@
-import axios from "axios";
+     import axios from "axios";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 
@@ -7,7 +7,7 @@ const request = axios.create({
     timeout: 10000,
 })
 
-// Request Interceptor
+
 request.interceptors.request.use(
     config => {
         NProgress.start()
@@ -19,13 +19,13 @@ request.interceptors.request.use(
     }
 )
 
-// Response Interceptor - SỬA LỖI: thêm error handling
+
 request.interceptors.response.use(
-    response => {  // SỬA: config → response
+    response => {
         NProgress.done()
-        return response.data  // SỬA: config.data → response.data
+        return response.data
     },
-    error => {  // THÊM: error handling
+    error => {
         NProgress.done()
         return Promise.reject(error)
     }

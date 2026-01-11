@@ -16,6 +16,7 @@ import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Tag;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
+import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.service.BlogService;
 import top.blogapi.model.vo.BlogIdAndTitle;
@@ -27,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 @Slf4j
+@Transactional
 public class BlogServiceImpl implements BlogService {
     BlogRepository blogRepository;
 
@@ -56,8 +58,18 @@ public class BlogServiceImpl implements BlogService {
 
     @Transactional
     @Override
-    public int deleteBlogById(Long id) {
-        return blogRepository.deleteBlogById(id);
+    public void deleteBlogById(Long id) {
+        try {
+            if(blogRepository.deleteBlogById(id) == 0)
+                throw BlogServiceException.builder()
+                        .blogNotFound(id.toString())
+                        .message("Id không tồn tại để xóa")
+                        .build();
+        }catch (DataAccessException e){
+            throw BlogServiceException.builder()
+                    .blogServerError("Lỗi máy chủ !!, xóa blog không thành công", e)
+                    .build();
+        }
     }
 
     @Transactional
@@ -135,6 +147,16 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List<BlogIdAndTitle> getIdAndTitleList() {
         return blogRepository.getIdAndTitleList();
+    }
+
+    @Override
+    public List<BlogInfo> getBlogInfoListByIsPublished() {
+        return blogRepository.getBlogInfoListByIsPublished();
+    }
+
+    @Override
+    public List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend() {
+        return blogRepository.getIdAndTitleListByIsPublishedAndIsRecommend();
     }
 
 }

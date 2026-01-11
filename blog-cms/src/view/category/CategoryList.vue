@@ -5,7 +5,7 @@
     <el-card  >
       <el-row :gutter="10" >
         <el-col :span="6">
-          <el-button type="primary" @click="addDialogVisible=true">
+          <el-button type="primary" @click="addDialogVisible=true" :icon="Plus" >
             Thêm thể loại
           </el-button>
 
@@ -63,7 +63,7 @@
 import { ref , reactive, onMounted} from "vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 import {getDataQuery, deleteCategoryById, createCategory, updateCategoryById} from "@/network/category.js";
-import { Edit, Delete } from "@element-plus/icons-vue";
+import {Edit, Delete, Plus} from "@element-plus/icons-vue";
 import { getCurrentInstance } from "vue";
 
 const { proxy } = getCurrentInstance()

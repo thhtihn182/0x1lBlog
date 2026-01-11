@@ -6,13 +6,14 @@ import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.vo.BlogIdAndTitle;
+import top.blogapi.model.vo.BlogInfo;
 
 import java.util.List;
 
 public interface BlogService {
     PageInfo<Blog> getListByTitleOrCategory(BlogQueryRequest blogQueryRequest);
 
-    int deleteBlogById(Long id);
+    void deleteBlogById(Long id);
 
     int deleteBlogTagByBlogId(Long id);
 
@@ -33,4 +34,8 @@ public interface BlogService {
     int countBlogByTagId(Long tagId);
 
     List<BlogIdAndTitle> getIdAndTitleList();
+
+    List<BlogInfo> getBlogInfoListByIsPublished();
+
+    List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend();
 }

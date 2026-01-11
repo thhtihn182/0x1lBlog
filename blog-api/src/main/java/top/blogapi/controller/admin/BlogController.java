@@ -13,7 +13,7 @@ import top.blogapi.service.BlogService;
 import top.blogapi.service.TagService;
 import top.blogapi.service.impl.orchestration.BlogOrchestrator;
 import top.blogapi.service.impl.orchestration.CategoryOrchestrator;
-import top.blogapi.util.Result;
+import top.blogapi.model.vo.Result;
 
 import java.util.HashMap;
 import java.util.List;
@@ -41,19 +41,11 @@ public class BlogController {
 
     @DeleteMapping("/blog/{id}")
     public Result<?> delete(@PathVariable Long id) {
-        try{
+
             int r1 = blogService.deleteBlogTagByBlogId(id);
             if(r1 != 1)
                 return Result.error("Lỗi không duy trì được bảng liên kết thẻ blog");
-            int r = blogService.deleteBlogById(id);
-            if(r != 1)
-                return Result.error("Không xóa Blog được");
-
-            return Result.ok("Xóa Blog thành công");
-        }catch (Exception e) {
-            e.printStackTrace();
-            return Result.error();
-        }
+            return Result.ok(blogOrchestrator.deleteBlogById(id));
     }
 
     @GetMapping("/categoryAndTag")

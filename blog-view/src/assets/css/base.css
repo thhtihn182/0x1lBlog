@@ -1,6 +1,7 @@
 html,
 body,
 #app {
+
   height: 100%;
   margin: 0;
   padding: 0;
@@ -9,6 +10,14 @@ body,
   background-size: cover;
   background-position: left top;
   background-repeat: no-repeat;
+}
+.rollText{
+  font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+::selection {
+  color:#ffffff !important;
+  background-color:#383838 !important;
+  text-shadow:none !important;
 }
 
 body::-webkit-scrollbar {
@@ -79,7 +88,7 @@ footer {
   padding-bottom: 0.2em !important;
 }
 
-.m-padded-tb-small {
+.m-padded-tb  -small {
   padding-top: 0.5em !important;
   padding-bottom: 0.5em !important;
 }
@@ -122,6 +131,22 @@ footer {
 
 .m-center {
   margin: auto !important;
+}
+
+.m-text-cover {
+  background: #d8eefa;
+  color: transparent;
+}
+
+.m-text-heimu {
+  background-color: #252525;
+  color: #252525;
+  text-shadow: none;
+  transition: color 0.3s;
+}
+
+.m-text-heimu:active, .m-text-heimu:hover {
+  color: #fff
 }
 
 .m-text-thin {

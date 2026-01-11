@@ -16,7 +16,10 @@ import top.blogapi.repository.CommentRepository;
 import top.blogapi.service.CommentService;
 import top.blogapi.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +28,21 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepository;
     @Override
+    @Transactional(readOnly = true)
     public List<Comment> getListByPageAndParentCommentId(Integer page, Long parentCommentId, Long blogId) {
         List<Comment> comments = commentRepository.getListByPageAndParentCommentId(page, parentCommentId, blogId);
+
         for (Comment c: comments) {
             c.setReplyComments(commentRepository.getListByPageAndParentCommentId(page, c.getId(), blogId));
         }
         return comments;
+    }
+
+    private List<Long> extractPostIds(List<Comment> comments) {
+        List<Long> commentIdList = new ArrayList<>();
+        for (Comment c: comments)
+            commentIdList.add(c.getId());
+        return commentIdList;
     }
     @Transactional
     @Override
@@ -92,6 +104,14 @@ public class CommentServiceImpl implements CommentService {
             getDataAccessException("Lỗi cập nhật Comment không thành công!!",e, request.getId());
         }
     }
+
+    @Override
+    public Map<Integer, Comment> getCommentMap() {
+        List<Comment> parentComments = commentRepository.getParentComment();
+
+        return Map.of();
+    }
+
 
 
     private void getDataAccessException(String msg, Throwable e, Long id){

@@ -63,7 +63,8 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
 
-                        .anyRequest().authenticated()
+                        .requestMatchers("/admin/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 //filter JWT tùy chỉnh
                 .addFilterBefore(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class)

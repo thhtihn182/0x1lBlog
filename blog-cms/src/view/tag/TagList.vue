@@ -5,7 +5,7 @@
     <el-card>
       <el-row :gutter="10">   <!-- :gutter = khoảng cách giữa các cột-->
         <el-col :span="6">   <!-- :span = độ rộng của cột -->
-          <el-button type="primary" @click="addDialogVisible=true">
+          <el-button type="primary" @click="addDialogVisible=true" :icon="Plus">
             Thêm Tag
           </el-button>
         </el-col>
@@ -161,7 +161,7 @@ import Breadcrumb from "@/components/Breadcrumb.vue";
 import { ref, reactive, onMounted } from "vue";
 import {createTag, deleteTagById, getData, updateTag} from "@/network/tag.js";
 import { getCurrentInstance } from "vue";
-import {Delete, Edit} from "@element-plus/icons-vue";
+import {Delete, Edit, Plus} from "@element-plus/icons-vue";
 
 const { proxy } = getCurrentInstance()
 

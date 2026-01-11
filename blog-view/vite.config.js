@@ -17,4 +17,8 @@ export default defineConfig({
       'store': fileURLToPath(new URL('./src/store', import.meta.url))
     },
   },
+  server: {
+    host: true,
+    port: 5174
+  }
 })

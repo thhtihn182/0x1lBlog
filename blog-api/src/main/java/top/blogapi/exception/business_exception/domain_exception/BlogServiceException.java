@@ -56,6 +56,14 @@ public class BlogServiceException extends DomainException {
                     .messageKey("blog.not_found", new Object[]{blogId} );
         }
 
+        public BlogServiceExceptionBuilder blogServerError(String msg, Throwable e, String ...operations){
+            return this.errorCode("BLOG_SERVER_ERROR")
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message(msg)
+                    .cause(e)
+                    .messageKey("blog.server_error", new Object[]{operations});
+        }
+
         public BlogServiceExceptionBuilder unauthorizedAccess(String blogId, Long userId) {
             return this.entityId(blogId)
                     .errorCode("BLOG_UNAUTHORIZED_ACCESS")

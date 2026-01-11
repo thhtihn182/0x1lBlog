@@ -4,6 +4,7 @@ import top.blogapi.dto.request.comment.CommentUpdateRequest;
 import top.blogapi.model.entity.Comment;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CommentService {
     List<Comment> getListByPageAndParentCommentId(Integer page, Long parentCommentId, Long blogId);
@@ -15,4 +16,6 @@ public interface CommentService {
     void deleteCommentById(Long id);
 
     void updateComment(CommentUpdateRequest request);
+
+    Map<Integer,Comment> getCommentMap();
 }

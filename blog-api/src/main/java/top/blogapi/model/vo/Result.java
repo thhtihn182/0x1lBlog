@@ -1,4 +1,4 @@
-package top.blogapi.util;
+package top.blogapi.model.vo;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

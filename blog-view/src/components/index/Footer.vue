@@ -4,13 +4,13 @@
       <div style="background: transparent">
         <div>
           <div style="text-align: left">
-            <h4 style="color: white; font-weight: 300">Xem trên điện thoại</h4>
+            <h4 style="color: white; font-weight: 300">{{ siteInfo.footerImgTitle }}</h4>
             <div>
               <Image
-                :src="footer.mobileQRSrc"
-                atl="QR Code điện thoại"
-                image-style="width: 100px"
-                preview
+
+                  atl="QR Code điện thoại"
+                  image-style="width: 100px"
+                  preview
               />
             </div>
           </div>
@@ -20,25 +20,25 @@
           <h4 style="color: white; font-weight: 300">Bài viết mới nhất</h4>
           <div>
             <a
-              v-for="(item,index) in footer.newBlogList"
-              :href="item.href"
-              :key="index"
-              class="m-padded-tb-small"
-              target="_blank"
-              style="color: rgba(255,255,255,0.8); display: block; padding: 0.5rem 0;">
+                v-for="(item,index) in newBlogList"
+                :href="item.id"
+                :key="item.id"
+                class="m-padded-tb-small"
+                target="_blank"
+                style="color: rgba(255,255,255,0.8); display: block; padding: 0.5rem 0;">
               {{item.title}}
             </a>
           </div>
         </div>
 
         <div>
-          <p class="m-opacity-mini">{{ footer.hitokoto.hitokoto}}</p>
+          <p class="m-opacity-mini">{{ hitokoto.hitokoto}}</p>
           <p
-            class="m-opacity-mini"
-            style="float: right"
-            v-if="footer.hitokoto.from"
+              class="m-opacity-mini"
+              style="float: right"
+              v-if="hitokoto.from"
           >
-            ——《{{ footer.hitokoto.from }}》
+            ——《{{ hitokoto.from }}》
           </p>
         </div>
       </div>
@@ -46,21 +46,16 @@
       <Divider/>
 
       <p class="m-opacity-tiny">
-        <span style="margin-right: 10px">{{ footer.copyright.time }}</span>
-        <a href="/" target="_blank" style="color:#ffe500">{{ footer.copyright.title }}</a>
-        <span style="margin: 0 15px">|</span>
-        <img src="@/assets/img/beian.png" alt="Biểu tượng bản quyền" class="beian-icon">
-        <a rel="external nofollow noopener" href="http://www.beian.miit.gov.cn/" target="_blank" style="color:#ffe500">
-          {{ footer.copyright.beianId }}
-        </a>
+        <span style="margin-right: 10px" v-if="siteInfo.copyright">{{ siteInfo.copyright.title }}</span>
+        <a href="/" style="color:#ffe500" v-if="siteInfo.copyright">{{ siteInfo.copyright.siteName }}</a>
       </p>
 
       <div class="github-badges">
         <a
-            v-for="(item, index) in footer.badges"
+            v-for="(item, index) in badges"
             :key="index"
             rel="external nofollow"
-            :href="item.href"
+            :href="item.url"
             target="_blank"
             :title="item.title"
             class="github-badge"
@@ -75,12 +70,29 @@
 
 
 <script setup>
-import { defineProps } from 'vue'
+import {defineProps, getCurrentInstance, onMounted} from 'vue'
+
+
+const { proxy } = getCurrentInstance()
 const props = defineProps({
-  footer: {
+  siteInfo: {
     type: Object,
-    required: false
+    required: true
+  },
+  badges: {
+    type: Array,
+    required: true
+  },
+  newBlogList: {
+    type: Array,
+    required: true
+  },
+  hitokoto: {
+    type: Object,
+    required: true
   }
+})
+onMounted(() => {
 })
 </script>
 
@@ -89,10 +101,4 @@ const props = defineProps({
   color: #fff;
 }
 
-.beian-icon {
-  width: 17px;
-  height: 17px;
-  margin-bottom: -4px;
-  margin-right: 5px;
-}
 </style>

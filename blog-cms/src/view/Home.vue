@@ -1,9 +1,9 @@
-<template>
+  <template>
   <el-container class="home-container">
     <!-- Header -->
     <el-header>
       <div class="header-left">
-        <span><img src="@/assets/img/logo.png" alt="Logo" height="60">
+        <span><img src="@/assets/img/logo.svg" alt="Logo" height="60">
            Hệ thống quản lý Blog</span>
       </div>
       <el-button type="info" @click="logout">Đăng xuất</el-button>
@@ -20,7 +20,7 @@
 
         <!-- Menu -->
         <el-menu
-          background-color="#333744"
+          background-color="#223344"
           text-color="#fff"
           active-text-color="#409eff"
           :default-openeds="defaultOpeneds"
@@ -37,7 +37,9 @@
             :index="String(item.id)"
           >
             <template #title>
-<!--              <el-button class="iconfont" size="small"  style="max-width: 8px" :icon="iconsObj[item.id]"></el-button>-->
+              <el-icon>
+                <component :is="iconsObj[item.id]"/>
+              </el-icon>
               <span>  {{ item.title }}</span>
             </template>
 
@@ -49,7 +51,9 @@
               @click="store.saveNavState(subItem.path)"
             >
               <template #title>
-<!--                <el-button style="max-width: 14px"  size="small"  :icon="iconsObj[subItem.id]"></el-button>-->
+                <el-icon>
+                  <component :is="iconsObj[subItem.id]" v-if="iconsObj[subItem.id]"/>
+                </el-icon>
                 <span>{{ subItem.title }}</span>
               </template>
 
@@ -83,7 +87,7 @@ const router = useRouter()
 
 //Reactive data
 const isCollapse = ref(false)
-const defaultOpeneds = ref(['1','2','3','4'])
+const defaultOpeneds = ref(['1','2','3'])
 
 const menuList = [
   {
@@ -98,39 +102,45 @@ const menuList = [
       },
       {
         id: 12,
-        title: 'Danh sách Blog',
+        title: 'Quản lý Blogs',
         children: [],
         path: '/blogs'
       },
       {
         id: 13,
-        title: 'Danh sách danh mục',
+        title: 'Quản lý thể loại',
         children: [],
         path: '/categories'
       },
       {
         id: 14,
-        title: 'Danh sách thẻ',
+        title: 'Quản lý Tags',
         children: [],
         path: '/tags'
+      },
+      {
+        id: 15,
+        title: 'Quản lý bình luận',
+        children: [],
+        path: '/comments'
       }
     ]
   },
   {
     id: 2,
-    title: 'Quản lý bình luận',
+    title: 'Quản lý hệ thống',
     children: [
       {
         id: 21,
-        title: 'Danh sách bình luận',
+        title: 'Quản lý Menus',
         children: [],
-        path: '/comments'
+        path: '/menus'
       },
       {
         id: 22,
-        title: 'Thùng rác',
+        title: 'Quản lý trang Web',
         children: [],
-        path: '/comments/trashes'
+        path: '/siteSettings'
       }
     ]
   },
@@ -149,21 +159,16 @@ const menuList = [
         title: 'Truy cập trực tuyến',
         children: [],
         path: '/latest'
-      }
-    ]
-  },
-  {
-    id: 4,
-    title: 'Giám sát hệ thống',
-    children: [
+      },
       {
-        id: 41,
+        id: 33,
         title: 'Nhật ký hệ thống',
         children: [],
         path: '/log'
       }
     ]
-  }
+  },
+
 ]
 
 import {
@@ -181,20 +186,21 @@ import {
   Document
 } from '@element-plus/icons-vue'
 
+import {defineAsyncComponent} from "vue";
 const iconsObj = {
-  '1': Menu,
-  '2': Tickets,
+  '1': defineAsyncComponent(()=> import('@/assets/css/icon/MenuIcon.vue')),
+  '2': Tools,
   '3': DataAnalysis,
-  '4': Tools,
-  '11': Edit,
-  '12': Tickets,
+  '11': defineAsyncComponent(()=> import('@/assets/css/icon/WriteIcon.vue')),
+  '12': 'el-icon-s-order',
   '13': Opportunity,
-  '14': Discount,
-  '21': DocumentCopy,
-  '22': Delete,
-  '31': TrendCharts,
+  '14': defineAsyncComponent(()=> import('@/assets/css/icon/TagIcon.vue')),
+  '15': defineAsyncComponent(()=> import('@/assets/css/icon/CommentIcon.vue')),
+  '21': Tickets,
+  '22': defineAsyncComponent(()=> import('@/assets/css/icon/WebMangeIcon.vue')),
+  '31': 'el-icon-s-marketing',
   '32': View,
-  '41': Document
+  '33': Document,
 }
 
 // Lifecycle
@@ -222,7 +228,7 @@ const toggleCollapse = () => {
 }
 
 .el-header{
-  background-color: #373d41;
+  background-color: #2e404c;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -237,7 +243,8 @@ const toggleCollapse = () => {
 }
 
 .el-aside{
-  background-color: #333744;
+
+  background-color: #353d78;
 }
 
 .el-aside .el-menu{
@@ -254,7 +261,7 @@ const toggleCollapse = () => {
 }
 
 .toggle-button {
-  background-color: #4a5064;
+  background-color: #4f6aaf;
   font-size: 20px;
   line-height: 40px;
   color: #ffffff;

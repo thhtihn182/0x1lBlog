@@ -2,9 +2,9 @@
   <div class="m-padded-tb-big">
     <div class="p-container">
       <!-- Thêm style inline override -->
-      <div style="display: flex; flex-direction: row; width: 100%;">
+      <div class="responsive-container">
 
-        <div style="flex: 0 0 25%;">
+        <div style="flex: 0 0 25%; margin-bottom: 10px">
           <Introduction/>
         </div>
 
@@ -34,6 +34,18 @@ import Introduction from "@/components/sidebar/Introduction.vue";
   border: 1px solid #41c5ff;
   min-height: 400px;
   padding: 20px;
+}
+.responsive-container {
+  display: flex;
+  flex-direction: column; /* Mặc định cho mobile */
+  width: 100%;
+}
+
+/* Khi màn hình >= 768px (tablet/desktop) */
+@media (min-width: 768px) {
+  .responsive-container {
+    flex-direction: row; /* Desktop */
+  }
 }
 </style>
 

@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Comment;
+import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.repository.CategoryRepository;
 import top.blogapi.repository.CommentRepository;
+import top.blogapi.service.impl.orchestration.SiteSettingOrchestrator;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -35,6 +37,8 @@ class BlogApiApplicationTests {
 	CommentRepository commentRepository;
 	@Autowired
 	CategoryRepository categoryRepository;
+	@Autowired
+	SiteSettingOrchestrator siteSettingOrchestrator;
 
 
 
@@ -47,6 +51,24 @@ class BlogApiApplicationTests {
 		System.out.println(blog);
 
 	}
+
+
+	@Test
+	void test9(){
+		System.out.println(commentRepository.commentTreeFlat().size());
+	}
+	@Test
+	void test8(){
+		System.out.println(blogRepository.getIdAndTitleListByIsPublishedAndIsRecommend());
+	}
+
+	@Test
+	void test7(){
+		List<BlogInfo> list = blogRepository.getBlogInfoListByIsPublished();
+		System.out.println(list);
+		System.out.println(list.getLast());
+	}
+
 	@Test
 	void test5(){
 		List<Comment> commentList = commentRepository.getListByPageAndParentCommentId(0,null,2L);

@@ -31,4 +31,10 @@ public interface TagRepository {
 
     @Update("UPDATE tag SET name = #{name}, color = #{color} WHERE id = #{id}")
     int updateTag(String name, String color, Long id);
+
+    @Select("SELECT t.id, t.name, t.color " +
+            "FROM blog_tag bt " +
+            "JOIN tag t ON bt.tag_id = t.id " +
+            "WHERE bt.blog_id = #{blogId}")
+    List<Tag> getTagListByBlogId(@Param("blogId") Long blogId);
 }

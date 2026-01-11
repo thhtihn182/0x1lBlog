@@ -9,7 +9,7 @@ import top.blogapi.dto.request.tag.CreateTagRequest;
 import top.blogapi.dto.request.tag.TagQueryRequest;
 import top.blogapi.dto.request.tag.UpdateTagRequest;
 import top.blogapi.service.impl.orchestration.TagOrchestrator;
-import top.blogapi.util.Result;
+import top.blogapi.model.vo.Result;
 
 @RestController
 @RequiredArgsConstructor
