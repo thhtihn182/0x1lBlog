@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.response.blog.BlogSummaryResponse;
 import top.blogapi.dto.response.category.CategoryResponse;
 import top.blogapi.dto.response._page.BlogListPageResponse;
+import top.blogapi.exception.business_exception.BusinessException;
 import top.blogapi.model.entity.*;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
@@ -35,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @Transactional
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -47,6 +50,8 @@ public class BlogOrchestrator {
 
     BlogMapper blogMapper;
     CategoryMapper categoryMapper;
+
+
 
     public BlogListPageResponse getListByTitleOrCategory(BlogQueryRequest blogQueryRequest) {
         validateBlogQuery(blogQueryRequest);
@@ -207,6 +212,20 @@ public class BlogOrchestrator {
             blogInfo.setDescription(MarkdownUtils.markdownToHtmlExtensions(blogInfo.getDescription()));
         });
         return blogInfos;
+    }
+
+    public void updateBlogTopById(Long blogId, Boolean top){
+        try{
+            blogService.updateBlogTopById(blogId, top);
+        }catch (BlogServiceException e){
+            log.error("Service error updating blog top: {}", blogId, e);
+            throw  BusinessException.builder()
+                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .cause(e)
+                    .message("Không thể cập nhật trạng thái top cho blog")
+                    .build();
+
+        }
     }
 
     public List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend(){

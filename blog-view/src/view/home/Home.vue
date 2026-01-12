@@ -8,7 +8,7 @@
           <Introduction/>
         </div>
 
-        <div style="flex: 0 0 75%;">
+        <div style="flex: 0 0 75%; padding-left: 1em; padding-right: 1em" >
           <BlogList/>
         </div>
 
@@ -19,7 +19,7 @@
 
 
 <script setup>
-import BlogList from "@/view/home/BlogList.vue";
+import BlogList from "@/components/blogList/BlogList.vue";
 import Introduction from "@/components/sidebar/Introduction.vue";
 </script>
 

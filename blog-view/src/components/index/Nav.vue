@@ -3,7 +3,7 @@
     <div style="max-width: 1200px; margin: 0 auto;">
       <div style="background: transparent; border: none;">
         <div>
-          <h2 class="m-blue" style=" margin: 0; padding: 0.5rem;">{{ blogName }}</h2>
+          <h2 class="m-blue rollText" style=" margin: 0; padding: 0.5rem;">{{ blogName }}</h2>
         </div>
         <div>
           <a href="#" :class="{'m-mobile-hide': mobileHide}" style="color: rgba(255,255,255,0.9);">

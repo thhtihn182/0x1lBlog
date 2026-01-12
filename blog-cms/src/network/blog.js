@@ -23,6 +23,17 @@ export function deleteBlogById(id){
     })
 }
 
+export function updateTop(id, top){
+    return axios({
+        url: 'blog/top',
+        method: 'PUT',
+        params:{
+            id,
+            top
+        }
+    })
+}
+
 export function getCategoryAndTag(){
     return axios({
         url: 'categoryAndTag',

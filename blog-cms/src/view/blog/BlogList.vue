@@ -47,6 +47,13 @@
         <el-table-column label="STT" type="index" width="55"></el-table-column>
         <el-table-column label="Tiêu đề" prop="title"></el-table-column>
         <el-table-column label="Danh mục" prop="categoryName" width="150"></el-table-column>
+        <el-table-column label="Top" width="80">
+          <template #default="scope">
+            <el-switch
+                v-model="scope.row.top"
+                @change="blogTopChanged(scope.row)"/>
+          </template>
+        </el-table-column>
         <el-table-column label="Đề xuất" width="80">
           <template #default="scope">
             <el-switch
@@ -100,8 +107,10 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter , useRoute } from 'vue-router'
 import { Search, Edit, Delete } from '@element-plus/icons-vue'
-import {getDataQuery, deleteBlogById ,getCategoryAndTag,
-  saveBlog, updateBlogRecommendById, updateBlogPublishedById}
+import {
+  getDataQuery, deleteBlogById, getCategoryAndTag,
+  saveBlog, updateBlogRecommendById, updateBlogPublishedById, updateTop
+}
   from '@/network/blog.js'
 import { formatDate } from '@/util/dateTimeFormatUtils.js'
 import  { getCurrentInstance } from 'vue'
@@ -110,7 +119,7 @@ import Breadcrumb from "@/components/Breadcrumb.vue";
 const { proxy } = getCurrentInstance()
 
 const router = useRouter()
-const route = useRoute()
+
 
 const queryInfo = reactive({
   query: '',
@@ -134,7 +143,7 @@ const getData = async () => {
     const res = await getDataQuery(queryInfo.query, queryInfo.categoryId, queryInfo.pageNum, queryInfo.pageSize)
 
     if (res.code === 200) {
-      console.log(res.msg)
+      console.log(res.data)
       blogList.value = res.data.blogs.list
       categoryList.value = res.data.categories
       total.value = res.data.blogs.total
@@ -155,7 +164,7 @@ const blogRecommendChanged = async (dataRow) => {
     else
       proxy.$msgError(res.msg)
   }catch (e){
-    proxy.$msgError(res.msg)
+    proxy.$msgError(e.response.data.msg)
   }
 }
 
@@ -167,10 +176,20 @@ const blogPublishedChanged = async (dataRow) => {
     else
       proxy.$msgError(res.msg)
   }catch (e){
-    proxy.$msgError(res.msg)
+    proxy.$msgError(e.response.data.msg)
   }
 }
-
+const blogTopChanged = async (dataRow) => {
+  try {
+    const res = await updateTop(dataRow.id,dataRow.top)
+    if(res.code === 200)
+      proxy.$msgSuccess(res.msg)
+    else
+      proxy.$msgError(res.msg)
+  }catch (e){
+    proxy.$msgError(e.response.data.msg)
+  }
+}
 const handleSizeChange = (newSize) => {
   queryInfo.pageSize = newSize
   getData()

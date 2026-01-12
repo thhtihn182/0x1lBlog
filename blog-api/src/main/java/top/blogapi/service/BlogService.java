@@ -31,6 +31,8 @@ public interface BlogService {
 
     int countBlogByCategoryId(Long categoryId);
 
+    void updateBlogTopById(Long blogId, Boolean top);
+
     int countBlogByTagId(Long tagId);
 
     List<BlogIdAndTitle> getIdAndTitleList();

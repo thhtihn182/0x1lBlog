@@ -61,7 +61,7 @@
             class="github-badge"
         >
           <span class="badge-subject">{{ item.subject }}</span>
-          <span class="badge-value" :class="'bg-'+item.color">{{ item.value }}</span>
+          <span class="badge-value" :style="{backgroundColor: item.color}">{{ item.value }}</span>
         </a>
       </div>
     </div>

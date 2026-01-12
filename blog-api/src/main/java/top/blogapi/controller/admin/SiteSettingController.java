@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.blogapi.model.entity.SiteSetting;
 import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.model.vo.Result;
 import top.blogapi.service.impl.orchestration.BlogOrchestrator;
@@ -28,9 +29,7 @@ public class SiteSettingController {
 
     @GetMapping("/site-settings")
     public Result<?> getSiteSetting() {
-        Map<String, Object> map = siteSettingOrchestrator.getSiteInfo();
-        List<BlogIdAndTitle> newBLogList = blogOrchestrator.getIdAndTitleListByIsPublishedAndIsRecommend();
-        map.put("newBlogList", newBLogList);
+        Map<String, List<SiteSetting>> map = siteSettingOrchestrator.getList();
         return Result.ok("Yêu cầu thành công !!", map);
     }
 

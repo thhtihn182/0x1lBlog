@@ -16,7 +16,7 @@ public interface BlogRepository {
     // Chỉ lấy thông tin cơ bản như trong XML
     @Select("<script> " +
             "SELECT b.id, b.title, b.is_recommend, b.is_published, b.create_time, b.update_time, "+
-            "   c.id as category_id, c.name as category_name " +
+            "   b.is_top, c.id as category_id, c.name as category_name " +
             "FROM blog b LEFT JOIN category c " +
             "ON b.category_id = c.id " +
             "<where> " +
@@ -28,7 +28,8 @@ public interface BlogRepository {
             "   </if> " +
             "</where> " +
             "</script>")
-    @Results({
+    @Results(id = "baseBlogMap", value = {
+            @Result(property = "top", column = "is_top"),
             @Result(property = "recommend", column = "is_recommend"), // vì boolean cần phải map
             @Result(property = "published", column = "is_published"), // vì boolean cần phải map
             @Result(property = "category.id", column = "category_id"), // vì Đối tượng lồng cần phải map
@@ -42,15 +43,18 @@ public interface BlogRepository {
     @Delete("DELETE FROM blog_tag WHERE blog_id = #{blogId} ")
     int deleteBlogTagByBlogId(@Param("blogId") Long blogId);
 
-    @Insert("INSERT INTO blog (title, content, description, flag, is_published, is_recommend, is_appreciation, " +
+    @Insert("INSERT INTO blog (title, content, description, flag, is_published, is_recommend, is_appreciation, is_top, " +
             "     is_share_statement, is_comment_enabled, create_time, update_time, views, words, read_time, category_id, user_id) " +
-            "VALUES (#{title}, #{content}, #{description}, #{flag}, #{published}, #{recommend}, #{appreciation}, " +
+            "VALUES (#{title}, #{content}, #{description}, #{flag}, #{published}, #{recommend}, #{appreciation}, #{top}, " +
             "     #{shareStatement}, #{commentEnabled}, #{createTime}, #{updateTime}, #{views}, #{words}, #{readTime}, #{category.id}, #{user.id}) ")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int saveBlog(Blog blog);
 
     @Insert("INSERT INTO blog_tag (blog_id, tag_id) VALUES (#{blogId},#{tagId})")
     int saveBlogTag(Long blogId, Long tagId);
+
+    @Update("UPDATE blog SET is_top = #{top} WHERE id = #{id}")
+    int updateBlogTopById(@Param("id") Long id, @Param("top") boolean top);
 
     @Update("UPDATE blog SET is_published = #{published} WHERE id = #{id}")
     int updateBlogPublishedById(@Param("id") Long id, @Param("published") boolean published);
@@ -60,7 +64,7 @@ public interface BlogRepository {
 
     @Select("SELECT b.id, b.title, b.content, b.description, b.flag, b.is_published, b.is_recommend, " +
             "b.is_appreciation, b.is_share_statement, b.is_comment_enabled, b.create_time, b.update_time, " +
-            "b.views, b.words, b.read_time, " +
+            "b.views, b.words, b.read_time, b.is_top, " +
             "c.id as category_id, c.name as category_name " +
             "FROM blog b " +
             "JOIN category c ON b.category_id = c.id " +
@@ -68,6 +72,7 @@ public interface BlogRepository {
     @Results({
             @Result(property = "published", column = "is_published"),
             @Result(property = "recommend", column = "is_recommend"),
+            @Result(property = "top", column = "is_top"),
             @Result(property = "appreciation", column = "is_appreciation"),
             @Result(property = "shareStatement", column = "is_share_statement"),
             @Result(property = "commentEnabled", column = "is_comment_enabled"),
@@ -88,6 +93,7 @@ public interface BlogRepository {
             "flag = #{flag}, " +
             "is_published = #{published}, " +
             "is_recommend = #{recommend}, " +
+            "is_top = #{top}, " +
             "is_appreciation = #{appreciation}, " +
             "is_share_statement = #{shareStatement}, " +
             "is_comment_enabled = #{commentEnabled}, " +
@@ -110,10 +116,11 @@ public interface BlogRepository {
     List<BlogIdAndTitle> getIdAndTitleList();
 
     @Select("SELECT b.id, b.title, b.description, b.create_time, b.views, b.words, b.read_time," +
-            "   c.id AS category_id, c.name AS category_name  " +
+            "   b.is_top, c.id AS category_id, c.name AS category_name  " +
             "FROM blog b LEFT JOIN category c ON b.category_id = c.id " +
             "WHERE b.is_published = TRUE")
     @Results({
+            @Result(property = "top", column = "is_top"),
             @Result(property = "category.id", column = "category_id"),
             @Result(property = "category.name", column = "category_name")
     })
@@ -123,4 +130,6 @@ public interface BlogRepository {
             "WHERE is_published = TRUE AND is_recommend = TRUE " +
             "ORDER BY create_time DESC ")
     List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend();
+
+
 }

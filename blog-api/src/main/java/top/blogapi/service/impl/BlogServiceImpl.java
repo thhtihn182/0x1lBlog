@@ -32,6 +32,7 @@ import java.util.List;
 public class BlogServiceImpl implements BlogService {
     BlogRepository blogRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public PageInfo<Blog> getListByTitleOrCategory(BlogQueryRequest blogQueryRequest) {
         try(Page<Object> page = PageHelper.startPage(
@@ -95,7 +96,7 @@ public class BlogServiceImpl implements BlogService {
         return blogRepository.updateBlog(blog);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Blog getBlogById(Long id) {
         Blog blog = blogRepository.getBlogById(id)
@@ -134,26 +135,43 @@ public class BlogServiceImpl implements BlogService {
                     .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public int countBlogByCategoryId(Long categoryId) {
         return blogRepository.countBlogByCategoryId(categoryId);
     }
 
+    @Transactional
+    @Override
+    public void updateBlogTopById(Long blogId, Boolean top) {
+        System.out.println(top);
+        int r =  blogRepository.updateBlogTopById(blogId, top);
+        System.out.println(r + " " + blogId + " " + top);
+        if(r != 1)
+            throw BlogServiceException.builder()
+                    .dataRetrievalFailed("updateBlogTopById")
+                    .build();
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public int countBlogByTagId(Long tagId) {
         return blogRepository.countBlogByTagId(tagId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BlogIdAndTitle> getIdAndTitleList() {
         return blogRepository.getIdAndTitleList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BlogInfo> getBlogInfoListByIsPublished() {
         return blogRepository.getBlogInfoListByIsPublished();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend() {
         return blogRepository.getIdAndTitleListByIsPublishedAndIsRecommend();

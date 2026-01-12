@@ -14,6 +14,7 @@ public class BlogSummaryResponse {
     String categoryName;
     LocalDateTime createTime;
     LocalDateTime updateTime;
-    boolean recommend;
-    boolean published;
+    Boolean recommend;
+    Boolean published;
+    Boolean top;
 }

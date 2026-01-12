@@ -4,7 +4,6 @@ package top.blogapi.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +27,12 @@ public class HomeController {
     @GetMapping("/blogs")
     public  Result blogs(@RequestParam(defaultValue = "1") Integer pageNum) {
         try {
-            String orderBy = "create_time desc";
-            PageHelper.startPage(pageNum, 5, orderBy);
+            String orderBy = "is_top desc, create_time desc";
+            int pageSize = 5;
+            PageHelper.startPage(pageNum, pageSize, orderBy);
             PageInfo<BlogInfo> pageInfo = new PageInfo<>(blogOrchestrator.getBlogInfoListByIsPublished());
             PageResult<BlogInfo> pageResult = new PageResult<>(pageInfo.getPages(),pageInfo.getList());
-            return Result.ok("请求成功", pageResult);
+            return Result.ok("Yêu cầu thành công", pageResult);
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error();

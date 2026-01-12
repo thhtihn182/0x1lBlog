@@ -239,10 +239,11 @@ footer {
   font-size: 13px;
   background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
   background-size: 400%;
-  width: 7em;
+  width: 8em;
   height: 3em;
   line-height: 38px;
   text-align: center;
+  align-items: center;
   color: #fff;
   text-transform: capitalize;
   border-radius: 50px;
@@ -270,5 +271,80 @@ footer {
 @keyframes sun {
   100% {
     background-position: -400% 0;
+  }
+}
+
+/* Grid System giống Semantic UI */
+.my-grid {
+  display: block;
+  margin-top: -1rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.my-grid::after {
+  content: ' ';
+  display: block;
+  clear: both;
+  height: 0;
+}
+
+/* Column trong grid */
+.my-grid > .my-column:not(.my-row),
+.my-grid > .my-row > .my-column {
+  position: relative;
+  display: inline-block;
+  width: 6.25%; /* 1/16 width */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  vertical-align: top;
+  float: left;
+  box-sizing: border-box;
+}
+
+/* Row trong grid */
+.my-grid > .my-row {
+  display: block;
+  margin-top: 1rem;
+  margin-left: -1rem;
+  margin-right: -1rem;
+}
+
+.my-grid > .my-row::after {
+  content: ' ';
+  display: block;
+  clear: both;
+  height: 0;
+}
+
+/* Column widths */
+.my-column.my-one-wide { width: 6.25%; }      /* 1/16 */
+.my-column.my-two-wide { width: 12.5%; }      /* 2/16 */
+.my-column.my-three-wide { width: 18.75%; }   /* 3/16 */
+.my-column.my-four-wide { width: 25%; }       /* 4/16 */
+.my-column.my-five-wide { width: 31.25%; }    /* 5/16 */
+.my-column.my-six-wide { width: 37.5%; }      /* 6/16 */
+.my-column.my-seven-wide { width: 43.75%; }   /* 7/16 */
+.my-column.my-eight-wide { width: 50%; }      /* 8/16 */
+.my-column.my-nine-wide { width: 56.25%; }    /* 9/16 */
+.my-column.my-ten-wide { width: 62.5%; }      /* 10/16 */
+.my-column.my-eleven-wide { width: 68.75%; }  /* 11/16 */
+.my-column.my-twelve-wide { width: 75%; }     /* 12/16 */
+.my-column.my-thirteen-wide { width: 81.25%; } /* 13/16 */
+.my-column.my-fourteen-wide { width: 87.5%; }  /* 14/16 */
+.my-column.my-fifteen-wide { width: 93.75%; }  /* 15/16 */
+.my-column.my-sixteen-wide { width: 100%; }    /* 16/16 */
+
+/* Đặc biệt cho col-12 (75% width - 12/16) */
+.my-column.my-col-12 { width: 75%; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-grid > .my-column:not(.my-row),
+  .my-grid > .my-row > .my-column {
+    width: 100%;
+    float: none;
+    display: block;
+    margin-bottom: 1rem;
   }
 }

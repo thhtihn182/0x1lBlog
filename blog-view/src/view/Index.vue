@@ -15,12 +15,12 @@
 
 <script setup>
 import Nav from "@/components/index/Nav.vue";
-import {getCurrentInstance, onMounted, ref, watch} from "vue";
+import { onMounted, ref, watch} from "vue";
 import Footer from "@/components/index/Footer.vue";
 import {getHitokoto, getSite, translateUrl} from "@/network/index.js";
 import {useAppStore} from "@/store/index.js";
 import {useRoute} from "vue-router";
-
+import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
 
 const route = useRoute()
 
@@ -110,7 +110,6 @@ const getHitokotoData = async () => {
   try {
     const res = await getHitokoto()
     console.log(res)
-    footer.value.hitokoto = res
     hitokoto.value = res
     console.log(hitokoto.value)
     const trans1 = await translateUrl(hitokoto.value.hitokoto)
@@ -120,7 +119,6 @@ const getHitokotoData = async () => {
 
   } catch (error) {
     console.error('Lấy hitokoto thất bại:', error)
-    // Cung cấp hitokoto mặc định nếu request thất bại
     hitokoto.value = {
       hitokoto: 'Hãy viết code bằng cả trái tim',
       from: 'Lập trình viên'
@@ -135,10 +133,10 @@ const site = async () => {
   try{
     const res = await getSite();
     if(res.code === 200){
-
       badges.value = res.data.badges
       siteInfo.value = res.data.siteInfo
       newBlogList.value = res.data.newBlogList
+      blogName.value = res.data.siteInfo.blogName ||  'Thinh0x1l\''
       store.saveIntroduction(res.data.introduction)
       store.saveWebTitleSuffix(res.data.siteInfo.webTitleSuffix)
       watch(
@@ -149,14 +147,32 @@ const site = async () => {
           { immediate : true}
       )
     }
-
+    console.log(res.data)
   }catch (e){
     console.error(e)
   }
 }
+const toast = useToast()
 
 // Lifecycle hook
 onMounted(() => {
+  // toast.success('Đăng nhập thành công!')
+  // toast.error('Đăng nhập thành công!')
+  // toast.warn('Đăng nhập thành công!')
+  // toast.info('Đăng nhập thành công!')
+  // toast.showLoading()
+  // toast.confirm()
+  // const showConfirm = async () => {
+  //   const confirmed = await toast.confirm({
+  //     message: 'Bạn có chắc muốn xóa?',
+  //     header: 'Xác nhận xóa'
+  //   })
+  //
+  //   if (confirmed) {
+  //     toast.success('Đã xóa thành công')
+  //   }
+  // }
+  // showConfirm()
   site()
   getHitokotoData()
 

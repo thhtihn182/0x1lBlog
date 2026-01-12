@@ -488,14 +488,42 @@ public class MD5Utils {
         System.out.println(stack);
         return stack;
     }
-    public static void main(String[] args) {
-        maximalRectangle(new int[][]{
-                {1,0,1,0,0},
-                {1,0,1,1,1},
-                {1,1,1,1,1},
-                {1,0,0,1,0}
-        });
+
+
+    public static void hello() throws InterruptedException {
+        String text = "hello world";
+        int length = text.length();
+
+        // Mảng lưu màu hiện tại của mỗi ký tự
+        int[] currentColors = new int[length];
+
+        // Khởi tạo màu ngẫu nhiên cho mỗi ký tự
+        for (int i = 0; i < length; i++) {
+            currentColors[i] = 31 + (int)(Math.random() * 7);
+        }
+
+        System.out.print("\033[?25l"); // Ẩn con trỏ
+
+        while (true) {
+            // Di chuyển con trỏ về đầu dòng
+            System.out.print("\r");
+
+            // In từng ký tự với màu của nó
+            for (int i = 0; i < length; i++) {
+                // Thay đổi màu ngẫu nhiên cho ký tự này
+                if (Math.random() > 0.7) { // 30% cơ hội đổi màu
+                    currentColors[i] = 31 + (int)(Math.random() * 7);
+                }
+
+                // In ký tự với màu hiện tại
+                System.out.print("\u001B[" + currentColors[i] + "m" + text.charAt(i));
+            }
+
+            System.out.print("\u001B[0m"); // Reset
+            Thread.sleep(200); // Tốc độ thay đổi
+        }
     }
+
     public static void maximalRectangle(int[][] matrix) {
         int[][]dp= new int[matrix.length+1][matrix[0].length+1];
         for(int i = 1 ; i< dp.length;i++){
@@ -508,5 +536,7 @@ public class MD5Utils {
             System.out.println();
         }
     }
-
+    public static void main(String[] args) throws InterruptedException {
+        hello();
+    }
 }

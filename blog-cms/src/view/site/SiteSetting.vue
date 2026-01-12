@@ -51,23 +51,23 @@
 
           <!-- Danh sách huy hiệu -->
           <div v-for="badge in typeMap.type2" :key="badge.id" class="badge-item">
-            <el-form :inline="true" :model="badge.value">
+            <el-form :inline="true" :model="badge">
               <el-form-item label="Tiêu đề">
-                <el-input v-model="badge.title" placeholder="Nhập tiêu đề" />
+                <el-input v-model="badge.value.title" placeholder="Nhập tiêu đề" />
               </el-form-item>
               <el-form-item label="URL">
-                <el-input v-model="badge.url" placeholder="Nhập URL" />
+                <el-input v-model="badge.value.url" placeholder="Nhập URL" />
               </el-form-item>
               <el-form-item label="Chủ đề">
-                <el-input v-model="badge.subject" placeholder="Nhập chủ đề" />
+                <el-input v-model="badge.value.subject" placeholder="Nhập chủ đề" />
               </el-form-item>
               <el-form-item label="Giá trị">
-                <el-input v-model="badge.value" placeholder="Nhập giá trị" />
+                <el-input v-model="badge.value.value" placeholder="Nhập giá trị" />
               </el-form-item>
               <el-form-item label="Màu sắc">
-                <el-color-picker v-model="badge.color" show-alpha />
+                <el-color-picker v-model="badge.value.color" show-alpha />
                 <el-input
-                    v-model="badge.color"
+                    v-model="badge.value.color"
                     placeholder="Nhập mã màu"
                     style="margin-left: 10px; width: 120px"
                 />
@@ -115,20 +115,16 @@ const typeMap = ref({
 const getList = async () => {
   try {
     const res = await getSiteSettingList()
-
     if (res.code === 200) {
-      typeMap.value.type2 = res.data.badges
-      console.log(typeMap.value.type2)
-      // Parse giá trị JSON cho type2
-      // if (res.data.type2) {
-      //   typeMap.value.type2 = res.data.type2.map(item => ({
-      //     ...item,
-      //     value: typeof item.value === 'string'
-      //         ? JSON.parse(item.value)
-      //         : item.value
-      //   }))
-      // }
-      console.log(res.data)
+      res.data.type2.forEach(item => {
+        try {
+          if (typeof item.value === 'string')
+            item.value = JSON.parse(item.value)
+        } catch (error) {
+          item.value = {}
+        }
+      })
+      typeMap.value = res.data
       ElMessage.success(res.msg || 'Tải dữ liệu thành công')
     } else {
       ElMessage.error(res.msg || 'Tải dữ liệu thất bại')

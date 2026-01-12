@@ -23,6 +23,7 @@ BlogInfo {
     Integer views;          // Số lần xem
     Integer words;          // Số từ trong bài viết
     Integer readTime;       // Thời gian đọc (phút)
+    Boolean top;
     Category category;      // Danh mục bài viết
     List<Tag> tags = new ArrayList<>();  // Thẻ (tag) bài viết
 }

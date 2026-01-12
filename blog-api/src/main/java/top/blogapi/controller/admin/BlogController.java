@@ -3,6 +3,7 @@ package top.blogapi.controller.admin;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
@@ -30,7 +32,7 @@ public class BlogController {
     BlogOrchestrator blogOrchestrator;
     @GetMapping("/blogs")
     public Result<?> blogs(@ModelAttribute BlogQueryRequest blogQueryRequest) {
-        System.out.println(blogQueryRequest);
+        log.info("[/blogs] request {}", blogQueryRequest);
         return Result.ok("Yêu cầu thành công",blogOrchestrator.getListByTitleOrCategory(blogQueryRequest));
     }
 
@@ -46,6 +48,12 @@ public class BlogController {
             if(r1 != 1)
                 return Result.error("Lỗi không duy trì được bảng liên kết thẻ blog");
             return Result.ok(blogOrchestrator.deleteBlogById(id));
+    }
+
+    @PutMapping("/blog/top")
+    public Result<?> updateTop(@RequestParam Long id, @RequestParam Boolean top) {
+        blogOrchestrator.updateBlogTopById(id, top);
+        return Result.ok("Cập nhật ghim blog thành công !!");
     }
 
     @GetMapping("/categoryAndTag")

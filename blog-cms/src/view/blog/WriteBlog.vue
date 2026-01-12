@@ -162,7 +162,9 @@
           <el-switch v-model="form.recommend" active-text="Đề xuất " />
           <el-switch v-model="form.commentEnabled" active-text="Bình luận " />
         </el-form-item>
-
+        <el-form-item>
+          <el-switch v-model="form.top" active-text="Đã ghim"/>
+        </el-form-item>
         <el-form-item style="text-align: right;">
           <el-button type="info" @click="submit(false)">Lưu bản nháp</el-button>
           <el-button type="primary" @click="submit(true)">Đăng bài</el-button>
@@ -179,7 +181,7 @@ import Image from '@tiptap/extension-image'
 import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter , useRoute} from 'vue-router'
 import { getCategoryAndTag, saveBlog , getBlogById , updateBlog} from '@/network/blog'
-import { getCurrentInstance} from "vue";
+import { getCurrentInstance } from "vue";
 import Breadcrumb from "@/components/Breadcrumb.vue";
 
 const { proxy } = getCurrentInstance()
@@ -204,6 +206,7 @@ const form = reactive({
   words: null,
   shareStatement: false,
   appreciation: false,
+  top: false,
   recommend: false,
   commentEnabled: false,
   published: false
@@ -212,14 +215,12 @@ const form = reactive({
 // Watch cho cả content và description
 watch(() => form.content, (newContent) => {
   if (editor.value && newContent !== editor.value.getHTML()) {
-    console.log('🔄 Updating content editor with new content')
     editor.value.commands.setContent(newContent, false)
   }
 })
 
 watch(() => form.description, (newDescription) => {
   if (descriptionEditor.value && newDescription !== descriptionEditor.value.getHTML()) {
-    console.log('🔄 Updating description editor with new content')
     descriptionEditor.value.commands.setContent(newDescription, false)
   }
 })

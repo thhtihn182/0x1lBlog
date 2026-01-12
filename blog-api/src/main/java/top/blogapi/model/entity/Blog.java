@@ -19,11 +19,12 @@ public class Blog {
     String content; // Nội dung bài viết
     String description; // Mô tả
     String flag; // Loại bài viết (nguyên tác, chuyển tải, dịch thuật)
-    boolean published; // Đã xuất bản hay bản nháp
-    boolean recommend; // Bật/tắt đề xuất
-    boolean appreciation; // Bật/tắt chức năng ủng hộ (donate)
-    boolean shareStatement; // Bật/tắt tuyên bố bản quyền
-    boolean commentEnabled; // Bật/tắt bình luận
+    Boolean published; // Đã xuất bản hay bản nháp
+    Boolean recommend; // Bật/tắt đề xuất
+    Boolean appreciation; // Bật/tắt chức năng ủng hộ (donate)
+    Boolean shareStatement; // Bật/tắt tuyên bố bản quyền
+    Boolean commentEnabled; // Bật/tắt bình luận
+    Boolean top; // Ghim blog
     LocalDateTime createTime; // Thời gian tạo
     LocalDateTime updateTime; // Thời gian cập nhật
     Integer views; // Lượt xem
