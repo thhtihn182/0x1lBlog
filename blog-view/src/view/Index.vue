@@ -3,7 +3,21 @@
     <Nav :blogName="blogName"/>
 
     <div class="main">
-      <router-view/>
+      <div class="m-padded-tb-big">
+        <div class="p-container">
+          <div class="flex flex-row flex-wrap">
+            <!-- Nội dung chính - 12 cột -->
+            <div class="col-12 md:col-9 lg:col-8 xl:col-9">
+              <router-view/>
+            </div>
+
+            <!-- Sidebar - 4 cột -->
+            <div class="col-12 md:col-3 lg:col-4 xl:col-3">
+              <Introduction/>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <Footer :siteInfo="siteInfo" :badges="badges" :newBlogList="newBlogList" :hitokoto="hitokoto"/>
@@ -21,6 +35,7 @@ import {getHitokoto, getSite, translateUrl} from "@/network/index.js";
 import {useAppStore} from "@/store/index.js";
 import {useRoute} from "vue-router";
 import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
+import Introduction from "@/components/sidebar/Introduction.vue";
 
 const route = useRoute()
 
@@ -156,23 +171,6 @@ const toast = useToast()
 
 // Lifecycle hook
 onMounted(() => {
-  // toast.success('Đăng nhập thành công!')
-  // toast.error('Đăng nhập thành công!')
-  // toast.warn('Đăng nhập thành công!')
-  // toast.info('Đăng nhập thành công!')
-  // toast.showLoading()
-  // toast.confirm()
-  // const showConfirm = async () => {
-  //   const confirmed = await toast.confirm({
-  //     message: 'Bạn có chắc muốn xóa?',
-  //     header: 'Xác nhận xóa'
-  //   })
-  //
-  //   if (confirmed) {
-  //     toast.success('Đã xóa thành công')
-  //   }
-  // }
-  // showConfirm()
   site()
   getHitokotoData()
 
@@ -189,5 +187,43 @@ onMounted(() => {
 .main {
   opacity: 0.9;
   flex: 1;
+}
+.p-container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Responsive breakpoints */
+@media (min-width: 576px) {
+  .p-container {
+    max-width: 540px;
+  }
+}
+
+@media (min-width: 768px) {
+  .p-container {
+    max-width: 720px;
+  }
+}
+
+@media (min-width: 992px) {
+  .p-container {
+    max-width: 960px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .p-container {
+    max-width: 1140px;
+  }
+}
+
+@media (min-width: 1400px) {
+  .p-container {
+    max-width: 1320px;
+  }
 }
 </style>
