@@ -10,9 +10,9 @@ const pinia = createPinia()
 import ElementPlus, {ElMessage} from 'element-plus'
 import 'element-plus/dist/index.css'
 
-import 'primeicons/primeicons.css'
 
 import './util/dateTimeFormatUtils.js'
+import PrimePluginVue from "@/plugins/primevueConfig/primePluginVue.js";
 
 const app = createApp(App)
 
@@ -20,6 +20,7 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.use(ElementPlus)
+app.use(PrimePluginVue)
 
 const showMessage = (type,msg) =>{
     try{

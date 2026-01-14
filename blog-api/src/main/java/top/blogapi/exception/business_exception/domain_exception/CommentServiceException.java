@@ -44,7 +44,7 @@ public class CommentServiceException extends DomainException {
 
         @Override
         protected CommentServiceExceptionBuilder self() {
-            return null;
+            return this;
         }
 
         @Override

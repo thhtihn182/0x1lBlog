@@ -24,11 +24,12 @@ public class GlobalExceptionHandler {
                 .errorCode(ex.getErrorCode())
                 .domain(ex.getDomain())
                 .path(request.getRequest().getRequestURI())
+                .httpMethod(request.getHttpMethod().name())
                 .context(ex.getContext())
                 .timestamp(LocalDateTime.now())
                 .entityId(ex.getEntityId())
                 .msg(ex.getMessage())
-                .cause(ex.getMsgCause())
+                .cause(ex.getCause().getMessage())
                 .build();
         return ResponseEntity.status(ex.getHttpStatus()).body(error);
     }

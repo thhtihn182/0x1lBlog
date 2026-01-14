@@ -9,10 +9,12 @@
  import BlogItem from "@/components/blogList/BlogItem.vue";
  import Pagination from "@/components/blogList/Pagination.vue";
  import {reactive, onMounted} from "vue";
+ import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
 
  const getBlogList = (val) => {
    console.log('getBlogList '+ val)
  }
+ const toast = useToast()
  onMounted(() => {
    getBlogList(2)
  })

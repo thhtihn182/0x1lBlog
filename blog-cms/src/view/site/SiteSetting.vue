@@ -4,42 +4,61 @@
     <Breadcrumb parent-title="Quản lý hệ thống" />
 
     <el-card>
-      <el-row :gutter="20">
+        <el-row :gutter="24">
         <!-- Cài đặt cơ bản -->
-        <el-col :span="12">
-          <el-card>
-            <template #header>
-              <span>Cài đặt cơ bản</span>
-            </template>
-            <el-form label-position="right" label-width="100px">
-              <el-form-item
-                  :label="item.nameVn"
-                  v-for="item in typeMap.type1"
-                  :key="item.id"
-              >
-                <el-input v-model="item.value" />
-              </el-form-item>
-            </el-form>
-          </el-card>
-        </el-col>
+          <el-col :span="12">
+            <el-card>
+              <template #header>
+                <div style="justify-content: space-between;display: flex">
+                  <span>Cài đặt cơ bản</span>
+                  <el-switch  v-model="e1"></el-switch>
+                </div>
+              </template>
+              <el-form label-position="right" label-width="100px">
+                <el-form-item
+                    :label="item.nameVn"
+                    v-for="item in typeMap.type1"
+                    :key="item.id"
+                >
+                  <el-input :type="e1?'textarea':'text'" v-model="item.value" />
+                </el-form-item>
+              </el-form>
+            </el-card>
+          </el-col>
 
         <!-- Thông tin thẻ cá nhân -->
-        <el-col :span="12">
-          <el-card>
-            <template #header>
-              <span>Thông tin thẻ cá nhân</span>
-            </template>
-            <el-form label-position="right" label-width="100px">
-              <el-form-item
-                  :label="item.nameVn"
-                  v-for="item in typeMap.type3"
-                  :key="item.id"
-              >
-                <el-input v-model="item.value" />
-              </el-form-item>
-            </el-form>
-          </el-card>
-        </el-col>
+          <el-col :span="12">
+            <el-card>
+              <template #header>
+                <div style="justify-content: space-between;display: flex">
+                  <span>Thông tin thẻ cá nhân</span>
+                  <el-switch v-model="e2"></el-switch>
+                </div>
+              </template>
+              <el-form label-position="right" label-width="100px">
+                <el-form-item
+                    :label="item.nameVn"
+                    v-for="item in typeMap.type3"
+                    :key="item.id"
+                >
+                  <div v-if="item.nameEn === 'favorite'">
+                    <el-col  >
+                      <el-input :type="e2?'textarea':'text'" v-model="item.value" />
+                    </el-col>
+                    <el-col >
+                      <el-button type="danger" :icon="Delete" @click="deleteFavorite(item)">Xóa</el-button>
+                    </el-col>
+                  </div>
+                  <div v-else>
+                    <el-col>
+                      <el-input v-model="item.value"></el-input>
+                    </el-col>
+                  </div>
+                </el-form-item>
+                <el-button type="primary" :icon="Plus" @click="addFavorite">Thêm đam mê</el-button>
+              </el-form>
+            </el-card>
+          </el-col>
       </el-row>
 
       <!-- Phần huy hiệu chân trang -->
@@ -73,7 +92,7 @@
                 />
               </el-form-item>
               <el-form-item>
-                <el-button type="danger" :icon="Delete" @click="removeBadge(badge.id)">
+                <el-button type="danger" :icon="Delete" @click="deleteBadge(badge)">
                   Xóa
                 </el-button>
               </el-form-item>
@@ -89,7 +108,7 @@
 
       <!-- Nút lưu -->
       <div class="save-button-container">
-        <el-button type="primary" :icon="Check" >
+        <el-button type="primary" :icon="Check"  @click="submit" >
           Lưu cài đặt
         </el-button>
       </div>
@@ -99,22 +118,27 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
+import { cloneDeep } from 'lodash-es'
 import { Delete, Plus, Check } from '@element-plus/icons-vue'
 import Breadcrumb from "@/components/Breadcrumb.vue"
-import { getSiteSettingList,  } from "@/network/siteSetting"
+import {getSiteSettingData, update,} from "@/network/siteSetting"
+import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
+
+const toast = useToast()
 
 // Dữ liệu
+const deleteIds = ref([]);
 const typeMap = ref({
   type1: [], // Cài đặt cơ bản
   type2: [], // Huy hiệu chân trang
   type3: []  // Thông tin thẻ cá nhân
-})
-
+});
+const e1 = ref(false)
+const e2 = ref(false)
 // Hàm xử lý
 const getList = async () => {
   try {
-    const res = await getSiteSettingList()
+    const res = await getSiteSettingData()
     if (res.code === 200) {
       res.data.type2.forEach(item => {
         try {
@@ -125,69 +149,114 @@ const getList = async () => {
         }
       })
       typeMap.value = res.data
-      ElMessage.success(res.msg || 'Tải dữ liệu thành công')
+      toast.success(res.msg || 'Tải dữ liệu thành công')
     } else {
-      ElMessage.error(res.msg || 'Tải dữ liệu thất bại')
+      toast.info(res.msg || 'Tải dữ liệu thất bại')
     }
   } catch (error) {
     console.error('Lỗi khi tải dữ liệu:', error)
-    ElMessage.error('Yêu cầu thất bại')
+    toast.error(error)
   }
 }
 
-const addBadge = () => {
-  if (!typeMap.value.type2) {
-    typeMap.value.type2 = []
-  }
 
-  const newBadge = {
-    id: Date.now(), // ID tạm thời
+
+const addBadge = () => {
+  typeMap.value.type2.push({
+    key: Date.now(),
+    nameEn: "badge",
+    nameVn: "Huy hiệu",
+    type: 2,
     value: {
+      color: '#409EFF',
+      subject: '',
       title: '',
       url: '',
-      subject: '',
-      value: '',
-      color: '#409EFF'
+      value: ''
     }
-  }
+  })
+  toast.info('Đã thêm huy hiệu mới')
+}
 
-  typeMap.value.type2.push(newBadge)
-  ElMessage.info('Đã thêm huy hiệu mới')
+const addFavorite = () => {
+  typeMap.value.type3.push({
+    key: Date.now(),
+    nameEn: 'favorite',
+    nameVn: 'Đam mê',
+    type: 3,
+    value: "{\"title\":\"---\",\"content\":\"---\"}",
+  })
+}
+
+const deleteFavorite = (favorite) => {
+  let arr = typeMap.value.type3
+  if(favorite.id){
+    deleteIds.value.push(favorite.id);
+    for(let i = 0 ; i < arr.length ; i++)
+      if(arr[i].id === favorite.id){
+        arr.splice(i,1);
+        break;
+      }
+    console.log(deleteIds.value)
+  }else{
+    for(let i = 0 ; i < arr.length ; i++)
+      if(arr[i].key === favorite.key){
+        arr.splice(i,1);
+        break;
+      }
+  }
+}
+
+const deleteBadge = (badge) => {
+  let arr = typeMap.value.type2;
+  if(badge.id){
+    deleteIds.value.push(badge.id)
+    for(let i = 0; i < arr.length;i++)
+      if(arr[i].id === badge.id){
+        arr.splice(i,1);
+        break;
+      }
+    console.log(deleteIds.value)
+  }else {
+    for(let i = 0; i < arr.length;i++)
+      if(arr[i].key === badge.key){
+        arr.splice(i,1);
+        break;
+      }
+  }
+}
+
+const submit = async () => {
+  const result = cloneDeep(typeMap.value)
+  result.type2.forEach(item => item.value = JSON.stringify(item.value))
+  let updateArr = []
+  updateArr.push(...result.type1)
+  updateArr.push(...result.type2)
+  updateArr.push(...result.type3)
+  console.log(updateArr)
+  try{
+    const res = await update(updateArr, deleteIds.value);
+    if(res.code === 200){
+      deleteIds.value = []
+      await getList()
+      toast.success(res.msg)
+    }else
+      toast.info(res.msg)
+  }catch (e){
+    console.log(e.response.data)
+    toast.error(e.response.data.msg)
+  }
 }
 
 const removeBadge = (id) => {
   const index = typeMap.value.type2.findIndex(item => item.id === id)
   if (index !== -1) {
     typeMap.value.type2.splice(index, 1)
-    ElMessage.success('Đã xóa huy hiệu')
+    toast.success('Đã xóa huy hiệu')
   }
 }
 
-// const saveSettings = async () => {
-//   try {
-//     // Chuẩn bị dữ liệu để gửi
-//     const dataToSend = {
-//       ...typeMap.value,
-//       type2: typeMap.value.type2?.map(item => ({
-//         ...item,
-//         value: JSON.stringify(item.value)
-//       })) || []
-//     }
-//
-//     const res = await updateSiteSettings(dataToSend)
-//
-//     if (res.code === 200) {
-//       ElMessage.success(res.msg || 'Lưu cài đặt thành công')
-//       // Refresh dữ liệu sau khi lưu
-//       await getList()
-//     } else {
-//       ElMessage.error(res.msg || 'Lưu cài đặt thất bại')
-//     }
-//   } catch (error) {
-//     console.error('Lỗi khi lưu:', error)
-//     ElMessage.error('Lưu thất bại')
-//   }
-// }
+
 
 // Lifecycle hook
 onMounted(() => {
@@ -196,9 +265,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Giữ nguyên CSS gốc */
 
-/* Thêm style mới cho giao diện hiện đại */
 .badge-item {
   background: #f8f9fa;
   border-radius: 8px;
@@ -253,93 +320,3 @@ onMounted(() => {
   opacity: 0;
 }
 </style>
-
-<!--&lt;!&ndash; GỢI Ý TỐI ƯU (để ngoài component) &ndash;&gt;-->
-
-<!--&lt;!&ndash;-->
-<!--1. SỬ DỤNG COMPOSABLES ĐỂ TÁI SỬ DỤNG LOGIC:-->
-<!--// composables/useSiteSettings.js-->
-<!--import { ref } from 'vue'-->
-<!--import { getSiteSettingList, updateSiteSettings } from '@/network/siteSetting'-->
-
-<!--export function useSiteSettings() {-->
-<!--  const typeMap = ref({ type1: [], type2: [], type3: [] })-->
-<!--  -->
-<!--  const loadSettings = async () => {-->
-<!--    // ... logic tải dữ liệu-->
-<!--  }-->
-<!--  -->
-<!--  const saveSettings = async () => {-->
-<!--    // ... logic lưu dữ liệu-->
-<!--  }-->
-<!--  -->
-<!--  return { typeMap, loadSettings, saveSettings }-->
-<!--}-->
-
-<!--2. SỬ DỤNG COMPONENTS NHỎ HƠN ĐỂ TÁI SỬ DỤNG:-->
-<!-- - Tạo BadgeForm.vue component riêng cho mỗi huy hiệu-->
-<!-- - Tạo SettingSection.vue component cho mỗi phần cài đặt-->
-
-<!--3. THÊM VALIDATION CHO FORM:-->
-<!--import { reactive } from 'vue'-->
-<!--const formRules = reactive({-->
-<!--  title: [{ required: true, message: 'Vui lòng nhập tiêu đề', trigger: 'blur' }],-->
-<!--  url: [{ type: 'url', message: 'Vui lòng nhập URL hợp lệ', trigger: 'blur' }]-->
-<!--})-->
-
-<!--4. THÊM DEBOUNCE CHO AUTO-SAVE:-->
-<!--import { debounce } from 'lodash-es'-->
-<!--const saveSettings = debounce(async () => {-->
-<!--  // ... logic lưu-->
-<!--}, 1000)-->
-
-<!--5. SỬ DỤNG PINIA CHO STATE MANAGEMENT:-->
-<!--// stores/siteSettings.js-->
-<!--import { defineStore } from 'pinia'-->
-<!--export const useSiteSettingsStore = defineStore('siteSettings', {-->
-<!--  state: () => ({ typeMap: {} }),-->
-<!--  actions: {-->
-<!--    async loadSettings() { /* ... */ },-->
-<!--    async saveSettings() { /* ... */ }-->
-<!--  }-->
-<!--})-->
-
-<!--6. THÊM LOADING STATES:-->
-<!--const loading = ref(false)-->
-<!--const getList = async () => {-->
-<!--  loading.value = true-->
-<!--  try {-->
-<!--    // ... logic-->
-<!--  } finally {-->
-<!--    loading.value = false-->
-<!--  }-->
-<!--}-->
-
-<!--7. TẠO CUSTOM DIRECTIVE CHO AUTO-FOCUS:-->
-<!--// directives/autoFocus.js-->
-<!--export const autoFocus = {-->
-<!--  mounted(el) {-->
-<!--    el.focus()-->
-<!--  }-->
-<!--}-->
-
-<!--8. SỬ DỤNG TELEPORT CHO MODAL/DIALOG:-->
-<!--<teleport to="body">-->
-<!--  <el-dialog v-model="dialogVisible">-->
-<!--    &lt;!&ndash; Nội dung &ndash;&gt;-->
-<!--</el-dialog>-->
-<!--</teleport>-->
-
-<!--9. THÊM INTERNATIONALIZATION (I18N) NẾU CẦN ĐA NGÔN NGỮ:-->
-<!--import { useI18n } from 'vue-i18n'-->
-<!--const { t } = useI18n()-->
-<!--// Sử dụng: {{ t('settings.basic') }}-->
-
-<!--10. THÊM DARK MODE SUPPORT:-->
-<!--:class="{ 'dark-mode': isDark }"-->
-<!--// CSS:-->
-<!--.dark-mode .badge-item {-->
-<!--background: #2d3748;-->
-<!--border-color: #4a5568;-->
-<!--}-->
-<!--&ndash;&gt;-->

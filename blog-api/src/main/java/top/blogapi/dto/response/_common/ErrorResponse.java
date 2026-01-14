@@ -21,6 +21,7 @@ public class ErrorResponse {
     String cause;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime timestamp;
+    String httpMethod;
     String path;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     String domain;

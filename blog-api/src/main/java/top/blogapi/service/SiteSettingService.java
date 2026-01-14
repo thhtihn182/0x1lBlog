@@ -7,4 +7,10 @@ import java.util.Map;
 
 public interface SiteSettingService {
     List<SiteSetting> getList();
+
+    void updateSiteSetting(SiteSetting siteSetting);
+
+    void deleteSettingById(Long id);
+
+    void saveSiteSetting(SiteSetting siteSetting);
 }

@@ -1,87 +1,39 @@
-// plugins/primevue.js
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
-import { inject } from 'vue'
-
-
-import 'primeicons/primeicons.css' // Chỉ cần 1 lần
-import 'primeflex/themes/primeone-light.css'
-import 'primeflex/primeflex.css'
-
-// Import PrimeVue components
-import Textarea from 'primevue/textarea'
+import {inject} from "vue";
+import 'primeicons/primeicons.css'
+import Aura from '@primevue/themes/aura'
 import Toast from 'primevue/toast'
 import ConfirmDialog from 'primevue/confirmdialog'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Dialog from 'primevue/dialog'
-import Checkbox from 'primevue/checkbox'
-import RadioButton from 'primevue/radiobutton'
-import FileUpload from 'primevue/fileupload'
-import Message from 'primevue/message'
-import Avatar from 'primevue/avatar'
-import Chip from 'primevue/chip'
-import Skeleton from 'primevue/skeleton'
-import Image from 'primevue/image'
-import Divider from 'primevue/divider'
-import Menubar from 'primevue/menubar'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import Badge from "primevue/badge"
-import Card from 'primevue/card'
-import Accordion from 'primevue/accordion'
-import AccordionPanel from 'primevue/accordionpanel'
-import {SimplePreset} from "@/plugins/primevueConfig/primeThemeConfig.js";
 
-
-const PrimeVuePlugin = {
-    install(app) {
+const PrimePluginVue = {
+    install(app){
         app.use(PrimeVue,{
-            theme:{
-                preset: SimplePreset,
+
+            theme: {
+                preset: Aura,
                 options: {
-                    // prefix: 'p',
+                    prefix: 'p',
                     darkModeSelector: false,
                     cssLayer: false
-                }
+                },
+                ripple: true
             }
         })
         app.use(ToastService)
         app.use(ConfirmationService)
 
         const components = {
-            'Button': Button,
-            'InputText': InputText,
-            'Textarea': Textarea,
             'Toast': Toast,
-            'ConfirmDialog': ConfirmDialog,
-            'DataTable': DataTable,
-            'Column': Column,
-            'Dialog': Dialog,
-            'Checkbox': Checkbox,
-            'RadioButton': RadioButton,
-            'FileUpload': FileUpload,
-            'Message': Message,
-            'Avatar': Avatar,
-            'Badge': Badge,
-            'Chip': Chip,
-            'Skeleton': Skeleton,
-            'Image': Image,
-            'Divider': Divider,
-            'Menubar': Menubar,
-            'Card': Card,
-            'AccordionPanel': AccordionPanel,
-            'Accordion': Accordion
+            'ConfirmDialog': ConfirmDialog
         }
-
-        Object.entries(components).forEach(([name, component]) => {
+        Object.entries(components).forEach(([name, component])  => {
             app.component(name, component)
         })
 
-        // Tạo toast service object (chỉ dùng inject)
         const toastService = {
-            success: (msg, options = {}) => {
+            success: (msg, options = {}) =>{
                 app.config.globalProperties.$toast.add({
                     severity: 'success',
                     summary: options.summary || 'Thành công',
@@ -90,7 +42,7 @@ const PrimeVuePlugin = {
                     ...options
                 })
             },
-            error: (msg, options = {}) => {
+            error: (msg, options = {}) =>{
                 app.config.globalProperties.$toast.add({
                     severity: 'error',
                     summary: options.summary || 'Lỗi',
@@ -108,7 +60,7 @@ const PrimeVuePlugin = {
                     ...options
                 })
             },
-            warn: (msg, options = {}) => {
+            warn: (msg, options= {}) => {
                 app.config.globalProperties.$toast.add({
                     severity: 'warn',
                     summary: options.summary || 'Cảnh báo',
@@ -117,11 +69,11 @@ const PrimeVuePlugin = {
                     ...options
                 })
             },
-            showLoading: (message = 'Đang xử lý...') => {
+            showLoading: (msg = 'Đang xử lý...') => {
                 app.config.globalProperties.$toast.add({
                     severity: 'info',
                     summary: 'Đang xử lý',
-                    detail: message,
+                    detail: msg,
                     life: 100000
                 })
             },
@@ -129,7 +81,7 @@ const PrimeVuePlugin = {
                 app.config.globalProperties.$toast.removeAllGroups()
             },
             confirm: (options = {}) => {
-                return new Promise((resolve) => {
+                return new Promise((resolove) => {
                     app.config.globalProperties.$confirm.require({
                         message: options.message || 'Bạn có chắc chắn không?',
                         header: options.header || 'Xác nhận',
@@ -145,20 +97,16 @@ const PrimeVuePlugin = {
             }
         }
 
-        // Provide toast service cho Composition API
         app.provide('toast', toastService)
     }
 }
-
-// Composition API helper
-export function useToast() {
+export function useToast(){
     const toast = inject('toast')
 
-    if (!toast) {
+    if(!toast){
         throw new Error('useToast() must be used within a component that has PrimeVue plugin installed')
     }
-
     return toast
 }
 
-export default PrimeVuePlugin
+export default PrimePluginVue

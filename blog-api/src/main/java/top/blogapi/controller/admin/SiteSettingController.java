@@ -4,10 +4,7 @@ package top.blogapi.controller.admin;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import top.blogapi.model.entity.SiteSetting;
 import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.model.vo.Result;
@@ -40,5 +37,11 @@ public class SiteSettingController {
     @GetMapping("/markdown/2")
     public Result<?> getMarkdown2(@RequestParam String text) {
         return Result.ok("OKe1", MarkdownUtils.markdownToHtml(text));
+    }
+
+    @PutMapping("/site-settings")
+    public Result<?> updateSiteSettingAll(@RequestBody Map<String, Object> map) {
+        siteSettingOrchestrator.updateAll(map);
+        return Result.ok("Cập nhật Setting thành công!");
     }
 }

@@ -2,11 +2,14 @@ package top.blogapi.service.impl.orchestration;
 
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.blogapi.exception.business_exception.domain_exception.SiteSettingException;
 import top.blogapi.model.entity.SiteSetting;
 import top.blogapi.model.vo.Badge;
 import top.blogapi.model.vo.Copyright;
@@ -14,10 +17,7 @@ import top.blogapi.model.vo.Favorite;
 import top.blogapi.model.vo.Introduction;
 import top.blogapi.service.SiteSettingService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -117,4 +117,22 @@ public class SiteSettingOrchestrator {
             texts.add(matcher.group(1)); // lấy từng nhóm '()'
         return texts;
     }
+
+    public void updateAll(Map<String, Object> map){
+        List<LinkedHashMap> siteSettings = (List<LinkedHashMap>) map.get("settings");
+        List<Integer> deleteIds = (List<Integer>) map.get("deleteIds");
+        System.out.println(deleteIds);
+        for(Integer id : deleteIds)
+            siteSettingService.deleteSettingById(Long.parseLong( id+""));
+        for (LinkedHashMap s : siteSettings){
+            JSONObject siteSettingJsonObject  = new JSONObject(s);
+            SiteSetting siteSetting = siteSettingJsonObject .toJavaObject(SiteSetting.class);
+            if(siteSetting.getId() != null)
+                siteSettingService.updateSiteSetting(siteSetting);
+            else
+                siteSettingService.saveSiteSetting(siteSetting);
+        }
+    }
+
+
 }
