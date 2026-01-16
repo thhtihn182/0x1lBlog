@@ -3,12 +3,9 @@ import Index from "@/view/Index.vue";
 import Home from "@/view/home/Home.vue";
 import GridL from "@/view/GridL.vue";
 import {useAppStore} from "@/store/index.js";
+import Archives from "@/view/archives/Archives.vue";
 
 const routes = [
-    {
-        path: '/',
-        redirect:'/index'
-    },
     {
         path: '/grid',
         component: GridL,
@@ -17,7 +14,7 @@ const routes = [
         }
     },
     {
-        path: '/index',
+        path: '/',
         component: Index,
         redirect: '/home',
         children: [
@@ -28,7 +25,13 @@ const routes = [
                     title: 'Trang chủ'
                 }
             },
-
+            {
+                path: '/archives',
+                component: Archives,
+                meta: {
+                    title: 'Lưu trữ'
+                }
+            }
         ]
     },
 ]

@@ -3,16 +3,21 @@
     <Nav :blogName="blogName"/>
 
     <div class="main">
-      <div class="m-padded-tb-big">
-        <div class="p-container">
-          <div class="flex flex-row flex-wrap">
-            <!-- Nội dung chính - 12 cột -->
-            <div class="col-12 md:col-9 lg:col-8 xl:col-9">
+      <div class="py-6">
+        <div class="container mx-auto" style="max-width: 1400px;">
+          <div class="flex flex-row flex-nowrap gap-3">
+
+            <div class="hidden md:block flex-none sticky-sidebar-wrapper" style="width: 280px;">
+              <div class="sticky-sidebar">
+                <Introduction/>
+              </div>
+            </div>
+
+            <div class="flex-1 min-w-0">
               <router-view/>
             </div>
 
-            <!-- Sidebar - 4 cột -->
-            <div class="col-12 md:col-3 lg:col-4 xl:col-3">
+            <div class="flex-none" style="width: 280px;">
               <Introduction/>
             </div>
           </div>
@@ -21,117 +26,36 @@
     </div>
 
     <Footer :siteInfo="siteInfo" :badges="badges" :newBlogList="newBlogList" :hitokoto="hitokoto"/>
-
   </div>
-
-
 </template>
 
 <script setup>
 import Nav from "@/components/index/Nav.vue";
-import { onMounted, ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import Footer from "@/components/index/Footer.vue";
 import {getHitokoto, getSite, translateUrl} from "@/network/index.js";
 import {useAppStore} from "@/store/index.js";
 import {useRoute} from "vue-router";
-import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
 import Introduction from "@/components/sidebar/Introduction.vue";
 
 const route = useRoute()
+const store = useAppStore()
 
 const siteInfo = ref({})
 const badges = ref([])
-const newBlogList= ref([])
-const hitokoto= ref({})
-
+const newBlogList = ref([])
+const hitokoto = ref({})
 const blogName = ref('Think\'s Blog')
-const siteT = ref({})
-const footer = ref({
-  mobileQRSrc: new URL('/src/assets/img/qr.png', import.meta.url).href,
-  newBlogList: [
-    {
-      href: '/',
-      title: 'Blog mới nhất 1',
-    },
-    {
-      href: '/',
-      title: 'Blog mới nhất 2',
-    },
-    {
-      href: '/',
-      title: 'Blog mới nhất 3',
-    }
-  ],
-  hitokoto:{},
-  copyright:{
-    time: 'Bản quyền © 2025 - 2026',
-    title:'BLOG CỦA THINK',
-    beianId: 'Mã test', //Mã ICP 20005222
-  },
-  badges:[
-    {
-      href: 'https://spring.io/projects/spring-boot/',
-      title: 'Được cung cấp bởi Spring Boot',
-      subject: 'Backend',
-      value: 'Spring Boot ',
-      color: 'blue',
-    },
-    {
-      href: 'https://cn.vuejs.org/',
-      title: 'Render phía client bằng Vue.js',
-      subject: 'SPA',
-      value: 'Vue.js',
-      color: 'brightgreen',
-    },
-    {
-      href: 'https://primevue.org/',
-      title: 'Framework UI PrimeVue-UI',
-      subject: 'Frontend',
-      value: 'PrimeVue-UI',
-      color: 'primevue-ui',
-    },
-    {
-      href: 'https://www.aliyun.com/',
-      title: 'Dịch vụ máy chủ và tên miền được cung cấp bởi Aliyun',
-      subject: 'Máy chủ & DNS',
-      value: 'Aliyun',
-      color: 'blueviolet',
-    },
-    {
-      href: 'https://www.jsdelivr.com/',
-      title: 'Dịch vụ CDN được cung cấp bởi jsDelivr',
-      subject: 'CDN',
-      value: 'jsDelivr',
-      color: 'orange',
-    },
-    {
-      href: 'https://github.com/',
-      title: 'Lưu trữ hình ảnh bởi GitHub',
-      subject: 'Lưu trữ',
-      value: 'GitHub',
-      color: 'github',
-    },
-    // {
-    //   href: 'https://creativecommons.org/licenses/by/4.0/',
-    //   title: 'Trang web này được cấp phép theo CC BY 4.0 International',
-    //   subject: 'Giấy phép',
-    //   value: 'BY 4.0',
-    //   color: 'lightgray',
-    // }
-  ]
-})
 
+// Functions
 const getHitokotoData = async () => {
   try {
     const res = await getHitokoto()
-    console.log(res)
     hitokoto.value = res
-    console.log(hitokoto.value)
     const trans1 = await translateUrl(hitokoto.value.hitokoto)
-    const trans2 =    await translateUrl(hitokoto.value.from)
+    const trans2 = await translateUrl(hitokoto.value.from)
     hitokoto.value.hitokoto = trans1[0][0][0]
     hitokoto.value.from = trans2[0][0][0]
-
   } catch (error) {
     console.error('Lấy hitokoto thất bại:', error)
     hitokoto.value = {
@@ -139,45 +63,44 @@ const getHitokotoData = async () => {
       from: 'Lập trình viên'
     }
   }
-
 }
-const store = useAppStore()
-
 
 const site = async () => {
-  try{
+  try {
     const res = await getSite();
     if(res.code === 200){
       badges.value = res.data.badges
       siteInfo.value = res.data.siteInfo
       newBlogList.value = res.data.newBlogList
-      blogName.value = res.data.siteInfo.blogName ||  'Thinh0x1l\''
+      blogName.value = res.data.siteInfo.blogName || 'Thinh0x1l\''
       store.saveIntroduction(res.data.introduction)
       store.saveWebTitleSuffix(res.data.siteInfo.webTitleSuffix)
       watch(
-          [()=>route.meta?.title , () => store.webTitleSuffix],
-          ([title,suffix]) => {
-            document.title = `${title ||''} | ${suffix}`;
+          [() => route.meta?.title , () => store.webTitleSuffix],
+          ([title, suffix]) => {
+            document.title = `${title || ''} | ${suffix}`;
           },
-          { immediate : true}
+          { immediate: true }
       )
     }
-    console.log(res.data)
-  }catch (e){
+  } catch (e) {
     console.error(e)
   }
 }
-const toast = useToast()
 
-// Lifecycle hook
 onMounted(() => {
   site()
   getHitokotoData()
-
 })
 </script>
 
 <style scoped>
+/* Reset các thuộc tính có thể ảnh hưởng đến sticky */
+.site, .main, .container, .flex {
+  position: static !important;
+  overflow: visible !important;
+}
+
 .site {
   display: flex;
   min-height: 100vh;
@@ -185,45 +108,81 @@ onMounted(() => {
 }
 
 .main {
-  opacity: 0.9;
+  margin-top: 40px;
   flex: 1;
-}
-.p-container {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  position: relative;
 }
 
-/* Responsive breakpoints */
-@media (min-width: 576px) {
-  .p-container {
-    max-width: 540px;
-  }
+.container {
+  position: relative;
 }
 
-@media (min-width: 768px) {
-  .p-container {
-    max-width: 720px;
-  }
+/* Sticky sidebar wrapper */
+.sticky-sidebar-wrapper {
+  align-self: flex-start;
+  position: sticky;
+  top: 68px;
+  height: 100%;
 }
 
-@media (min-width: 992px) {
-  .p-container {
-    max-width: 960px;
-  }
-}
+/*.sticky-sidebar {
+  position: sticky;n dev
+  top: 10px;
+  height: fit-content;
+  overflow-y: auto;
+}*/
 
-@media (min-width: 1200px) {
-  .p-container {
+/* Responsive */
+@media (max-width: 1399px) and (min-width: 1200px) {
+  .container {
     max-width: 1140px;
   }
-}
-
-@media (min-width: 1400px) {
-  .p-container {
-    max-width: 1320px;
+  .sticky-sidebar-wrapper,
+  .flex-none[style*="width: 280px"] {
+    width: 250px !important;
   }
 }
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .container {
+    max-width: 960px;
+  }
+  .sticky-sidebar-wrapper,
+  .flex-none[style*="width: 280px"] {
+    width: 220px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .flex-nowrap {
+    flex-wrap: wrap !important;
+  }
+
+  .sticky-sidebar-wrapper,
+  .flex-1,
+  .flex-none[style*="width: 280px"]:not(.hidden) {
+    width: 100% !important;
+    margin-bottom: 1.5rem;
+  }
+
+  .flex-none[style*="width: 280px"]:not(.hidden) {
+    order: 2;
+  }
+
+  .flex-1 {
+    order: 1;
+  }
+
+  .sticky-sidebar-wrapper {
+    position: static !important;
+    top: auto !important;
+  }
+
+  .sticky-sidebar {
+    position: static !important;
+    top: auto !important;
+    max-height: none;
+  }
+}
+
 </style>

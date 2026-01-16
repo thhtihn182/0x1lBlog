@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full z-5 shadow-2">
-    <nav class="surface-900 text-white ">
-      <div class="container mx-auto px-4" style="max-width: 1200px; margin: 0 auto;">
-        <div class="flex align-items-center justify-content-between py-3">
+  <div class="fixed-nav">
+    <nav class="text-white" style="background-color: rgb(27, 28, 29); border: none; min-height: 1.85714286em;">
+      <div class="container mx-auto px-4">
+        <div class="flex align-items-center justify-content-between py-1">
           <!-- Logo/Brand -->
           <a href="#" class="no-underline">
-            <div class="text-xl font-bold text-blue-300">{{ blogName }}</div>
+            <h2 class="m-blue rollText" style="margin: 0; padding: 0.5rem;">{{ blogName }}</h2>
           </a>
 
           <!-- Desktop Menu Items -->
@@ -48,7 +48,7 @@
         <div v-if="mobileMenuOpen" class="md:hidden surface-900 py-3 mt-2 rounded">
           <div class="flex flex-column gap-3 px-4">
             <a href="#" class="text-white no-underline hover:text-blue-300 py-2">
-              <i class="pi pi-lightbulb mr-3"></i>Trang Chủ
+              <i class="pi pi-lightbulk mr-3"></i>Trang Chủ
             </a>
             <a href="#" class="text-white no-underline hover:text-blue-300 py-2">
               <i class="pi pi-tags mr-3"></i>Thể Loại
@@ -79,11 +79,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
+import { ref } from 'vue'
+import { defineProps } from 'vue'
 
-const blogName = 'Your Blog Name';
+const props = defineProps({
+  blogName: {
+    type: String,
+    required: false
+  }
+})
+
 const mobileMenuOpen = ref(false);
 
 const toggle = () => {
@@ -92,5 +97,54 @@ const toggle = () => {
 </script>
 
 <style scoped>
+/* Fixed Navigation */
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
 
+
+.container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Hiệu ứng scroll cho nav */
+.fixed-nav {
+  transition: all 0.3s ease;
+}
+
+/* Thêm shadow khi scroll */
+.fixed-nav.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: rgba(27, 28, 29, 0.95) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* Tối ưu cho mobile */
+@media (max-width: 768px) {
+  .fixed-nav {
+    padding: 0 1rem;
+  }
+
+  body {
+    padding-top: 52px; /* Chiều cao nhỏ hơn trên mobile */
+  }
+}
+
+/* Đảm bảo mobile menu nằm trên các element khác */
+.md\:hidden {
+  z-index: 1001;
+}
+
+/* Hiệu ứng hover cho menu items */
+a:hover {
+  transform: translateY(-1px);
+}
 </style>
