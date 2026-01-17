@@ -4,8 +4,8 @@
 
     <div class="main">
       <div class="py-6">
-        <div class="container mx-auto" style="max-width: 1400px;">
-          <div class="flex flex-row flex-nowrap gap-3">
+        <div class="container mx-auto" style="max-width: 1450px;">
+          <div class="flex flex-row flex-nowrap ">
 
             <div class="hidden md:block flex-none sticky-sidebar-wrapper" style="width: 280px;">
               <div class="sticky-sidebar">
@@ -13,7 +13,7 @@
               </div>
             </div>
 
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0 main-content">
               <router-view/>
             </div>
 
@@ -112,7 +112,11 @@ onMounted(() => {
   flex: 1;
   position: relative;
 }
-
+.main-content{
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+}
 .container {
   position: relative;
 }
