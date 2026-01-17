@@ -3,32 +3,25 @@
     <nav  ref="navRef" class="text-white" style="background-color: rgb(27, 28, 29); border: none;">
       <div class="container  ">
         <div class="flex-nav">
-          <!-- Logo/Brand -->
-            <router-link
-
-                class="no-underline nav-line" to="/">
+            <router-link class="no-underline nav-line" to="/">
               <h3 class="m-blue text-base-c t-m-bold  "
                   style="margin: 0; padding: 0.900007143em ;font-size: 1.28571429rem;">{{ blogName }}
               </h3>
             </router-link>
-            <!-- Desktop Menu Items -->
-            <router-link
-                :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
                 class=" nav-line text-white md/:hidden no-underline p-3
                 hover:text-blue-300 text-base-c t-m-bold transition-colors
                 transition-duration-200" to="">
                 <i class="pi pi-home mr-2"></i>Trang chủ
             </router-link>
-          <router-link
-              :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
-              class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
-              t-m-bold transition-colors transition-duration-200 p-3" to="">
-                <i class="pi pi-tags mr-2"></i>Thể Loại
-          </router-link>
-            <router-link
-                :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
-                         class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
-                         text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="">
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+                class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
+                t-m-bold transition-colors transition-duration-200 p-3" to="">
+                  <i class="pi pi-tags mr-2"></i>Thể Loại
+            </router-link>
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+                class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
+                text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="">
               <i class="pi pi-copy mr-2"></i>Tag
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
@@ -41,47 +34,32 @@
           style="margin-left: auto !important;">
                   <i class="pi pi-search absolute left-3 top-1/2 transform-translate-y-1/2 text-gray-400"></i>
                   <InputText
-
                       type="text"
                       placeholder="Search..."
                       class="bg-surface-800 border-surface-700 text-white w-12rem lg:w-15rem"
                   />
           </div>
-
-
         </div>
         <Button
             icon="pi pi-bars"
             class="p-button-text p-2 m-2 m-right-top md:hidden text-white"
             @click="toggle"
         />
-        <!-- Mobile Menu (Dropdown) -->
       </div>
     </nav>
   </div>
 </template>
 
 <script setup>
-import {onMounted, onUnmounted, ref, watch} from 'vue'
+import { ref} from 'vue'
 import { defineProps } from 'vue'
-const navRef = ref(null)
 const props = defineProps({
   blogName: {
     type: String,
     required: false
   }
 })
-import { useMediaQuery } from '@vueuse/core'
-
-const isMobile = useMediaQuery('(max-width: 768px)')
-document.addEventListener('click', (e) => {
-  console.log(e.target)
-})
-
-// Tự động đóng menu khi chuyển sang desktop
-
 const mobileMenuOpen = ref(false);
-
 const toggle = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value;
 };
@@ -90,7 +68,7 @@ const toggle = () => {
 </script>
 
 <style scoped>
-/* Fixed Navigation */
+
 .fixed-nav {
   position: fixed;
   top: 0;
@@ -99,9 +77,6 @@ const toggle = () => {
   z-index: 1000;
   width: 100%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-.p-button:hover{
-  background-color: rgb(40, 42, 43)!important;
 }
 .t-m-bold{
   font-weight: 700;
@@ -161,6 +136,6 @@ const toggle = () => {
 .md\:hidden {
   z-index: 1001;
 }
-/* Hiệu ứng hover cho menu items */
+
 
 </style>
