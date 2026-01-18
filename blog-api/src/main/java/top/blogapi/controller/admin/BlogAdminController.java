@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 @RequestMapping("/admin")
-public class BlogController {
+public class BlogAdminController {
     BlogService blogService;
     TagService tagService;
     CategoryOrchestrator categoryOrchestrator;

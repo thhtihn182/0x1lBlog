@@ -15,7 +15,7 @@ import top.blogapi.model.vo.Result;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequestMapping("/admin")
-public class TagController {
+public class TagAdminController {
     TagOrchestrator tagOrchestrator;
 
     @GetMapping("/tags")

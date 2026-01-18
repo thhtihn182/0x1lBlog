@@ -13,7 +13,7 @@ import top.blogapi.model.vo.Result;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 @RequestMapping("/admin")
-public class CategoryController {
+public class CategoryAdminController {
     CategoryOrchestrator categoryOrchestrator;
 
     @GetMapping("/categories")

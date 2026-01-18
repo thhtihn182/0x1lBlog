@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 @RequestMapping("/admin")
-public class SiteSettingController {
+public class SiteSettingAdminController {
     BlogOrchestrator blogOrchestrator;
     SiteSettingOrchestrator siteSettingOrchestrator;
 

@@ -16,7 +16,7 @@ import top.blogapi.model.vo.Result;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 @RequestMapping("/admin")
-public class CommentController {
+public class CommentAdminController {
     CommentOrchestrator commentOrchestrator;
 
     @GetMapping("/comments")
