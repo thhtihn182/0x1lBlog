@@ -237,9 +237,9 @@ public class BlogOrchestrator {
         return List.of();
     }
 
-    public Map<String, Object> getArchiveBlogList(){
-        List<String> groupYearMonth = blogService.getGroupYearMonth();
-        List<ArchiveBlog> archiveBlogsBatch = blogService.getArchiveBlogListByYearMonth(groupYearMonth);
+    public Map<String, Object> getArchiveBlogListIsPublished(){
+        List<String> groupYearMonth = blogService.getGroupYearMonthAndIsPublished();
+        List<ArchiveBlog> archiveBlogsBatch = blogService.getArchiveBlogListByYearMonthAndIsPublished(groupYearMonth);
         Map<String, List<ArchiveBlogResponse>> blogMap = new LinkedHashMap<>();
         for(int i = archiveBlogsBatch.size() -1 ; i>=0 ;i--){
             ArchiveBlog a = archiveBlogsBatch.get(i);

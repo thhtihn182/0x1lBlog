@@ -238,39 +238,39 @@ h2{
 import {onMounted, ref} from 'vue'
 import {getArchives} from "@/network/archive.js";
 
-const blogMap = ref({
-  "12/2023": [
-    { id: 1, day: "31d", title: "Tổng kết hành trình học tập năm 2023" },
-    { id: 2, day: "25d", title: "Giáng sinh vui vẻ! Kế hoạch nghỉ lễ của tôi" },
-    { id: 3, day: "20d", title: "Thực hành Vue 3 Composition API" },
-    { id: 4, day: "15d", title: "Kinh nghiệm sử dụng thư viện PrimeVue ghiệm sử dụng thư viện Pghiệm sử dụng thư viện Pghiệm sử dụng thư viện P" }
-  ],
-  "11/2023": [
-    { id: 5, day: "30d", title: "Mẹo sử dụng TypeScript nâng cao" },
-    { id: 6, day: "25d", title: "Tối ưu hiệu suất Frontend thực tế" },
-    { id: 7, day: "20d", title: "Nhập môn phát triển Backend với Node.js" },
-    { id: 8, day: "10d", title: "Thiết kế và tối ưu cơ sở dữ liệu" }
-  ],
-  "10/2023": [
-    { id: 9, day: "28d", title: "Thực hành tốt nhất cho thiết kế Responsive" },
-    { id: 10, day: "20d", title: "Phân tích sâu về CSS Grid Layout" },
-    { id: 11, day: "15d", title: "Tính năng mới trong JavaScript ES2023" },
-    { id: 12, day: "05d", title: "Hướng dẫn cấu hình Frontend Engineering" }
-  ],
-  "2023-11": [
-    { id: 13, day: "30d", title: "Cấu hình chi tiết Webpack 5" },
-    { id: 14, day: "25d", title: "So sánh hiệu suất Vite vs Webpack" },
-    { id: 15, day: "18d", title: "Unit Testing và Integration Testing" },
-    { id: 16, day: "10d", title: "Thiết lập pipeline CI/CD" }
-  ],
-  "08/2023": [
-    { id: 17, day: "N28", title: "Thực hành kiến trúc Micro Frontend" },
-    { id: 18, day: "20d", title: "Phân tích so sánh các thư viện quản lý state" },
-    { id: 19, day: "15d", title: "Giải pháp thích ứng cho phát triển di động" },
-    { id: 20, day: "05d", title: "Hướng dẫn phát triển ứng dụng PWA" }
-  ]
-})
-// const blogMap = ref({})
+// const blogMap = ref({
+//   "12/2023": [
+//     { id: 1, day: "31d", title: "Tổng kết hành trình học tập năm 2023" },
+//     { id: 2, day: "25d", title: "Giáng sinh vui vẻ! Kế hoạch nghỉ lễ của tôi" },
+//     { id: 3, day: "20d", title: "Thực hành Vue 3 Composition API" },
+//     { id: 4, day: "15d", title: "Kinh nghiệm sử dụng thư viện PrimeVue ghiệm sử dụng thư viện Pghiệm sử dụng thư viện Pghiệm sử dụng thư viện P" }
+//   ],
+//   "11/2023": [
+//     { id: 5, day: "30d", title: "Mẹo sử dụng TypeScript nâng cao" },
+//     { id: 6, day: "25d", title: "Tối ưu hiệu suất Frontend thực tế" },
+//     { id: 7, day: "20d", title: "Nhập môn phát triển Backend với Node.js" },
+//     { id: 8, day: "10d", title: "Thiết kế và tối ưu cơ sở dữ liệu" }
+//   ],
+//   "10/2023": [
+//     { id: 9, day: "28d", title: "Thực hành tốt nhất cho thiết kế Responsive" },
+//     { id: 10, day: "20d", title: "Phân tích sâu về CSS Grid Layout" },
+//     { id: 11, day: "15d", title: "Tính năng mới trong JavaScript ES2023" },
+//     { id: 12, day: "05d", title: "Hướng dẫn cấu hình Frontend Engineering" }
+//   ],
+//   "2023-11": [
+//     { id: 13, day: "30d", title: "Cấu hình chi tiết Webpack 5" },
+//     { id: 14, day: "25d", title: "So sánh hiệu suất Vite vs Webpack" },
+//     { id: 15, day: "18d", title: "Unit Testing và Integration Testing" },
+//     { id: 16, day: "10d", title: "Thiết lập pipeline CI/CD" }
+//   ],
+//   "08/2023": [
+//     { id: 17, day: "N28", title: "Thực hành kiến trúc Micro Frontend" },
+//     { id: 18, day: "20d", title: "Phân tích so sánh các thư viện quản lý state" },
+//     { id: 19, day: "15d", title: "Giải pháp thích ứng cho phát triển di động" },
+//     { id: 20, day: "05d", title: "Hướng dẫn phát triển ứng dụng PWA" }
+//   ]
+// })
+const blogMap = ref({})
 const count = ref(0)
 const colorObj = ref({
   0: 'tl-blue',
@@ -284,7 +284,7 @@ const archiveList = async () => {
     const res = await getArchives()
     if(res.code === 200){
       count.value = res.data.count;
-    //  blogMap.value = res.data.blogMap
+      blogMap.value = res.data.blogMap
     }else {
 
     }

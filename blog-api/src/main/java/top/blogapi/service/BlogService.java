@@ -42,7 +42,7 @@ public interface BlogService {
 
     List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend();
 
-    List<String> getGroupYearMonth();
+    List<String> getGroupYearMonthAndIsPublished();
 
-    List<ArchiveBlog> getArchiveBlogListByYearMonth(List<String> yearMonths);
+    List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths);
 }

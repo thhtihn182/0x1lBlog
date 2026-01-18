@@ -133,17 +133,20 @@ public interface BlogRepository {
     List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend();
 
     @Select("SELECT DISTINCT DATE_FORMAT(create_time,'%m/%Y') as day " +
-            "FROM blog ")
-    List<String> getGroupYearMonth();
+            "FROM blog " +
+            "WHERE is_published = TRUE "
+    )
+    List<String> getGroupYearMonthAndIsPublished();
 
     @Select("<script> " +
             "SELECT id, title, DATE_FORMAT(create_time, 'N%m') as day, DATE_FORMAT(create_time,'%m/%Y') as yM  " +
             "FROM blog " +
-            "WHERE DATE_FORMAT(create_time, '%m/%Y') IN " +
+            "WHERE is_published = TRUE AND " +
+            "DATE_FORMAT(create_time, '%m/%Y') IN " +
             "<foreach item='ym' collection='yearMonths' open='(' separator=',' close=')'>" +
             "#{ym}" +
             "</foreach> " +
             "</script> "
     )
-    List<ArchiveBlog> getArchiveBlogListByYearMonth(List<String> yearMonths);
+    List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths);
 }

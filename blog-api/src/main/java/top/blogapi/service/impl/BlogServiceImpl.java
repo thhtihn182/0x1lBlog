@@ -145,9 +145,7 @@ public class BlogServiceImpl implements BlogService {
     @Transactional
     @Override
     public void updateBlogTopById(Long blogId, Boolean top) {
-        System.out.println(top);
         int r =  blogRepository.updateBlogTopById(blogId, top);
-        System.out.println(r + " " + blogId + " " + top);
         if(r != 1)
             throw BlogServiceException.builder()
                     .dataRetrievalFailed("updateBlogTopById")
@@ -180,14 +178,14 @@ public class BlogServiceImpl implements BlogService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> getGroupYearMonth() {
-        return blogRepository.getGroupYearMonth();
+    public List<String> getGroupYearMonthAndIsPublished() {
+        return blogRepository.getGroupYearMonthAndIsPublished();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<ArchiveBlog> getArchiveBlogListByYearMonth(List<String> yearMonths) {
-        return blogRepository.getArchiveBlogListByYearMonth(yearMonths);
+    public List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths) {
+        return blogRepository.getArchiveBlogListByYearMonthAndIsPublished(yearMonths);
     }
 
 

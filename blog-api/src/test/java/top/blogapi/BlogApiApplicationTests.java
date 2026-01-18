@@ -50,8 +50,8 @@ class BlogApiApplicationTests {
 
 	@Test
 	void test10(){
-		List<String > yearMonths = blogRepository.getGroupYearMonth();
-		List<ArchiveBlog> archiveBlogs = blogRepository.getArchiveBlogListByYearMonth(yearMonths);
+		List<String > yearMonths = blogRepository.getGroupYearMonthAndIsPublished();
+		List<ArchiveBlog> archiveBlogs = blogRepository.getArchiveBlogListByYearMonthAndIsPublished(yearMonths);
 		Map<String, List<ArchiveBlog>> map = new LinkedHashMap<>();
 		for (int i = archiveBlogs.size()-1; i >= 0 ; i--) {
 			String key = archiveBlogs.get(i).getYM();

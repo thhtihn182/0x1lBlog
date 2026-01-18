@@ -20,7 +20,7 @@ public class ArchiveController {
     @GetMapping("/archives")
     public Result<?> archives() {
         try {
-            return Result.ok("Yêu cầu thành công !", blogOrchestrator.getArchiveBlogList());
+            return Result.ok("Yêu cầu thành công !", blogOrchestrator.getArchiveBlogListIsPublished());
         } catch (Exception e) {
             e.printStackTrace();
             return Result.error();
