@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Tag;
+import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.model.vo.BlogInfo;
 
@@ -131,5 +132,18 @@ public interface BlogRepository {
             "ORDER BY create_time DESC ")
     List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend();
 
+    @Select("SELECT DISTINCT DATE_FORMAT(create_time,'%m/%Y') as day " +
+            "FROM blog ")
+    List<String> getGroupYearMonth();
 
+    @Select("<script> " +
+            "SELECT id, title, DATE_FORMAT(create_time, 'N%m') as day, DATE_FORMAT(create_time,'%m/%Y') as yM  " +
+            "FROM blog " +
+            "WHERE DATE_FORMAT(create_time, '%m/%Y') IN " +
+            "<foreach item='ym' collection='yearMonths' open='(' separator=',' close=')'>" +
+            "#{ym}" +
+            "</foreach> " +
+            "</script> "
+    )
+    List<ArchiveBlog> getArchiveBlogListByYearMonth(List<String> yearMonths);
 }

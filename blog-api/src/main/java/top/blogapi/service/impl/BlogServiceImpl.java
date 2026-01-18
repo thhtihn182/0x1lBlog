@@ -16,6 +16,7 @@ import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Tag;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
+import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.service.BlogService;
@@ -176,5 +177,18 @@ public class BlogServiceImpl implements BlogService {
     public List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend() {
         return blogRepository.getIdAndTitleListByIsPublishedAndIsRecommend();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<String> getGroupYearMonth() {
+        return blogRepository.getGroupYearMonth();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ArchiveBlog> getArchiveBlogListByYearMonth(List<String> yearMonths) {
+        return blogRepository.getArchiveBlogListByYearMonth(yearMonths);
+    }
+
 
 }

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="text-base-c">
       <div class="top-section border-round-top  text-center">
         <h2 style="font-weight: bold;">Lưu trữ Blog</h2>
         <p class="mt-2 mb-0 text-base-c">Tốt! Hiện tại có tổng cộng {{count}} bài viết</p>
@@ -27,16 +27,16 @@
               <span style="color: white">Hello World!</span>
             </span>
           </div>
-          <div class="tl-dark">
-            <div class="tl-item">
-              <div class="tl-wrap">
-                <span class="tl-date">N15</span>
-                <a href="#" @click.prevent="toBlog({id: 0, title: 'Bài viết đầu tiên'})" class="timeline-link">
-                  <span class="timeline-label tl-title text-base-c">Bài viết đầu tiên trên blog của tôi</span>
-                </a>
-              </div>
-            </div>
-          </div>
+<!--            <div class="tl-dark">-->
+<!--              <div class="tl-item">-->
+<!--                <div class="tl-wrap">-->
+<!--                  <span class="tl-date">N15</span>-->
+<!--                  <a href="#" @click.prevent="toBlog({id: 0, title: 'Bài viết đầu tiên'})" class="timeline-link">-->
+<!--                    <span class="timeline-label tl-title text-base-c ">Bài viết đầu tiên trên blog của tôi</span>-->
+<!--                  </a>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@ h2{
 }
 
 .tl-wrap{
-  padding: 15px 0 15px 20px;
+  padding: 12px 0 12px 20px;
   margin-left: 6em;
   border-left: 4px solid;
   position: relative;
@@ -103,7 +103,7 @@ h2{
 
 .timeline-label:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.19);
 }
 
 .tl-wrap:before {
@@ -145,9 +145,8 @@ h2{
 .timeline-label{
   position: relative;
   margin-left: 8px;
-  letter-spacing: 0.3px;
-  padding: 12px 15px;
-  border-radius: 0.28571429rem;
+  padding: 11px 15px;
+  border-radius: 0.21571429rem;
   cursor: pointer;
   transition: all 0.2s ease;
   display: inline-block;
@@ -236,7 +235,8 @@ h2{
 
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
+import {getArchives} from "@/network/archive.js";
 
 const blogMap = ref({
   "12/2023": [
@@ -257,27 +257,43 @@ const blogMap = ref({
     { id: 11, day: "15d", title: "Tính năng mới trong JavaScript ES2023" },
     { id: 12, day: "05d", title: "Hướng dẫn cấu hình Frontend Engineering" }
   ],
-  "09/2023": [
+  "2023-11": [
     { id: 13, day: "30d", title: "Cấu hình chi tiết Webpack 5" },
     { id: 14, day: "25d", title: "So sánh hiệu suất Vite vs Webpack" },
     { id: 15, day: "18d", title: "Unit Testing và Integration Testing" },
     { id: 16, day: "10d", title: "Thiết lập pipeline CI/CD" }
   ],
   "08/2023": [
-    { id: 17, day: "28d", title: "Thực hành kiến trúc Micro Frontend" },
+    { id: 17, day: "N28", title: "Thực hành kiến trúc Micro Frontend" },
     { id: 18, day: "20d", title: "Phân tích so sánh các thư viện quản lý state" },
     { id: 19, day: "15d", title: "Giải pháp thích ứng cho phát triển di động" },
     { id: 20, day: "05d", title: "Hướng dẫn phát triển ứng dụng PWA" }
   ]
 })
-
-const count = ref(20)
+// const blogMap = ref({})
+const count = ref(0)
 const colorObj = ref({
   0: 'tl-blue',
   1: 'tl-dark',
   2: 'tl-green',
   3: 'tl-purple',
   4: 'tl-red',
+})
+const archiveList = async () => {
+  try {
+    const res = await getArchives()
+    if(res.code === 200){
+      count.value = res.data.count;
+    //  blogMap.value = res.data.blogMap
+    }else {
+
+    }
+  }catch (error){
+    console.error(error)
+  }
+}
+onMounted(() => {
+  archiveList()
 })
 
 

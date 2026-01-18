@@ -3,8 +3,10 @@ package top.blogapi;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import top.blogapi.mapper.BlogMapper;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Comment;
+import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.repository.CategoryRepository;
@@ -14,16 +16,15 @@ import top.blogapi.service.impl.orchestration.SiteSettingOrchestrator;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @SpringBootTest
 class BlogApiApplicationTests {
-	@Test
-	void contextLoads() {
-	}
+
 	@Autowired
 	private DataSource dataSource;
+	@Autowired
+	private BlogMapper blogMapper;
 
 	@Test
 	void testConnection() throws SQLException {
@@ -43,6 +44,28 @@ class BlogApiApplicationTests {
 
 
 	@Test
+	void test11(){
+
+	}
+
+	@Test
+	void test10(){
+		List<String > yearMonths = blogRepository.getGroupYearMonth();
+		List<ArchiveBlog> archiveBlogs = blogRepository.getArchiveBlogListByYearMonth(yearMonths);
+		Map<String, List<ArchiveBlog>> map = new LinkedHashMap<>();
+		for (int i = archiveBlogs.size()-1; i >= 0 ; i--) {
+			String key = archiveBlogs.get(i).getYM();
+			map.computeIfAbsent(key,k -> new ArrayList<>()).add(archiveBlogs.get(i));
+		}
+
+		for(Map.Entry<String, List<ArchiveBlog>> entry : map.entrySet()){
+			System.out.println(entry.getKey()+ " | " + entry.getValue());
+		}
+		for (ArchiveBlog a : archiveBlogs)
+			System.out.println(blogMapper.toArchiveBlogResponse(a));
+	}
+
+	@Test
 	void test1 (){
 		Optional<Blog> blog = blogRepository.getBlogById(35L);
         blog.ifPresent(blog1 -> {
@@ -51,7 +74,6 @@ class BlogApiApplicationTests {
 		System.out.println(blog);
 
 	}
-
 
 	@Test
 	void test9(){

@@ -5,6 +5,7 @@ import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
 import top.blogapi.model.entity.Blog;
+import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.model.vo.BlogInfo;
 
@@ -40,4 +41,8 @@ public interface BlogService {
     List<BlogInfo> getBlogInfoListByIsPublished();
 
     List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend();
+
+    List<String> getGroupYearMonth();
+
+    List<ArchiveBlog> getArchiveBlogListByYearMonth(List<String> yearMonths);
 }

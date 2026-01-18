@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
+import top.blogapi.dto.response.blog.ArchiveBlogResponse;
 import top.blogapi.dto.response.blog.BlogSummaryResponse;
 import top.blogapi.dto.response.category.CategoryResponse;
 import top.blogapi.dto.response._page.BlogListPageResponse;
@@ -23,6 +24,7 @@ import top.blogapi.exception.business_exception.domain_exception.CategoryService
 import top.blogapi.exception.business_exception.domain_exception.TagServiceException;
 import top.blogapi.mapper.BlogMapper;
 import top.blogapi.mapper.CategoryMapper;
+import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
@@ -32,10 +34,7 @@ import top.blogapi.util.StringUtils;
 import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.util.markdown.MarkdownUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -236,5 +235,20 @@ public class BlogOrchestrator {
             e.printStackTrace();
         }
         return List.of();
+    }
+
+    public Map<String, Object> getArchiveBlogList(){
+        List<String> groupYearMonth = blogService.getGroupYearMonth();
+        List<ArchiveBlog> archiveBlogsBatch = blogService.getArchiveBlogListByYearMonth(groupYearMonth);
+        Map<String, List<ArchiveBlogResponse>> blogMap = new LinkedHashMap<>();
+        for(int i = archiveBlogsBatch.size() -1 ; i>=0 ;i--){
+            ArchiveBlog a = archiveBlogsBatch.get(i);
+            blogMap.computeIfAbsent(a.getYM(), k -> new ArrayList<>())
+                    .add(blogMapper.toArchiveBlogResponse(a));
+        }
+        return Map.of(
+                "blogMap",blogMap,
+                "count", archiveBlogsBatch.size()
+        );
     }
 }
