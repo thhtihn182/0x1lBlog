@@ -68,7 +68,7 @@
           </div>
 
           <!-- Mô tả bài viết -->
-          <div class="m-padded-tb-small m-description" v-html="item.description"></div>
+          <div class="m-padded-tb-small m-description m-markdown" v-html="item.description"></div>
 
           <!-- Nút đọc toàn bộ -->
           <div class="col-12">

@@ -30,7 +30,7 @@
      views: 1234,
      words: 1234,
      readTime: 1234,
-     description: '<p>Mô tả bài viết</p><p>Mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết</p><p>Mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết</p><p>Mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết</p><p><img src="/src/assets/img/pic.svg" style="max-width: 300px"></p>',
+     description: '<h2>Mô tả bài viết</h2><p>Mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết</p><p>Mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết</p><p>Mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết mô tả bài viết</p><p><img src="/src/assets/img/pic.svg" style="max-width: 300px"></p>',
      tags: [
        {
          id: 1,
