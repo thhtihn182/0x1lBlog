@@ -19,6 +19,11 @@
                 t-m-bold transition-colors transition-duration-200 p-3" to="">
                   <i class="pi pi-tags mr-2"></i>Thể Loại
             </router-link>
+          <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+                       class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
+                text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="/archives">
+            <i class="pi pi-copy mr-2"></i>Lưu trữ
+          </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
                 text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="">
@@ -118,7 +123,7 @@ const toggle = () => {
     display: flex; flex-direction: row;
   }
 }
-@media (max-width: 769px) {
+@media (max-width: 767px) {
   .nav-line:before {
     position: absolute;
     content: '';

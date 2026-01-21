@@ -536,7 +536,41 @@ public class MD5Utils {
             System.out.println();
         }
     }
+
+    public static void maxSideLength(int[][] mat, int threshold) {
+        int[][] mati = new int[mat.length][mat[0].length];
+        for(int i = 0 ; i < mat.length ; i++){
+            mati[i][0] = mat[i][0];
+            for(int j = 1; j < mat[0].length ;j++)
+                mati[i][j] = mati[i][j-1] + mat[i][j];
+        }
+        for (int[] m : mati)
+            System.out.println(Arrays.toString(m));
+        System.out.println();
+        for(int j = 0 ; j < mati[0].length;j++){
+            for (int i = 1 ; i < mati.length;i++){
+                mati[i][j] += mati[i-1][j];
+            }
+        }
+        for (int[] m : mati)
+            System.out.println(Arrays.toString(m));
+    }
+    public static int[] findEvenNumbers(int[] digits) {
+        List<String> sT = new ArrayList<>();
+        List<Integer> digit = new LinkedList<>();
+        for(int d : digits)
+            digit.add(d);
+        StringBuilder sb = new StringBuilder();
+        sb.append(digit.removeFirst());
+        for(int i = 1; i < digits.length ;i++){
+
+        }
+        int[] ans = null;
+        return ans;
+    }
+
     public static void main(String[] args) throws InterruptedException {
-        hello();
+        System.out.println(findEvenNumbers(new int[]{2, 1, 3, 0}));
+
     }
 }

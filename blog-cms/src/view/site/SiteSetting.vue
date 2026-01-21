@@ -40,20 +40,15 @@
                     :label="item.nameVn"
                     v-for="item in typeMap.type3"
                     :key="item.id"
+                    style="position: relative !important;"
                 >
-                  <div v-if="item.nameEn === 'favorite'">
-                    <el-col  >
-                      <el-input :type="e2?'textarea':'text'" v-model="item.value" />
-                    </el-col>
-                    <el-col >
-                      <el-button type="danger" :icon="Delete" @click="deleteFavorite(item)">Xóa</el-button>
-                    </el-col>
-                  </div>
-                  <div v-else>
-                    <el-col>
-                      <el-input v-model="item.value"></el-input>
-                    </el-col>
-                  </div>
+                  <el-input
+                      :type="e2?'textarea':'text'" v-model="item.value" :style="{ width: item.nameEn === 'favorite' ? '85%' : '100%' }"  />
+                  <el-button v-if="item.nameEn === 'favorite'"
+                             type="danger" :icon="Delete" @click="deleteFavorite(item)"
+                             style="width: 10% !important; margin: 0 auto !important;"
+
+                  >Xóa</el-button>
                 </el-form-item>
                 <el-button type="primary" :icon="Plus" @click="addFavorite">Thêm đam mê</el-button>
               </el-form>

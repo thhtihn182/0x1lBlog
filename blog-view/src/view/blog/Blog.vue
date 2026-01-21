@@ -1,19 +1,14 @@
 <template>
   <div style="z-index: 10">
-    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative"
-         v-for="item in blogList"
-         :key="item.id">
-
+    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative ">
 
       <div class="gradient-badge gold">
         <div class="badge-triangle"></div>
         <div class="badge-content">
           <span class="badge-text">TOP</span>
-          <!--          <div class="arrow-up"></div>-->
         </div>
         <div class="badge-shine"></div>
       </div>
-
       <!-- Container với flex layout -->
       <div class="flex flex-column">
         <div >
@@ -21,7 +16,7 @@
           <div class="col-12 text-center" style="padding-top: 0">
             <h2 class="header m-scaleup">
               <a href="#" class="text-900 hover:text-primary transition-colors no-underline">
-                {{ item.title }}
+                {{ blog.title }}
               </a>
             </h2>
           </div>
@@ -31,58 +26,45 @@
             <div class="flex flex-wrap justify-content-center gap-4">
               <div class="flex align-items-center m-datetime">
                 <i class="pi pi-calendar mr-2"></i>
-                <span>{{ formatDate(item.date) }}</span>
+                <span>{{ formatDate(blog.updateTime) }}</span>
               </div>
 
               <div class="flex align-items-center m-views">
                 <i class="pi pi-eye mr-2"></i>
-                <span>{{ item.views }}</span>
+                <span>{{ blog.views }}</span>
               </div>
 
               <div class="flex align-items-center m-common-black">
                 <i class="pi pi-pencil mr-2"></i>
-                <span>Số chữ ≈ {{ item.words }} từ</span>
+                <span>Số chữ ≈ {{ blog.words }} từ</span>
               </div>
 
               <div class="flex align-items-center m-common-black">
                 <i class="pi pi-clock mr-2"></i>
-                <span>Thời gian đọc ≈ {{ item.readTime }} phút</span>
+                <span>Thời gian đọc ≈ {{ blog.readTime }} phút</span>
               </div>
             </div>
           </div>
-
           <!-- Category button -->
-          <a :href="item.category?.id" class="col-12 mb-3">
+          <a :href="blog.category?.id" class="col-12 mb-3">
             <Button
-                :label="item.category.name"
+                :label="blog.category?.name"
                 icon="pi pi-folder-open"
                 class="ribbon-label m-text-500 text-base-ct "
 
             />
           </a>
-
           <!-- Mô tả bài viết -->
-          <div class="m-padded-tb-small m-markdown" v-html="item.description"></div>
-
-          <!-- Nút đọc toàn bộ -->
-          <div class="col-12">
-            <div class="flex align-items-center">
-              <a :href="item.id" class="color-btn">
-                <span >Đọc toàn bộ</span>
-              </a>
-            </div>
-          </div>
-
+          <div class="m-padded-tb-small m-markdown" v-html="blog.content"></div>
           <!-- Divider -->
           <div class="col-12">
             <div class="border-top-1 surface-border my-4"></div>
           </div>
-
           <!-- Tags -->
           <div class="m-padded-tb-no">
             <div class="flex flex-wrap gap-2">
               <a
-                  v-for="tag in item.tags"
+                  v-for="tag in blog.tags"
                   :key="tag.id"
                   :href="tag.id"
                   class="inline-flex align-items-center px-3 py-2 border-round font-medium"
@@ -102,19 +84,61 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
-import {formatDate} from "@/util/dateTimeFormatUtils.js";
+import { ref, onMounted } from 'vue'
+
+import { getBlogById } from '@/network/blog'
+import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
+import { formatDate } from "@/util/dateTimeFormatUtils.js";
+
+const toast = useToast()
+const blog = ref({})
+const category = ref()
 
 
-defineProps({
-  blogList: {
-    type: Array,
-    required: true
+const getTagSeverity = (semanticColor) => {
+  const colorMap = {
+    'red': 'danger',
+    'orange': 'warning',
+    'yellow': 'warning',
+    'olive': 'success',
+    'green': 'success',
+    'teal': 'info',
+    'blue': 'info',
+    'violet': 'secondary',
+    'purple': 'secondary',
+    'pink': 'danger',
+    'brown': 'warning',
+    'grey': 'secondary',
+    'black': 'contrast'
   }
+  return colorMap[semanticColor] || 'info'
+}
+
+// Lấy thông tin bài viết
+const fetchBlog = async () => {
+  try {
+    const response = await getBlogById(39)
+
+    if (response.code === 200) {
+
+      blog.value = response.data
+      console.log(blog.value)
+
+    } else {
+
+    }
+  } catch (error) {
+
+  }
+}
+
+onMounted( () => {
+   fetchBlog()
 })
 </script>
 
 <style scoped>
+
 .header{
   border: none;
   margin: 0 1rem;
@@ -127,4 +151,5 @@ defineProps({
   text-transform: none;
   color: rgba(0, 0, 0, .87);
 }
+
 </style>

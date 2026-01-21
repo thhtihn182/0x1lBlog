@@ -25,6 +25,7 @@ import top.blogapi.exception.business_exception.domain_exception.TagServiceExcep
 import top.blogapi.mapper.BlogMapper;
 import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.model.vo.ArchiveBlog;
+import top.blogapi.model.vo.BlogDetail;
 import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
@@ -250,5 +251,9 @@ public class BlogOrchestrator {
                 "blogMap",blogMap,
                 "count", archiveBlogsBatch.size()
         );
+    }
+
+    public BlogDetail getBlogByIdAndIsPublished(Long id){
+        return blogService.getBlogByIdAndIsPublished(id);
     }
 }

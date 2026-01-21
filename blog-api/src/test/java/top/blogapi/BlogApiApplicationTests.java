@@ -7,6 +7,7 @@ import top.blogapi.mapper.BlogMapper;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Comment;
 import top.blogapi.model.vo.ArchiveBlog;
+import top.blogapi.model.vo.BlogDetail;
 import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.repository.CategoryRepository;
@@ -45,7 +46,10 @@ class BlogApiApplicationTests {
 
 	@Test
 	void test11(){
-
+		Optional<BlogDetail> blogDetail = blogRepository.getBlogWithCategory(36L);
+		System.out.println(blogDetail.get());
+		blogDetail.ifPresent((blog) -> blog.setTags(blogRepository.findTagsByBlogId(blog.getId())));
+		System.out.println(blogDetail.get());
 	}
 
 	@Test

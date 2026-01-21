@@ -60,7 +60,6 @@ public interface CommentRepository {
     int updateComment(Long id,String nickname, String email, String content, String ip);
 
                 @Select("""
-            
                         with recursive comment_tree as (
                 select
                     *,

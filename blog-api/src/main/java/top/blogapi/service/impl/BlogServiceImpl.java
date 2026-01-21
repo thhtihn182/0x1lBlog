@@ -17,6 +17,7 @@ import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Tag;
 import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.model.vo.ArchiveBlog;
+import top.blogapi.model.vo.BlogDetail;
 import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.service.BlogService;
@@ -24,6 +25,7 @@ import top.blogapi.model.vo.BlogIdAndTitle;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -186,6 +188,17 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths) {
         return blogRepository.getArchiveBlogListByYearMonthAndIsPublished(yearMonths);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public BlogDetail getBlogByIdAndIsPublished(Long id) {
+        BlogDetail blogDetail =  blogRepository.getBlogWithCategory(id)
+                .orElseThrow(() -> BlogServiceException.builder()
+                        .blogNotFound(id.toString())
+                        .build());
+        blogDetail.setTags(blogRepository.findTagsByBlogId(id));
+        return blogDetail;
     }
 
 

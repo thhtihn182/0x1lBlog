@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Tag;
 import top.blogapi.model.vo.ArchiveBlog;
+import top.blogapi.model.vo.BlogDetail;
 import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.model.vo.BlogInfo;
 
@@ -15,24 +16,34 @@ import java.util.Optional;
 @Repository
 public interface BlogRepository {
     // Chỉ lấy thông tin cơ bản như trong XML
-    @Select("<script> " +
-            "SELECT b.id, b.title, b.is_recommend, b.is_published, b.create_time, b.update_time, "+
-            "   b.is_top, c.id as category_id, c.name as category_name " +
-            "FROM blog b LEFT JOIN category c " +
-            "ON b.category_id = c.id " +
-            "<where> " +
-            "   <if test='query != null and query != \"\"'> " +
-            "       b.title LIKE CONCAT('%', #{query}, '%') " +
-            "   </if> " +
-            "   <if test='categoryId != null'> " +
-            "       AND b.category_id = #{categoryId} " +
-            "   </if> " +
-            "</where> " +
-            "</script>")
+    @Select("""
+            <script>
+        SELECT b.id,
+               b.title,
+               b.is_recommend,
+               b.is_published,
+               b.create_time,
+               b.update_time,
+               b.is_top,
+               c.id   AS category_id,
+               c.name AS category_name
+        FROM blog b
+        LEFT JOIN category c
+            ON b.category_id = c.id
+        <where>
+            <if test="query != null and query != ''">
+                b.title LIKE CONCAT('%', #{query}, '%')
+            </if>
+            <if test="categoryId != null">
+                AND b.category_id = #{categoryId}
+            </if>
+        </where>
+    </script>
+    """)
     @Results(id = "baseBlogMap", value = {
             @Result(property = "top", column = "is_top"),
-            @Result(property = "recommend", column = "is_recommend"), // vì boolean cần phải map
-            @Result(property = "published", column = "is_published"), // vì boolean cần phải map
+            @Result(property = "recommend", column = "is_recommend"), // vì khác tên
+            @Result(property = "published", column = "is_published"), // vì khác tên
             @Result(property = "category.id", column = "category_id"), // vì Đối tượng lồng cần phải map
             @Result(property = "category.name", column = "category_name") // vì Đối tượng lồng cần phải map
     })
@@ -88,23 +99,26 @@ public interface BlogRepository {
             "WHERE bt.blog_id = #{blogId}")
     List<Tag> findTagsByBlogId(@Param("blogId") Long blogId);
 
-    @Update("UPDATE blog SET title = #{title}, " +
-            "content = #{content}, " +
-            "description = #{description}, " +
-            "flag = #{flag}, " +
-            "is_published = #{published}, " +
-            "is_recommend = #{recommend}, " +
-            "is_top = #{top}, " +
-            "is_appreciation = #{appreciation}, " +
-            "is_share_statement = #{shareStatement}, " +
-            "is_comment_enabled = #{commentEnabled}, " +
-            "create_time = #{createTime}, " +
-            "update_time = #{updateTime}, " +
-            "views = #{views}, " +
-            "words = #{words}, " +
-            "read_time = #{readTime}, " +
-            "category_id = #{category.id} " +
-            "WHERE id = #{id}")
+    @Update("""
+        UPDATE blog
+        SET title = #{title},
+            content = #{content},
+            description = #{description},
+            flag = #{flag},
+            is_published = #{published},
+            is_recommend = #{recommend},
+            is_top = #{top},
+            is_appreciation = #{appreciation},
+            is_share_statement = #{shareStatement},
+            is_comment_enabled = #{commentEnabled},
+            create_time = #{createTime},
+            update_time = #{updateTime},
+            views = #{views},
+            words = #{words},
+            read_time = #{readTime},
+            category_id = #{category.id}
+        WHERE id = #{id}
+    """)
     int updateBlog(Blog blog);
 
     @Select("SELECT COUNT(b.category_id) FROM blog b WHERE b.category_id = #{categoryId}")
@@ -138,15 +152,41 @@ public interface BlogRepository {
     )
     List<String> getGroupYearMonthAndIsPublished();
 
-    @Select("<script> " +
-            "SELECT id, title, DATE_FORMAT(create_time, 'N%m') as day, DATE_FORMAT(create_time,'%m/%Y') as yM  " +
-            "FROM blog " +
-            "WHERE is_published = TRUE AND " +
-            "DATE_FORMAT(create_time, '%m/%Y') IN " +
-            "<foreach item='ym' collection='yearMonths' open='(' separator=',' close=')'>" +
-            "#{ym}" +
-            "</foreach> " +
-            "</script> "
-    )
+    @Select("""
+        <script>
+            SELECT id,
+                   title,
+                   DATE_FORMAT(create_time, 'N%m') AS day,
+                   DATE_FORMAT(create_time, '%m/%Y') AS yM
+            FROM blog
+            WHERE is_published = TRUE
+              AND DATE_FORMAT(create_time, '%m/%Y') IN
+            <foreach item="ym"
+                     collection="yearMonths"
+                     open="("
+                     separator=","
+                     close=")">
+                #{ym}
+            </foreach>
+        </script>
+    """)
     List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths);
+
+    @Select("""
+        SELECT b.id, b.title, b.content, b.flag, b.is_appreciation, b.is_share_statement,
+               b.is_comment_enabled, b.is_top, b.create_time, b.update_time, b.views, b.words ,
+               b.read_time,c.id AS category_id, c.name AS category_name
+        FROM blog AS b
+        LEFT JOIN category AS c ON b.category_id = c.id
+        WHERE b.id = #{id} AND b.is_published
+    """)
+    @Results({
+            @Result(property = "category.name", column = "category_name"),
+            @Result(property = "category.id", column = "category_id"),
+            @Result(property = "appreciation", column = "is_appreciation"),
+            @Result(property = "shareStatement", column = "is_share_statement"),
+            @Result(property = "commentEnabled", column = "is_comment_enabled"),
+            @Result(property = "top", column = "is_top"),
+    })
+    Optional<BlogDetail> getBlogWithCategory(Long id);
 }

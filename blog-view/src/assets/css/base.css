@@ -52,11 +52,6 @@ footer {
   Source Han Sans CN Regular, WenQuanYi Micro Hei, Arial, sans-serif;
 }
 
-.m-markdown h1, .m-markdown h2{
-  padding-bottom: .3em;
-  border-bottom: 1px solid #eaecef;
-}
-
 .m-margin-small {
   margin: 3px 10px !important;
 }
@@ -216,24 +211,219 @@ footer {
   transform: scale(1.1)!important;
 }
 
+.gradient-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 75px;
+  height: 75px;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.badge-triangle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg,
+  #ef4444 0%,        /* Red-500 */
+  #dc2626 30%,       /* Red-600 */
+  #b91c1c 70%,       /* Red-700 */
+  #991b1b 100%       /* Red-800 */
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  border-bottom-left-radius: 0.75rem;
+  box-shadow: -4px 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.badge-content {
+  position: absolute;
+  top: 22px;
+  right: 10px;
+  transform: rotate(45deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 12;
+}
+
+.badge-text {
+  color: white;
+  font-weight: 900;
+  font-size: 0.95rem;
+  text-shadow:
+          1px 1px 3px rgba(0, 0, 0, 0.5),
+          0 0 10px rgba(255, 255, 255, 0.3);
+  letter-spacing: 1.5px;
+  margin-bottom: 5px;
+}
+
+.badge-shine {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg,
+  rgba(255, 255, 255, 0.6) 0%,
+  rgba(255, 255, 255, 0.2) 50%,
+  rgba(255, 255, 255, 0) 100%);
+  transform: rotate(45deg) translate(-15px, 15px);
+  z-index: 11;
+  border-radius: 3px;
+}
 
 
-.m-description {
+@keyframes shineMove {
+  0% {
+    transform: rotate(45deg) translate(-20px, 20px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: rotate(45deg) translate(10px, -10px);
+    opacity: 0.4;
+  }
+}
+
+.badge-shine {
+  animation: shineMove 2.5s ease-in-out infinite alternate;
+}
+
+
+@keyframes gradientPulse {
+  0%, 100% {
+    opacity: 1;
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  }
+  50% {
+    opacity: 0.9;
+    background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+  }
+}
+
+.gradient-badge:hover .badge-triangle {
+  animation: gradientPulse 1.5s ease-in-out infinite;
+}
+
+.gradient-badge.gold .badge-triangle {
+  background: linear-gradient(135deg,
+  #ef4444 0%,        /* Red-500 */
+  #dc2626 25%,       /* Red-600 */
+  #b91c1c 65%,       /* Red-700 */
+  #991b1b 95%
+  );
+}
+
+.gradient-badge.gold .badge-text {
+  color: #ffffff; /* Slate-800 */
+  text-shadow: 3px 1px 3px rgba(255, 255, 255, 0.5);
+}
+
+
+
+.ribbon-label {
+  position: relative !important;
+  left: -3.12rem !important;
+  margin-bottom: 15px!important;
+  overflow: visible  !important;
+  background: linear-gradient(135deg,
+  #f97316 0%,
+  #f59e0b 50%,
+  #eab308 100%
+  ) !important;
+  color: white !important;
+  border: none !important;
+  padding: .4rem 1rem !important;
+  border-radius: 0 3px 3px 1px !important;
+  box-shadow:
+          3px 3px 10px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3) !important;;
+}
+
+.ribbon-label::before {
+  position: absolute;
+  content: '';
+  top: -0.2rem;
+  margin-top: 30px;
+  left: -16px;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-right: 15px solid #c2410c;
+  border-bottom: 16px solid transparent;
+  border-left: 17px solid transparent;
+}
+
+.ribbon-label:hover {
+  background: linear-gradient(135deg,
+  #ea580c 0%,
+  #d97706 50%,
+  #b45309 100%
+  ) !important;
+}
+
+.m-markdown {
   width: 100%;
   text-align: justify;
 }
 
-.m-description p {
+.m-markdown p {
   font-size: 14px;
   line-height: 1.8;
   letter-spacing: 0.5px;
 }
 
-.m-description img {
+.m-markdown img {
   display: block;
   margin: 0 auto;
   max-width: 100%;
 }
+
+.m-markdown h1, .m-markdown h2 {
+  padding-bottom: .3em;
+  border-bottom: 1px solid #eaecef;
+}
+
+.m-datetime {
+  color: #00a7e0 !important;
+}
+
+.m-datetime * {
+  vertical-align: middle !important;
+}
+
+.m-datetime i {
+  margin-right: 3px !important;
+}
+
+.m-views {
+  color: #ff3f1f !important;
+}
+
+.m-views * {
+  vertical-align: middle !important;
+}
+
+.m-views i {
+  margin-right: 3px !important;
+}
+
+.m-common-black {
+  color: #000 !important;
+}
+
+.m-common-black * {
+  vertical-align: middle !important;
+}
+
+.m-common-black i {
+  margin-right: 3px !important;
+}
+
 
 /*-----------------------Button--------------------------*/
 .color-btn {

@@ -4,6 +4,7 @@ import Home from "@/view/home/Home.vue";
 import GridL from "@/view/GridL.vue";
 import {useAppStore} from "@/store/index.js";
 import Archives from "@/view/archives/Archives.vue";
+import Blog from "@/view/blog/Blog.vue";
 
 const routes = [
     {
@@ -30,6 +31,13 @@ const routes = [
                 component: Archives,
                 meta: {
                     title: 'Lưu trữ'
+                }
+            },
+            {
+                path: '/blog',
+                component: Blog,
+                meta: {
+                    title: 'Blog'
                 }
             }
         ]
