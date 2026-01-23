@@ -294,10 +294,8 @@ onMounted(() =>{
 }
 
 .color-swatch {
-  width: 20px;
+  width: 100px;
   height: 20px;
-  border-radius: 4px;
-  border: 1px solid #e4e7ed;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
 }

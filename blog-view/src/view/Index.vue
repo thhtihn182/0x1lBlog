@@ -7,17 +7,16 @@
         <div class="container mx-auto" style="max-width: 1450px;">
           <div class="flex flex-row flex-nowrap ">
 
-            <div class="hidden md:block flex-none sticky-sidebar-wrapper" style="width: 280px;">
+            <div class="hidden md:block flex-none sticky-sidebar-wrapper" style="width: 18.75% !important;">
               <div class="sticky-sidebar">
                 <Introduction/>
               </div>
             </div>
-
-            <div class="flex-1 min-w-0 main-content">
+            <div class="flex-1 min-w-0 main-content" style="width: 62.5% !important;">
               <router-view/>
             </div>
 
-            <div class="flex-none" style="width: 280px;">
+            <div class="hidden md:block flex-none" style="width: 18.75% !important;">
               <Introduction/>
             </div>
           </div>
@@ -135,58 +134,5 @@ onMounted(() => {
   height: fit-content;
   overflow-y: auto;
 }*/
-
-/* Responsive */
-@media (max-width: 1399px) and (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
-  }
-  .sticky-sidebar-wrapper,
-  .flex-none[style*="width: 280px"] {
-    width: 250px !important;
-  }
-}
-
-@media (max-width: 1199px) and (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-  .sticky-sidebar-wrapper,
-  .flex-none[style*="width: 280px"] {
-    width: 220px !important;
-  }
-}
-
-@media (max-width: 991px) {
-  .flex-nowrap {
-    flex-wrap: wrap !important;
-  }
-
-  .sticky-sidebar-wrapper,
-  .flex-1,
-  .flex-none[style*="width: 280px"]:not(.hidden) {
-    width: 100% !important;
-    margin-bottom: 1.5rem;
-  }
-
-  .flex-none[style*="width: 280px"]:not(.hidden) {
-    order: 2;
-  }
-
-  .flex-1 {
-    order: 1;
-  }
-
-  .sticky-sidebar-wrapper {
-    position: static !important;
-    top: auto !important;
-  }
-
-  .sticky-sidebar {
-    position: static !important;
-    top: auto !important;
-    max-height: none;
-  }
-}
 
 </style>

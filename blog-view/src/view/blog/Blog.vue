@@ -1,6 +1,6 @@
 <template>
   <div style="z-index: 10">
-    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative ">
+    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative m-box">
 
       <div class="gradient-badge gold">
         <div class="badge-triangle"></div>
@@ -25,28 +25,28 @@
           <div class="col-12 text-center">
             <div class="flex flex-wrap justify-content-center gap-4">
               <div class="flex align-items-center m-datetime">
-                <i class="pi pi-calendar mr-2"></i>
+                <font-awesome-icon icon="calendar-alt" class="mr-2" />
                 <span>{{ formatDate(blog.updateTime) }}</span>
               </div>
 
               <div class="flex align-items-center m-views">
-                <i class="pi pi-eye mr-2"></i>
+                <font-awesome-icon icon="eye" class="mr-2" />
                 <span>{{ blog.views }}</span>
               </div>
 
               <div class="flex align-items-center m-common-black">
-                <i class="pi pi-pencil mr-2"></i>
+                <font-awesome-icon icon="pencil-alt" class="mr-2" />
                 <span>Số chữ ≈ {{ blog.words }} từ</span>
               </div>
 
               <div class="flex align-items-center m-common-black">
-                <i class="pi pi-clock mr-2"></i>
+                <font-awesome-icon icon="clock" class="mr-2" />
                 <span>Thời gian đọc ≈ {{ blog.readTime }} phút</span>
               </div>
             </div>
           </div>
           <!-- Category button -->
-          <a :href="blog.category?.id" class="col-12 mb-3">
+          <a :href="blog.category.id" class="col-12 mb-3" v-if="blog.category">
             <Button
                 :label="blog.category?.name"
                 icon="pi pi-folder-open"
@@ -55,7 +55,7 @@
             />
           </a>
           <!-- Mô tả bài viết -->
-          <div class="m-padded-tb-small m-markdown" v-html="blog.content"></div>
+          <div class="typo m-padded-tb-small m-markdown " v-html="blog.content"></div>
           <!-- Divider -->
           <div class="col-12">
             <div class="border-top-1 surface-border my-4"></div>
@@ -117,7 +117,7 @@ const getTagSeverity = (semanticColor) => {
 // Lấy thông tin bài viết
 const fetchBlog = async () => {
   try {
-    const response = await getBlogById(39)
+    const response = await getBlogById(51)
 
     if (response.code === 200) {
 

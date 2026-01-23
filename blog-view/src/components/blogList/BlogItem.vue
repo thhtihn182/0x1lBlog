@@ -1,6 +1,6 @@
 <template>
   <div style="z-index: 10">
-    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative"
+    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative m-box"
          v-for="item in blogList"
          :key="item.id">
 
@@ -30,22 +30,22 @@
           <div class="col-12 text-center">
             <div class="flex flex-wrap justify-content-center gap-4">
               <div class="flex align-items-center m-datetime">
-                <i class="pi pi-calendar mr-2"></i>
+                <font-awesome-icon icon="calendar-alt" class="mr-2" />
                 <span>{{ formatDate(item.date) }}</span>
               </div>
 
               <div class="flex align-items-center m-views">
-                <i class="pi pi-eye mr-2"></i>
+                <font-awesome-icon icon="eye" class="mr-2" />
                 <span>{{ item.views }}</span>
               </div>
 
               <div class="flex align-items-center m-common-black">
-                <i class="pi pi-pencil mr-2"></i>
+                <font-awesome-icon icon="pencil-alt" class="mr-2" />
                 <span>Số chữ ≈ {{ item.words }} từ</span>
               </div>
 
               <div class="flex align-items-center m-common-black">
-                <i class="pi pi-clock mr-2"></i>
+                <font-awesome-icon icon="clock" class="mr-2" />
                 <span>Thời gian đọc ≈ {{ item.readTime }} phút</span>
               </div>
             </div>

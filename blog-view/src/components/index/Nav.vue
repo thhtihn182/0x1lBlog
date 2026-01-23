@@ -4,45 +4,54 @@
       <div class="container  ">
         <div class="flex-nav">
             <router-link class="no-underline nav-line" to="/">
-              <h3 class="m-blue text-base-c t-m-bold  "
+              <h3 class="m-blue text-base-c   "
                   style="margin: 0; padding: 0.900007143em ;font-size: 1.28571429rem;">{{ blogName }}
               </h3>
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
-                class=" nav-line text-white md/:hidden no-underline p-3
+                class=" nav-line  md/:hidden no-underline p-3
                 hover:text-blue-300 text-base-c t-m-bold transition-colors
                 transition-duration-200" to="">
-                <i class="pi pi-home mr-2"></i>Trang chủ
+              <font-awesome-icon icon="home" class="mr-2" />Trang chủ
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
                 t-m-bold transition-colors transition-duration-200 p-3" to="">
-                  <i class="pi pi-tags mr-2"></i>Thể Loại
+              <font-awesome-icon icon="lightbulb" class="mr-2" />Phân loại
             </router-link>
           <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
                        class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
                 text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="/archives">
-            <i class="pi pi-copy mr-2"></i>Lưu trữ
+            <font-awesome-icon icon="archive" class="mr-2 pi" />Lưu trữ
           </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
                 text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="">
-              <i class="pi pi-copy mr-2"></i>Tag
+              <font-awesome-icon icon="tag" class="mr-2" />Tag
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
                 t-m-bold transition-colors transition-duration-200 p-3" to="">
-              <i class="pi pi-info-circle mr-2"></i>Về tôi
+              <font-awesome-icon icon="info-circle" class="mr-2" />Về tôi
             </router-link>
 
-          <div class=" nav-line  " :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
-          style="margin-left: auto !important;">
-                  <i class="pi pi-search absolute left-3 top-1/2 transform-translate-y-1/2 text-gray-400"></i>
-                  <InputText
-                      type="text"
-                      placeholder="Search..."
-                      class="bg-surface-800 border-surface-700 text-white w-12rem lg:w-15rem"
-                  />
+          <div class="nav-line search-container" :class="mobileMenuOpen ? 'm-mobile-show' : 'm-mobile-hide'"
+               >
+            <div >
+              <div class="m-search">
+                <input
+                    type="text"
+
+                    placeholder="Search..."
+                    class="search-input"
+
+                />
+                <font-awesome-icon icon="search" class="search icon t-m-bold"></font-awesome-icon>
+
+                <!-- Suggestions dropdown -->
+
+              </div>
+            </div>
           </div>
         </div>
         <Button
@@ -84,8 +93,8 @@ const toggle = () => {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 .t-m-bold{
-  font-weight: 700;
-  color: rgba(255, 255, 255, .9);
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 400;
 }
 .container {
   max-width: 1400px;
@@ -122,6 +131,11 @@ const toggle = () => {
   .flex-nav{
     display: flex; flex-direction: row;
   }
+  .search-container{
+    margin-left: auto;
+    border-left: 1px solid rgba(255, 255, 255, .08) ;
+    border-right: none!important;
+  }
 }
 @media (max-width: 767px) {
   .nav-line:before {
@@ -137,10 +151,109 @@ const toggle = () => {
   .flex-nav{
     display: flex; flex-direction: column;
   }
+  .search-container{
+    margin-left: 0;
+    border-left: 1px solid rgba(255, 255, 255, .08) ;
+    border-right: none!important;
+  }
 }
 .md\:hidden {
   z-index: 1001;
 }
+
+.m-search {
+  position: relative;
+  min-width: 220px;
+  margin: 0;
+  padding: 0 !important;
+}
+
+/* Input field */
+.search-input {
+  width: 100%;
+  color: rgba(255, 255, 255, .9);
+  border: 0 !important;
+  background-color: inherit;
+  padding: 0.67857143em 2.1em 0.67857143em 1em;
+  font-size: 14px;
+  font-family: inherit;
+  border-radius: 4px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+/* Search icon */
+.m-search .search.icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, .9) !important;
+  pointer-events: none;
+  font-style: normal;
+  font-size: 16px;
+}
+
+/* Suggestions dropdown */
+.m-search-item {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 350px !important;
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e4e7ed;
+  z-index: 1000;
+  margin-top: 2px;
+  padding: 5px 0;
+}
+
+/* Suggestion item */
+.suggestion-item {
+  padding: 8px 10px !important;
+  cursor: pointer;
+  line-height: normal !important;
+  transition: background-color 0.3s;
+}
+
+.suggestion-item .title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 14px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.suggestion-item .content {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  color: rgba(0, 0, 0, .70);
+  line-height: 1.4;
+}
+
+
+.m-search.loading .search.icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 255, 255, .9);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
 
 
 </style>

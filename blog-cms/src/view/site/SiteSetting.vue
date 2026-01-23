@@ -43,7 +43,10 @@
                     style="position: relative !important;"
                 >
                   <el-input
-                      :type="e2?'textarea':'text'" v-model="item.value" :style="{ width: item.nameEn === 'favorite' ? '85%' : '100%' }"  />
+                      :type="e2?'textarea':'text'" v-model="item.value"
+                      :style="{ width: item.nameEn === 'favorite' ? '85%' : '100%' }"
+                      :autosize="{ minRows: 1, maxRows: 50 }"
+                  />
                   <el-button v-if="item.nameEn === 'favorite'"
                              type="danger" :icon="Delete" @click="deleteFavorite(item)"
                              style="width: 10% !important; margin: 0 auto !important;"

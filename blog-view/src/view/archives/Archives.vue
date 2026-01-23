@@ -1,5 +1,5 @@
 <template>
-    <div class="text-base-c">
+    <div class="text-base-c m-box">
       <div class="top-section border-round-top  text-center">
         <h2 style="font-weight: bold;">Lưu trữ Blog</h2>
         <p class="mt-2 mb-0 text-base-c">Tốt! Hiện tại có tổng cộng {{count}} bài viết</p>
