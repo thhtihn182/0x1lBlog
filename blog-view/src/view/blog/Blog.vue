@@ -54,29 +54,32 @@
 
             />
           </a>
-          <!-- Mô tả bài viết -->
-          <div class="typo m-padded-tb-small m-markdown " v-html="blog.content"></div>
-          <!-- Divider -->
-          <div class="col-12">
-            <div class="border-top-1 surface-border my-4"></div>
-          </div>
-          <!-- Tags -->
-          <div class="m-padded-tb-no">
-            <div class="flex flex-wrap gap-2">
-              <a
-                  v-for="tag in blog.tags"
-                  :key="tag.id"
-                  :href="tag.id"
-                  class="inline-flex align-items-center px-3 py-2 border-round font-medium"
-                  :style="{
+          <div class="px-3 py-2">
+            <!-- Mô tả bài viết -->
+            <div class="typo m-padded-tb-small m-markdown " v-html="blog.content"></div>
+            <!-- Divider -->
+            <div class="col-12">
+              <div class="border-top-1 surface-border my-4"></div>
+            </div>
+            <!-- Tags -->
+            <div class="m-padded-tb-no">
+              <div class="flex flex-wrap gap-2">
+                <a
+                    v-for="tag in blog.tags"
+                    :key="tag.id"
+                    :href="tag.id"
+                    class="inline-flex align-items-center px-3 py-2 border-round font-medium"
+                    :style="{
                   backgroundColor: tag.color,
                   color: 'white'
                 }"
-              >
-                {{ tag.name }}
-              </a>
+                >
+                  {{ tag.name }}
+                </a>
+              </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

@@ -24,6 +24,7 @@ import {
 import '@/util/dateTimeFormatUtils.js'
 import '@/assets/css/base.css'
 import '@/assets/css/badge.css'
+import '@/assets/css/typo.css'
 import PrimeVuePlugin from "@/plugins/primevueConfig/primePluginVue.js";
 
 
