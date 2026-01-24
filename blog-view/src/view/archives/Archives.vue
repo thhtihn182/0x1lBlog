@@ -15,7 +15,7 @@
             <div class="tl-item" v-for="blog in value" :key="blog.id">
               <div class="tl-wrap">
                 <span class="tl-date text-base-c"> {{ blog.day }}</span>
-                <a class="timeline-link">
+                <a class="timeline-link" :href="'/blog?id='+blog.id">
                   <span class="timeline-label tl-title text-base-c"> {{ blog.title}}</span>
                 </a>
               </div>

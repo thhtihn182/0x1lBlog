@@ -432,9 +432,9 @@ footer {
   top: 10%;
   margin: 0 auto;
   font-size: 13px;
-  background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+  background: linear-gradient(135deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
   background-size: 400%;
-  width: 8em;
+  width: 15em;
   height: 3em;
   line-height: 38px;
   text-align: center;
