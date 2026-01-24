@@ -56,7 +56,7 @@
           </a>
           <div class="px-3 py-2">
             <!-- Mô tả bài viết -->
-            <div class="typo m-padded-tb-small m-markdown " v-html="blog.content"></div>
+            <div class="typo m-padded-tb-small px-3 m-markdown " v-html="blog.content"></div>
             <!-- Divider -->
             <div class="col-12">
               <div class="border-top-1 surface-border my-4"></div>

@@ -17,6 +17,7 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dialog from 'primevue/dialog'
 import Checkbox from 'primevue/checkbox'
+import Paginator from "primevue/Paginator";
 import RadioButton from 'primevue/radiobutton'
 import FileUpload from 'primevue/fileupload'
 import Message from 'primevue/message'
@@ -55,6 +56,7 @@ const PrimeVuePlugin = {
             'InputText': InputText,
             'Textarea': Textarea,
             'Toast': Toast,
+            'Paginator': Paginator,
             'ConfirmDialog': ConfirmDialog,
             'DataTable': DataTable,
             'Column': Column,

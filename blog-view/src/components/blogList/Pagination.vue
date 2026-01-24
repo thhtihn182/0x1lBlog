@@ -1,45 +1,47 @@
 <template>
-  <div class="ui bottom" style="text-align:center">
-    <el-pagination @current-change="handleCurrentChange" :current-page="pageNum" :page-count="totalPage"
-                   layout="prev, pager, next" background hide-on-single-page>
-    </el-pagination>
+  <div class="" style="text-align: center">
+    <Paginator
+        :rows="pageSize"
+        :totalRecords="totalRecords"
+        @page="handlePageChange"
+        :template="{
+        layout: 'PrevPageLink PageLinks NextPageLink'
+      }"
+        class="custom-paginator"
+    />
   </div>
 </template>
 
-<script>
-export default {
-  name: "Pagination",
-  props: {
-    getBlogList: {
-      type: Function,
-      required: true
-    },
-    totalPage: {
-      type: Number,
-      required: true
-    }
+<script setup>
+import { ref, computed, watch } from 'vue'
+
+const props = defineProps({
+  getBlogList: {
+    type: Function,
+    required: true
   },
-  data() {
-    return {
-      pageNum: 1
-    }
-  },
-  methods: {
-    //监听页码改变的事件
-    handleCurrentChange(newPage) {
-      this.pageNum = newPage
-      this.getBlogList(newPage)
-    },
+  totalPage: {
+    type: Number,
+    required: true
   }
+})
+
+const pageNum = ref(1)
+const first = ref(0)
+const pageSize = ref(5)
+
+const totalRecords = computed(() => props.totalPage * pageSize.value)
+
+
+
+const handlePageChange = (event) => {
+  console.log(event)
+  console.log(first.value)
+  pageNum.value = event.page
+  props.getBlogList(event.page+1)
 }
 </script>
 
-<style>
-.el-pagination.is-background .btn-next, .el-pagination.is-background .btn-prev, .el-pagination.is-background .el-pager li {
-  background-color: #ffffff !important;
-}
+<style scoped>
 
-.el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #409EFF !important;
-}
 </style>

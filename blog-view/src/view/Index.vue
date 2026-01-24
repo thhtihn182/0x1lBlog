@@ -17,7 +17,7 @@
             </div>
 
             <div class="hidden md:block flex-none" style="width: 18.75% !important;">
-              <Introduction/>
+<!--              <Introduction/>-->
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@
          :key="item.id">
 
 
-      <div class="gradient-badge gold">
+      <div class="gradient-badge gold"  v-if="item.top">
         <div class="badge-triangle"></div>
         <div class="badge-content">
           <span class="badge-text">TOP</span>
@@ -31,7 +31,7 @@
             <div class="flex flex-wrap justify-content-center gap-4">
               <div class="flex align-items-center m-datetime">
                 <font-awesome-icon icon="calendar-alt" class="mr-2" />
-                <span>{{ formatDate(item.date) }}</span>
+                <span>{{ formatDate(item.createTime) }}</span>
               </div>
 
               <div class="flex align-items-center m-views">
@@ -67,7 +67,7 @@
           <!-- Nút đọc toàn bộ -->
           <div class="col-12">
             <div class="flex align-items-center">
-              <a :href="item.id" class="color-btn">
+              <a :href="'/blog?id='+item.id" class="color-btn">
                 <span >Đọc toàn bộ</span>
               </a>
             </div>
