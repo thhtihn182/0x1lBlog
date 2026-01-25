@@ -56,14 +56,14 @@
           </a>
           <div class="px-3 py-2">
             <!-- Mô tả bài viết -->
-            <div class="typo m-padded-tb-small px-3 m-markdown" v-html="blog.content"></div>
+            <div class="typo m-padded-tb-small px-3 line-numbers match-braces rainbow-braces" v-html="blog.content"></div>
             <!-- Divider -->
             <div class="col-12">
               <div class="border-top-1 surface-border my-2"></div>
             </div>
             <!-- Tags -->
             <div class="m-padded-tb-no">
-              <Tag :list-tag="blog.tags"></Tag>
+              <Tag v-if="blog.tags" :list-tag="blog.tags"></Tag>
             </div>
           </div>
 
@@ -74,7 +74,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, nextTick} from 'vue'
 import Tag from '@/components/tag/Tag.vue'
 import { getBlogById } from '@/network/blog'
 import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
@@ -121,9 +121,16 @@ const fetchBlog = async () => {
   }
 }
 
-onMounted( () => {
-   fetchBlog()
-})
+
+// ========== IMPORT THEME ==========
+
+onMounted(async () => {
+  await fetchBlog();
+  await nextTick();
+
+  // Sử dụng highlightAll để highlight tất cả code trong DOM
+  Prism.highlightAll();
+});
 </script>
 
 <style scoped>

@@ -22,6 +22,7 @@ import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.service.BlogService;
 import top.blogapi.model.vo.BlogIdAndTitle;
+import top.blogapi.util.markdown.MarkdownUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -198,6 +199,7 @@ public class BlogServiceImpl implements BlogService {
                         .blogNotFound(id.toString())
                         .build());
         blogDetail.setTags(blogRepository.findTagsByBlogId(id));
+        blogDetail.setContent(MarkdownUtils.markdownToHtmlExtensions(blogDetail.getContent()));
         return blogDetail;
     }
 

@@ -80,7 +80,7 @@
 
             <!-- Tags -->
             <div class="m-padded-tb-no">
-              <Tag :list-tag="item.tags"></Tag>
+              <Tag v-if="item.tags" :list-tag="item.tags"></Tag>
             </div>
           </div>
         </div>

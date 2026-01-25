@@ -25,8 +25,8 @@ import '@/util/dateTimeFormatUtils.js'
 import '@/assets/css/base.css'
 import '@/assets/css/badge.css'
 import '@/assets/css/typo.css'
+import {PrismPlugin} from '@/plugins/prism/prism.js'
 import PrimeVuePlugin from "@/plugins/primevueConfig/primePluginVue.js";
-
 
 library.add(
     faHome,
@@ -47,8 +47,9 @@ library.add(
 
 const app = createApp(App)
 const pinia = createPinia()
-app.use(router)
-app.component('font-awesome-icon', FontAwesomeIcon)
-app.use(pinia)
-app.use(PrimeVuePlugin)
-app.mount('#app')
+app .use(router)
+    .use(pinia)
+    .use(PrismPlugin)
+    .use(PrimeVuePlugin)
+    .component('font-awesome-icon', FontAwesomeIcon)
+    .mount('#app')

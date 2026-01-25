@@ -25,6 +25,8 @@
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.5.3",
+    "prism-themes": "^1.9.0",
+    "prismjs": "^1.30.0",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   },

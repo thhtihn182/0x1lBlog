@@ -34,6 +34,7 @@
               v-model="form.description"
               language="en"
               placeholder="Mô tả Blog...."
+              :ishljs="false"
           />
         </el-form-item>
 
@@ -44,6 +45,7 @@
               v-model="form.content"
               language="en"
               placeholder="Nội dụng Blog.... "
+              :ishljs="false"
           />
         </el-form-item>
 
