@@ -17,7 +17,7 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Dialog from 'primevue/dialog'
 import Checkbox from 'primevue/checkbox'
-import Paginator from "primevue/Paginator";
+import Paginator from "primevue/paginator";
 import RadioButton from 'primevue/radiobutton'
 import FileUpload from 'primevue/fileupload'
 import Message from 'primevue/message'

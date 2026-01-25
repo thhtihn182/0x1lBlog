@@ -1,6 +1,6 @@
 <template>
   <div style="z-index: 10">
-    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative m-box"
+    <div class="pb-2 px-4 pt-4  surface-card shadow-2 mb-5 relative m-box"
          v-for="item in blogList"
          :key="item.id">
 
@@ -60,39 +60,27 @@
 
             />
           </a>
+          <div class="px-3 py-2">
+            <!-- Mô tả bài viết -->
+            <div class="m-padded-tb-small m-markdown typo " v-html="item.description"></div>
 
-          <!-- Mô tả bài viết -->
-          <div class="m-padded-tb-small m-markdown" v-html="item.description"></div>
-
-          <!-- Nút đọc toàn bộ -->
-          <div class="col-12">
-            <div class="flex align-items-center">
-              <a :href="'/blog?id='+item.id" class="color-btn">
-                <span >Đọc toàn bộ</span>
-              </a>
+            <!-- Nút đọc toàn bộ -->
+            <div class="col-12">
+              <div class="flex align-items-cente">
+                <a :href="'/blog?id='+item.id" class="color-btn">
+                  <span >Đọc toàn bộ</span>
+                </a>
+              </div>
             </div>
-          </div>
 
-          <!-- Divider -->
-          <div class="col-12">
-            <div class="border-top-1 surface-border my-4"></div>
-          </div>
+            <!-- Divider -->
+            <div class="col-12">
+              <div class="border-top-1 surface-border my-2"></div>
+            </div>
 
-          <!-- Tags -->
-          <div class="m-padded-tb-no">
-            <div class="flex flex-wrap gap-2">
-              <a
-                  v-for="tag in item.tags"
-                  :key="tag.id"
-                  :href="tag.id"
-                  class="inline-flex align-items-center px-3 py-2 border-round font-medium"
-                  :style="{
-                  backgroundColor: tag.color,
-                  color: 'white'
-                }"
-              >
-                {{ tag.name }}
-              </a>
+            <!-- Tags -->
+            <div class="m-padded-tb-no">
+              <Tag :list-tag="item.tags"></Tag>
             </div>
           </div>
         </div>
@@ -104,7 +92,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import {formatDate} from "@/util/dateTimeFormatUtils.js";
-
+import Tag from '@/components/tag/Tag.vue'
 
 defineProps({
   blogList: {

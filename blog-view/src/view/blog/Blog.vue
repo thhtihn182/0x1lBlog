@@ -1,6 +1,6 @@
 <template>
   <div style="z-index: 10">
-    <div class="m-padded-tb-large p-4 surface-card shadow-2 mb-5 relative m-box">
+    <div class="pb-2 px-4 pt-4 surface-card shadow-2 mb-5 relative m-box">
 
       <div class="gradient-badge gold">
         <div class="badge-triangle"></div>
@@ -56,27 +56,14 @@
           </a>
           <div class="px-3 py-2">
             <!-- Mô tả bài viết -->
-            <div class="typo m-padded-tb-small px-3 m-markdown " v-html="blog.content"></div>
+            <div class="typo m-padded-tb-small px-3 m-markdown" v-html="blog.content"></div>
             <!-- Divider -->
             <div class="col-12">
-              <div class="border-top-1 surface-border my-4"></div>
+              <div class="border-top-1 surface-border my-2"></div>
             </div>
             <!-- Tags -->
             <div class="m-padded-tb-no">
-              <div class="flex flex-wrap gap-2">
-                <a
-                    v-for="tag in blog.tags"
-                    :key="tag.id"
-                    :href="tag.id"
-                    class="inline-flex align-items-center px-3 py-2 border-round font-medium"
-                    :style="{
-                  backgroundColor: tag.color,
-                  color: 'white'
-                }"
-                >
-                  {{ tag.name }}
-                </a>
-              </div>
+              <Tag :list-tag="blog.tags"></Tag>
             </div>
           </div>
 
@@ -88,11 +75,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-
+import Tag from '@/components/tag/Tag.vue'
 import { getBlogById } from '@/network/blog'
 import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
 import { formatDate } from "@/util/dateTimeFormatUtils.js";
-
+import {useRoute} from "vue-router";
+const route = useRoute()
 const toast = useToast()
 const blog = ref({})
 const category = ref()
@@ -117,13 +105,11 @@ const getTagSeverity = (semanticColor) => {
   return colorMap[semanticColor] || 'info'
 }
 
-// Lấy thông tin bài viết
+
 const fetchBlog = async () => {
   try {
-    const response = await getBlogById(51)
-
+    const response = await getBlogById(route.query.id)
     if (response.code === 200) {
-
       blog.value = response.data
       console.log(blog.value)
 
