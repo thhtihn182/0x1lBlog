@@ -9,18 +9,19 @@ const pinia = createPinia()
 // Element Plus (thay cho Element UI)
 import ElementPlus, {ElMessage} from 'element-plus'
 import 'element-plus/dist/index.css'
-
-
+import editor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 import './util/dateTimeFormatUtils.js'
 import PrimePluginVue from "@/plugins/primevueConfig/primePluginVue.js";
 
 const app = createApp(App)
 
 // sử dụng plugins
-app.use(router)
-app.use(pinia)
-app.use(ElementPlus)
-app.use(PrimePluginVue)
+app .use(router)
+    .use(pinia)
+    .use(ElementPlus)
+    .use(PrimePluginVue)
+    .use(editor)
 
 const showMessage = (type,msg) =>{
     try{
