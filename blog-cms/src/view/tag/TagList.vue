@@ -13,7 +13,11 @@
 
       <el-table :data="tagList" border stripe>
         <el-table-column label="STT" type="index" width="70"/>
-        <el-table-column label="Tên" prop="tagName"/> <!--  prop="tagName" của tagList map với field của API -->
+        <el-table-column label="Tên">
+          <template #default="scope">
+              <Tag :tag="scope.row"/>
+          </template>
+        </el-table-column>
         <el-table-column label="Màu sắc" prop="tagColor">
           <template #default="scope">
             <div class="color-display-cell">
@@ -27,12 +31,6 @@
             </div>
           </template>
         </el-table-column>
-<!--        <el-table-column label="Màu sắc " prop="tagColor">-->
-<!--          <template v-slot="scope">-->
-<!--            <span style="float:left;width: 100px;">{{ scope.row.tagColor }}</span>-->
-<!--            <span style="float:left;width: 100px; height: 23px" class="me-base" :class="'me-'+scope.row.tagColor "></span>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
         <el-table-column label="Thao tác" >
           <template #default="{ row }">
 
@@ -70,31 +68,12 @@
         <el-form-item label="Tên Tag" prop="tagName">
           <el-input v-model="addForm.tagName" placeholder="Nhập tên Tag"/>
         </el-form-item>
-        <el-form-item label="Màu sắc" prop="tagColor">
-         <el-select
-           v-model="addForm.tagColor"
-           placeholder="Chọn màu cho tag"
-           :clearable="true"
-           style="width: 100%"
-           filterable>
-           <el-option
-               v-for="item in colors"
-               :key="item.value"
-               :label="item.label"
-               :value="item.value"
-           >
-             <div class="color-display-cell">
-               <el-text style="float: left; width: 60px">
-                 {{ item.value }}
-               </el-text>
-               <div class="color-swatch"
-                    style="float: left;"
-                    :style="{backgroundColor: item.value}">
-               </div>
-               <el-text>{{ item.label }}</el-text>
-             </div>
-           </el-option>
-         </el-select>
+        <el-form-item label="Màu sắc" prop="tagColor" v-if="addForm.tagName">
+          <el-color-picker v-model="addForm.tagColor"
+                           color-format="hex" style="width: 100px"
+                           @active-change="handleColorChangeAdd"
+          />
+          <Tag :tag="addForm"/>
         </el-form-item>
       </el-form>
       <template #footer >
@@ -119,31 +98,10 @@
           <el-input v-model="editForm.tagName"/>
         </el-form-item>
         <el-form-item label="Màu sắc" prop="tagColor">
-          <el-select
-            v-model="editForm.tagColor"
-            placeholder="Chọn màu cho tag"
-            :clearable="true"
-            style="width: 100%"
-            filterable>
-            <el-option
-              v-for="item in colors"
-              :key="item.value"
-              :value="item.value"
-              :label="item.label">
-              <div class="color-display-cell">
-                <el-text style="float:left; width: 60px">
-                  {{ item.value }}
-                </el-text>
-                <div style="float:left"
-                    class="color-swatch"
-                    :style="{ backgroundColor: item.value }"
-                ></div>
-                <el-text  >
-                  {{ item.label }}
-                </el-text>
-              </div>
-            </el-option>
-          </el-select>
+          <el-color-picker v-model="editForm.tagColor"
+                           @active-change="handleColorChangeEdit"
+                           color-format="hex" style="width: 100px"/>
+          <Tag :tag="editForm"/>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -162,7 +120,7 @@ import { ref, reactive, onMounted } from "vue";
 import {createTag, deleteTagById, getData, updateTag} from "@/network/tag.js";
 import { getCurrentInstance } from "vue";
 import {Delete, Edit, Plus} from "@element-plus/icons-vue";
-
+import Tag from '@/components/tag/Tag.vue'
 const { proxy } = getCurrentInstance()
 
 
@@ -181,25 +139,12 @@ const addForm = ref({
   tagName: '',
   tagColor: '',
 })
-const editForm = reactive({})
+const  editForm = reactive({})
 const formRules = {
   tagName: [{required: true, message: 'Vui lòng nhập tên tag', trigger:'blur'},],
   tagColor: [{required: true, message: 'Vui lòng nhập màu tag', trigger:'blur'},],
 }
-const colors = ref([
-  { label: 'Đỏ', value: '#FF4D4F' },
-  { label: 'Cam', value: '#FA8C16' },
-  { label: 'Vàng', value: '#FADB14' },
-  { label: 'Xanh lá', value: '#52C41A' },
-  { label: 'Xanh dương', value: '#1890FF' },
-  { label: 'Tím', value: '#722ED1' },
-  { label: 'Hồng', value: '#EB2F96' },
-  { label: 'Xám', value: '#8C8C8C' },
-  { label: 'Đen', value: '#262626' },
-  { label: 'Xanh ngọc', value: '#13C2C2' },
-  { label: 'Xanh biển', value: '#2F54EB' },
-  { label: 'Nâu', value: '#A52A2A' }
-])
+
 const fetchData = async () => {
   try{
     const res = await getData(queryInfo)
@@ -224,21 +169,20 @@ const handleCurrentChange = (newPage) => {
 }
 const addDialogClose = () => {
   addDialogVisible.value = false
-  addFormRef.value.resetFields()
+  addFormRef.value = null
 }
 const editDialogClose = () => {
   editDialogVisible.value = false
-  editFormRef.value.resetFields()
+  editFormRef.value = null
 }
 const showEditDialog = (row) => {
-  console.log(row)
   Object.assign(editForm ,row)
   editDialogVisible.value = true
 }
 
 const addTag = async () => {
   try{
-    console.log(addForm.value)
+    await addFormRef.value.validate()
     const res = await createTag(addForm.value)
 
     if(res.code === 200){
@@ -254,6 +198,7 @@ const addTag = async () => {
 
 const editTag = async () => {
   try {
+    await editFormRef.value.validate()
     const res = await updateTag(editForm)
     if(res.code === 200){
       proxy.$msgSuccess(res.msg)
@@ -266,6 +211,13 @@ const editTag = async () => {
   await fetchData()
 }
 
+const handleColorChangeAdd = (color) => {
+  addForm.value.tagColor=color
+};
+
+const handleColorChangeEdit = (color) => {
+  editForm.tagColor=color
+};
 const deleteTagByIdVue = async (id) => {
   try {
     const res = await deleteTagById(id)
