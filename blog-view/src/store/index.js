@@ -1,11 +1,13 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import {computed, ref} from "vue";
 
 export const useAppStore = defineStore('app', () => {
 
-    const webTitleSuffix = ref(getStorage('webTitleSuffix', ''));
+    const siteInfo = ref(getStorage('siteInfo', {}));
     const introduction = ref(getStorage('introduction', getDefaultIntro()));
 
+    const webTitleSuffix = computed(() => siteInfo.value?.webTitleSuffix || '')
+    const author = computed(() => siteInfo.value?.author || '')
 
     function getStorage  (key, defaultValue) {
         try {
@@ -27,11 +29,11 @@ export const useAppStore = defineStore('app', () => {
     }}
 
     // Actions
-    const saveWebTitleSuffix = (suffix) => {
-        webTitleSuffix.value = suffix;
-        setStorage('webTitleSuffix', suffix);
-
+    const saveSiteInfo = (data) => {
+        siteInfo.value = data
+        setStorage('siteInfo', data);
     };
+
 
     const saveIntroduction = (data) => {
         introduction.value = { ...introduction.value, ...data };
@@ -44,9 +46,11 @@ export const useAppStore = defineStore('app', () => {
     };
 
     return {
-        webTitleSuffix,
+        siteInfo,
+        author,
         introduction,
-        saveWebTitleSuffix,
+        webTitleSuffix,
+        saveSiteInfo,
         saveIntroduction,
         resetIntroduction,
     };

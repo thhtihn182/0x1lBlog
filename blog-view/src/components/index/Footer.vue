@@ -1,5 +1,5 @@
 <template>
-  <footer class="m-padded-tb-large m-opacity" style="background: #1b1c1d; color: white">
+  <footer  class="m-padded-tb-large m-opacity" style="background: #1b1c1d; color: white">
     <div style="text-align: center; max-width: 1200px; margin: 0 auto">
       <div style="background: transparent">
         <div>
@@ -65,7 +65,7 @@
         </a>
       </div>
     </div>
-  </footer>
+  </footer >
 </template>
 
 

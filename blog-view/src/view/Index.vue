@@ -30,21 +30,22 @@
 
 <script setup>
 import Nav from "@/components/index/Nav.vue";
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import Footer from "@/components/index/Footer.vue";
 import {getHitokoto, getSite, translateUrl} from "@/network/index.js";
 import {useAppStore} from "@/store/index.js";
 import {useRoute} from "vue-router";
 import Introduction from "@/components/sidebar/Introduction.vue";
+import {storeToRefs} from "pinia";
 
 const route = useRoute()
 const store = useAppStore()
+const {siteInfo} = storeToRefs(store)
 
-const siteInfo = ref({})
 const badges = ref([])
 const newBlogList = ref([])
 const hitokoto = ref({})
-const blogName = ref('Think\'s Blog')
+const blogName = computed(() => siteInfo.value?.blogName || 'Thinh0x1l\'')
 
 // Functions
 const getHitokotoData = async () => {
@@ -69,11 +70,10 @@ const site = async () => {
     const res = await getSite();
     if(res.code === 200){
       badges.value = res.data.badges
-      siteInfo.value = res.data.siteInfo
       newBlogList.value = res.data.newBlogList
-      blogName.value = res.data.siteInfo.blogName || 'Thinh0x1l\''
+
       store.saveIntroduction(res.data.introduction)
-      store.saveWebTitleSuffix(res.data.siteInfo.webTitleSuffix)
+      store.saveSiteInfo(res.data.siteInfo)
       watch(
           [() => route.meta?.title , () => store.webTitleSuffix],
           ([title, suffix]) => {
