@@ -16,8 +16,13 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.js'
 import 'prismjs/plugins/toolbar/prism-toolbar.css'
 import 'prismjs/plugins/toolbar/prism-toolbar.js'
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.js'
+import 'prismjs/plugins/show-language/prism-show-language.js'
 
 const rainbowBracesCSS = `
+pre[class*="language-"],
+code[class*="language-"] {
+    border-radius: 0 !important; 
+}
 .token.punctuation.brace-level-1 { color: #ff6b6b; }
 .token.punctuation.brace-level-2 { color: #4ecdc4; }
 .token.punctuation.brace-level-3 { color: #ffe66d; }
@@ -29,9 +34,10 @@ const rainbowBracesCSS = `
 .copy-to-clipboard-button {
     background: #4299e1 !important;
     color: white !important;
-    border: none !important;
+    border: none !important;w   
     border-radius: 4px !important;
     padding: 4px 12px !important;
+    margin-right: 1em !important;
     font-size: 12px !important;
 }
 `

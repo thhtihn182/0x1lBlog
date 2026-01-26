@@ -1,6 +1,6 @@
 <template>
   <div style="z-index: 10">
-    <div class="pb-2 px-4 pt-4 surface-card shadow-2 mb-5 relative m-box">
+    <div class="pb-2 px-4 pt-4 surface-card   relative " style="border: 1px solid #d4d4d5;">
 
       <div class="gradient-badge gold">
         <div class="badge-triangle"></div>
@@ -68,42 +68,49 @@
           </div>
 
         </div>
+
+      </div>
+
+    </div>
+    <div class="blog-info-container">
+      <div style="display: flex; align-items: center;">
+        <ul style="list-style-type: disc; padding-left: 1.5em; margin: 0;">
+          <li style="margin-bottom: 0.5em;">
+            Tác giả: {{author}}
+            <a href="/about" class="blog-info-link" target="_blank">(Liên hệ tác giả)</a>
+          </li>
+          <li style="margin-bottom: 0.5em;">Ngày phát hành: {{ formatDate(blog.createTime,'YYYY-MM-DD HH:mm') }}</li>
+          <li style="margin-bottom: 0.5em;">Cập nhật lần cuối: {{ formatDate(blog.updateTime,'YYYY-MM-DD HH:mm') }}</li>
+          <li>
+            Trang web này được cấp phép theo
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" class="blog-info-link">
+              giấy phép Creative Commons Attribution 4.0 International (CC BY 4.0)
+            </a>.
+            Bạn được phép sao chép, trích dẫn và sử dụng nội dung này cho mục đích thương mại.
+            Tuy nhiên, bạn phải ghi rõ tên tác giả và nguồn bài viết.
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted, nextTick} from 'vue'
+import {ref, onMounted, nextTick, computed} from 'vue'
 import Tag from '@/components/tag/Tag.vue'
 import { getBlogById } from '@/network/blog'
-import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
 import { formatDate } from "@/util/dateTimeFormatUtils.js";
 import {useRoute} from "vue-router";
+import {useAppStore} from "@/store/index.js";
+import {storeToRefs} from "pinia";
+
+const store = useAppStore()
 const route = useRoute()
-const toast = useToast()
+
+const {author} = storeToRefs(store)
+
 const blog = ref({})
-const category = ref()
 
-
-const getTagSeverity = (semanticColor) => {
-  const colorMap = {
-    'red': 'danger',
-    'orange': 'warning',
-    'yellow': 'warning',
-    'olive': 'success',
-    'green': 'success',
-    'teal': 'info',
-    'blue': 'info',
-    'violet': 'secondary',
-    'purple': 'secondary',
-    'pink': 'danger',
-    'brown': 'warning',
-    'grey': 'secondary',
-    'black': 'contrast'
-  }
-  return colorMap[semanticColor] || 'info'
-}
 
 
 const fetchBlog = async () => {
@@ -111,7 +118,6 @@ const fetchBlog = async () => {
     const response = await getBlogById(route.query.id)
     if (response.code === 200) {
       blog.value = response.data
-      console.log(blog.value)
 
     } else {
 
@@ -134,6 +140,31 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.blog-info-container {
+  background: #fcfff5;
+  color: #2c662d;
+  border: 1px solid #a3c293;
+  margin-top: -1px;
+  padding: 1em 1.53666666em;
+  font-size: 1em;
+  line-height: 1.4285em;
+  min-height: 1em;
+  position: relative;
+  justify-content: space-between;
+}
+
+.blog-info-link {
+  color: #4183c4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+.blog-info-link:hover {
+  opacity: 0.7;
+  text-decoration: none;
+}
+
 
 .header{
   border: none;
