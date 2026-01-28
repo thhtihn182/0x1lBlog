@@ -5,14 +5,7 @@
          :key="item.id">
 
 
-      <div class="gradient-badge gold"  v-if="item.top">
-        <div class="badge-triangle"></div>
-        <div class="badge-content">
-          <span class="badge-text">TOP</span>
-          <!--          <div class="arrow-up"></div>-->
-        </div>
-        <div class="badge-shine"></div>
-      </div>
+      <PinTop v-if="item.top"/>
 
       <!-- Container với flex layout -->
       <div class="flex flex-column">
@@ -51,15 +44,7 @@
             </div>
           </div>
 
-          <!-- Category button -->
-          <a :href="item.category?.id" class="col-12 mb-3">
-            <Button
-                :label="item.category.name"
-                icon="pi pi-folder-open"
-                class="ribbon-label m-text-500 text-base-ct "
-
-            />
-          </a>
+          <Ribbon :category="item?.category"/>
           <div class="px-3 py-2">
             <!-- Mô tả bài viết -->
             <div class="m-padded-tb-small m-markdown typo " v-html="item.description"></div>
@@ -92,7 +77,9 @@
 <script setup>
 import { defineProps } from 'vue'
 import {formatDate} from "@/util/dateTimeFormatUtils.js";
-import Tag from '@/components/tag/Tag.vue'
+import Tag from '@/components/blogList/Tag.vue'
+import Ribbon from "@/components/blogList/Ribbon.vue";
+import PinTop from "@/components/blogList/PinTop.vue";
 
 defineProps({
   blogList: {

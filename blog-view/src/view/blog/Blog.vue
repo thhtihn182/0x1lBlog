@@ -2,13 +2,7 @@
   <div style="z-index: 10">
     <div class="pb-2 px-4 pt-4 surface-card   relative " style="border: 1px solid #d4d4d5;">
 
-      <div class="gradient-badge gold">
-        <div class="badge-triangle"></div>
-        <div class="badge-content">
-          <span class="badge-text">TOP</span>
-        </div>
-        <div class="badge-shine"></div>
-      </div>
+      <PinTop v-if="blog.top"/>
       <!-- Container với flex layout -->
       <div class="flex flex-column">
         <div >
@@ -45,15 +39,8 @@
               </div>
             </div>
           </div>
-          <!-- Category button -->
-          <a :href="blog.category.id" class="col-12 mb-3" v-if="blog.category">
-            <Button
-                :label="blog.category?.name"
-                icon="pi pi-folder-open"
-                class="ribbon-label m-text-500 text-base-ct "
 
-            />
-          </a>
+          <Ribbon v-if="blog.category" :category="blog.category"/>
           <div class="px-3 py-2">
             <!-- Mô tả bài viết -->
             <div class="typo m-padded-tb-small px-3 line-numbers match-braces rainbow-braces" v-html="blog.content"></div>
@@ -97,12 +84,14 @@
 
 <script setup>
 import {ref, onMounted, nextTick, computed} from 'vue'
-import Tag from '@/components/tag/Tag.vue'
+import Tag from '@/components/blogList/Tag.vue'
 import { getBlogById } from '@/network/blog'
 import { formatDate } from "@/util/dateTimeFormatUtils.js";
 import {useRoute} from "vue-router";
 import {useAppStore} from "@/store/index.js";
 import {storeToRefs} from "pinia";
+import Ribbon from "@/components/blogList/Ribbon.vue";
+import PinTop from "@/components/blogList/PinTop.vue";
 
 const store = useAppStore()
 const route = useRoute()

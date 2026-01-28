@@ -124,7 +124,7 @@
     color: #1abc9c;
 }
 
-.typo a[target="_blank"]::after {
+.typo a[target="_blank"]:not(:has(img))::after {
     background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB0PSIxNjM5OTgyNzA4MTg3IiBjbGFzcz0iaWNvbiIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHAtaWQ9IjE0ODE5IiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48ZGVmcz48c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwvc3R5bGU+PC9kZWZzPjxwYXRoIGQ9Ik04MTkuMiA4ODcuNDY2NjY3SDEzNi41MzMzMzNWMjA0LjhoMzQxLjMzMzMzNFY2OC4yNjY2NjdIMTM2LjUzMzMzM2ExMzYuNTMzMzMzIDEzNi41MzMzMzMgMCAwIDAtMTM2LjUzMzMzMyAxMzYuNTMzMzMzdjY4Mi42NjY2NjdhMTM2LjUzMzMzMyAxMzYuNTMzMzMzIDAgMCAwIDEzNi41MzMzMzMgMTM2LjUzMzMzM2g2ODIuNjY2NjY3YTEzNi41MzMzMzMgMTM2LjUzMzMzMyAwIDAgMCAxMzYuNTMzMzMzLTEzNi41MzMzMzNWNTQ2LjEzMzMzM2gtMTM2LjUzMzMzM3YzNDEuMzMzMzM0eiIgZmlsbD0iIzFhYmM5YyIgcC1pZD0iMTQ4MjAiPjwvcGF0aD48cGF0aCBkPSJNOTU1LjczMzMzMyAwaC0yNzMuMDY2NjY2YTY4LjI2NjY2NyA2OC4yNjY2NjcgMCAwIDAgMCAxMzYuNTMzMzMzaDEwOC4yMDI2NjNMNDIxLjI3MzYgNTA2LjEyOTA2N2E2OC4yNjY2NjcgNjguMjY2NjY3IDAgMSAwIDk2LjU5NzMzMyA5Ni41OTczMzNMODg3LjQ2NjY2NyAyMzMuMTMwNjY3VjM0MS4zMzMzMzNhNjguMjY2NjY3IDY4LjI2NjY2NyAwIDAgMCAxMzYuNTMzMzMzIDBWNjguMjY2NjY3YTY4LjI2NjY2NyA2OC4yNjY2NjcgMCAwIDAtNjguMjY2NjY3LTY4LjI2NjY2N3oiIGZpbGw9IiMxYWJjOWMiIHAtaWQ9IjE0ODIxIj48L3BhdGg+PC9zdmc+);
     background-repeat: no-repeat;
     content: '';
@@ -165,14 +165,19 @@
     margin: 0 5px;
 }
 
-.typo p code, .typo ul code, .typo ol code {
-    margin-left: 3px;
-    margin-right: 3px;
-    border: 1px solid #ddd;
-    color: #e4305e;
-    background: #fdf2f5;
-    border-radius: 3px;
-    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+.typo p code,
+.typo ul code,
+.typo ol code {
+    margin: 0 3px;
+    padding: 0.2em 0.5em;
+    border: 1px solid #2d3748;
+    color: #e2e8f0;
+    background: #2d3748;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    font-size: 0.9em;
+    font-weight: 450;
+    letter-spacing: -0.02em;
 }
 
 .typo hr {
@@ -242,6 +247,10 @@ ràng với các khối khác; giá trị lề nên được tối ưu hóa cho 
     margin-bottom: 16px;
     font-weight: 600;
     line-height: 1.25;
+    display: flex;
+    align-items: center; /* Canh giữa theo chiều dọc */
+    gap: 12px; /* Khoảng cách giữa các phần tử */
+    flex-wrap: wrap; /* Xuống dòng nếu không đủ chỗ */
 }
 
 .typo h1 {
@@ -302,7 +311,7 @@ ràng với các khối khác; giá trị lề nên được tối ưu hóa cho 
 .typo table th, .typo table td, .typo table caption {
     border: 1px solid #ddd;
     padding: 0.5em 1em;
-    color: #666;
+    color: #616161;
 }
 
 .typo table th {
@@ -310,7 +319,19 @@ ràng với các khối khác; giá trị lề nên được tối ưu hóa cho 
 }
 
 .typo table thead th {
-    background: #f1f1f1;
+    background: #bfbfbf;
+}
+
+.typo table tr:nth-child(even) {
+    background-color: rgba(220, 220, 220, 0.68);
+}
+
+.typo table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.typo table tr:hover {
+    background-color: #d8d8d8;
 }
 
 .typo table caption {
@@ -325,6 +346,12 @@ ràng với các khối khác; giá trị lề nên được tối ưu hóa cho 
     Để tùy chỉnh kích thước hình ảnh:
     ![pic.jpg](https://yourimgurl.com/pic.jpg#w50)
 */
+
+.typo a img{
+    width: auto !important;
+    margin: 0;
+}
+
 .typo img[src*="#w90"] {
     width: 90%;
 }
