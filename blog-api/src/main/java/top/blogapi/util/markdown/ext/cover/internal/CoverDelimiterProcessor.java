@@ -1,7 +1,11 @@
 package top.blogapi.util.markdown.ext.cover.internal;
 
+import org.commonmark.node.Node;
+import org.commonmark.node.Text;
 import org.commonmark.parser.delimiter.DelimiterProcessor;
 import org.commonmark.parser.delimiter.DelimiterRun;
+import top.blogapi.util.markdown.ext.cover.Cover;
+import top.blogapi.util.markdown.ext.heimu.Heimu;
 
 public class CoverDelimiterProcessor implements DelimiterProcessor {
     @Override
@@ -21,6 +25,24 @@ public class CoverDelimiterProcessor implements DelimiterProcessor {
 
     @Override
     public int process(DelimiterRun opener, DelimiterRun closer) {
-        return opener.length() > 1 && closer.length() > 1 ? 2 : 0;
+        if (opener.length() >= 2 && closer.length() >= 2) {
+            Text openerText = opener.getOpener();
+            Text closerText = closer.getCloser();
+
+            Node cover = new Cover();
+            Node tmp = openerText.getNext();
+            while (tmp != null && tmp != closerText) {
+                Node next = tmp.getNext();
+                cover.appendChild(tmp);
+                tmp = next;
+            }
+
+            openerText.insertAfter(cover);
+            openerText.unlink();
+            closerText.unlink();
+            return 2;
+        }
+
+        return 0;  
     }
 }
