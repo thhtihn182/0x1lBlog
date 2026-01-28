@@ -82,7 +82,7 @@
                 <el-input v-model="badge.value.value" placeholder="Nhập giá trị" />
               </el-form-item>
               <el-form-item label="Màu sắc">
-                <el-color-picker v-model="badge.value.color" show-alpha />
+                <el-color-picker v-model="badge.value.color" color-format="hex" />
                 <el-input
                     v-model="badge.value.color"
                     placeholder="Nhập mã màu"
