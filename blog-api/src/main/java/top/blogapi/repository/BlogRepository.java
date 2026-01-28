@@ -55,10 +55,41 @@ public interface BlogRepository {
     @Delete("DELETE FROM blog_tag WHERE blog_id = #{blogId} ")
     int deleteBlogTagByBlogId(@Param("blogId") Long blogId);
 
-    @Insert("INSERT INTO blog (title, content, description, flag, is_published, is_recommend, is_appreciation, is_top, " +
-            "     is_share_statement, is_comment_enabled, create_time, update_time, views, words, read_time, category_id, user_id) " +
-            "VALUES (#{title}, #{content}, #{description}, #{flag}, #{published}, #{recommend}, #{appreciation}, #{top}, " +
-            "     #{shareStatement}, #{commentEnabled}, #{createTime}, #{updateTime}, #{views}, #{words}, #{readTime}, #{category.id}, #{user.id}) ")
+    @Insert("""
+        INSERT INTO blog (
+            title,
+            content,
+            description,
+            is_published,
+            is_recommend,
+            is_appreciation,
+            is_top,
+            is_comment_enabled,
+            create_time,
+            update_time,
+            views,
+            words,
+            read_time,
+            category_id,
+            user_id
+        ) VALUES (
+            #{title},
+            #{content},
+            #{description},
+            #{published},
+            #{recommend},
+            #{appreciation},
+            #{top},
+            #{commentEnabled},
+            #{createTime},
+            #{updateTime},
+            #{views},
+            #{words},
+            #{readTime},
+            #{category.id},
+            #{user.id}
+        )
+    """)
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int saveBlog(Blog blog);
 
@@ -74,19 +105,33 @@ public interface BlogRepository {
     @Update("UPDATE blog SET is_recommend = #{recommend} WHERE id = #{id}")
     int updateBlogRecommendById(@Param("id")Long id, @Param("recommend") boolean recommend);
 
-    @Select("SELECT b.id, b.title, b.content, b.description, b.flag, b.is_published, b.is_recommend, " +
-            "b.is_appreciation, b.is_share_statement, b.is_comment_enabled, b.create_time, b.update_time, " +
-            "b.views, b.words, b.read_time, b.is_top, " +
-            "c.id as category_id, c.name as category_name " +
-            "FROM blog b " +
-            "JOIN category c ON b.category_id = c.id " +
-            "WHERE b.id = #{id}")
+    @Select("""
+            SELECT
+                b.id,
+                b.title,
+                b.content,
+                b.description,
+                b.is_published,
+                b.is_recommend,
+                b.is_appreciation,
+                b.is_comment_enabled,
+                b.create_time,
+                b.update_time,
+                b.views,
+                b.words,
+                b.read_time,
+                b.is_top,
+                c.id as category_id,
+                c.name as category_name
+            FROM blog b
+            JOIN category c ON b.category_id = c.id
+            WHERE b.id = #{id}
+    """)
     @Results({
             @Result(property = "published", column = "is_published"),
             @Result(property = "recommend", column = "is_recommend"),
             @Result(property = "top", column = "is_top"),
             @Result(property = "appreciation", column = "is_appreciation"),
-            @Result(property = "shareStatement", column = "is_share_statement"),
             @Result(property = "commentEnabled", column = "is_comment_enabled"),
             @Result(property = "category.id", column = "category_id"),
             @Result(property = "category.name", column = "category_name"),
@@ -104,12 +149,10 @@ public interface BlogRepository {
         SET title = #{title},
             content = #{content},
             description = #{description},
-            flag = #{flag},
             is_published = #{published},
             is_recommend = #{recommend},
             is_top = #{top},
             is_appreciation = #{appreciation},
-            is_share_statement = #{shareStatement},
             is_comment_enabled = #{commentEnabled},
             create_time = #{createTime},
             update_time = #{updateTime},
@@ -173,7 +216,7 @@ public interface BlogRepository {
     List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths);
 
     @Select("""
-        SELECT b.id, b.title, b.content, b.flag, b.is_appreciation, b.is_share_statement,
+        SELECT b.id, b.title, b.content,  b.is_appreciation,
                b.is_comment_enabled, b.is_top, b.create_time, b.update_time, b.views, b.words ,
                b.read_time,c.id AS category_id, c.name AS category_name
         FROM blog AS b
@@ -184,7 +227,6 @@ public interface BlogRepository {
             @Result(property = "category.name", column = "category_name"),
             @Result(property = "category.id", column = "category_id"),
             @Result(property = "appreciation", column = "is_appreciation"),
-            @Result(property = "shareStatement", column = "is_share_statement"),
             @Result(property = "commentEnabled", column = "is_comment_enabled"),
             @Result(property = "top", column = "is_top"),
     })

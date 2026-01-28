@@ -91,8 +91,9 @@ public class BlogOrchestrator {
             if(StringUtils.isEmpty(
                     blog.getTitle(),
                     blog.getContent(),
-                    blog.getDescription(),
-                    blog.getFlag())
+                    blog.getDescription()
+//                    , blog.getFlag()
+            )
                     || blog.getWords() == null || blog.getWords() < 0){
                 throw BlogServiceException.builder()
                         .invalidParameters("Các thông tin không được để trống")

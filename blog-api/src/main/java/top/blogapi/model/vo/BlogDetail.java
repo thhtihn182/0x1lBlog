@@ -18,9 +18,7 @@ public class BlogDetail {
     Long id;
     String title;
     String content;
-    String flag;
     Boolean appreciation;
-    Boolean shareStatement;
     Boolean commentEnabled;
     Boolean top;
     LocalDateTime createTime;
