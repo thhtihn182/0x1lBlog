@@ -8,7 +8,7 @@
         <el-form-item prop="title">
           <el-input v-model="form.title" placeholder="Vui lòng nhập tiêu đề"
                     style="min-width: 500px">
-            <template #prepend>
+<!--            <template #prepend>
               <el-select
                   v-model="form.flag"
                   placeholder="Vui lòng chọn thể loại"
@@ -23,7 +23,7 @@
                     :key="index"
                 />
               </el-select>
-            </template>
+            </template>-->
           </el-input>
         </el-form-item>
 
@@ -113,7 +113,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-switch v-model="form.shareStatement" active-text="Bản quyền " />
+<!--          <el-switch v-model="form.shareStatement" active-text="Bản quyền " />-->
           <el-switch v-model="form.appreciation" active-text="Ủng hộ " />
           <el-switch v-model="form.recommend" active-text="Đề xuất " />
           <el-switch v-model="form.commentEnabled" active-text="Bình luận " />
@@ -150,7 +150,7 @@ const tagList = ref([])
 
 const form = reactive({
   title: '',
-  flag: null,
+  // flag: null,
   content: '',
   description: '',
   cate: null,
@@ -158,7 +158,7 @@ const form = reactive({
   readTime: null,
   views: 0,
   words: null,
-  shareStatement: false,
+  // shareStatement: false,
   appreciation: false,
   top: false,
   recommend: false,
