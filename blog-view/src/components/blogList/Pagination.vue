@@ -15,6 +15,8 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import {useScrollToTop} from "@/util/ScrollToTop.js";
+const {scrollToTop} = useScrollToTop()
 
 const props = defineProps({
   getBlogList: {
@@ -36,8 +38,7 @@ const totalRecords = computed(() => props.totalPage * pageSize.value)
 
 
 const handlePageChange = (event) => {
-  console.log(event)
-  console.log(first.value)
+  scrollToTop()
   pageNum.value = event.page
   props.getBlogList(event.page+1)
 }

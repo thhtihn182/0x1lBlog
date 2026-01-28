@@ -104,7 +104,7 @@ const blog = ref({})
 
 const fetchBlog = async () => {
   try {
-    const response = await getBlogById(route.query.id)
+    const response = await getBlogById(route.params.id)
     if (response.code === 200) {
       blog.value = response.data
 

@@ -22,6 +22,12 @@
           </div>
         </div>
       </div>
+      <button
+          @click="scrollToTop"
+          class="scroll-top-btn"
+      >
+        <img src="/src/assets/img/plane-top.png"  alt="dfds">
+      </button>
     </div>
 
     <Footer :siteInfo="siteInfo" :badges="badges" :newBlogList="newBlogList" :hitokoto="hitokoto"/>
@@ -37,6 +43,9 @@ import {useAppStore} from "@/store/index.js";
 import {useRoute} from "vue-router";
 import Introduction from "@/components/sidebar/Introduction.vue";
 import {storeToRefs} from "pinia";
+import {useScrollToTop} from '@/util/ScrollToTop.js'
+
+const {scrollToTop} = useScrollToTop()
 
 const route = useRoute()
 const store = useAppStore()
@@ -64,6 +73,10 @@ const getHitokotoData = async () => {
     }
   }
 }
+
+watch(() => route.fullPath, () =>{
+  scrollToTop()
+})
 
 const site = async () => {
   try {
@@ -116,10 +129,25 @@ onMounted(() => {
   padding-right: 1rem;
   padding-bottom: 1rem;
 }
-.container {
-  position: relative;
+
+.scroll-top-btn img{
+  width: 56px;
+  height: 56px;
+}
+.scroll-top-btn {
+  background: none;
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
 }
 
+.scroll-top-btn:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
 /* Sticky sidebar wrapper */
 .sticky-sidebar-wrapper {
   align-self: flex-start;
