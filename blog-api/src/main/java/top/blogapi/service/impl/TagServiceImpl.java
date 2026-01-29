@@ -11,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.tag.TagQueryRequest;
+import top.blogapi.exception.business_exception.BusinessException;
+import top.blogapi.exception.system_exception.SystemException;
 import top.blogapi.model.entity.Tag;
-import top.blogapi.exception.business_exception.domain_exception.TagServiceException;
 import top.blogapi.repository.TagRepository;
 import top.blogapi.service.TagService;
 
@@ -34,53 +35,39 @@ public class TagServiceImpl implements TagService {
         try(Page<Object> page = PageHelper.startPage(
                 tagQueryRequest.getPageNum(),
                 tagQueryRequest.getPageSize(),
-                tagQueryRequest.getSortBy() + " " + tagQueryRequest.getSortOrder())){
+                tagQueryRequest.getSortBy() + " " + tagQueryRequest.getSortOrder())) {
             return new PageInfo<>(
-                        tagRepository.getTagList()
-                    );
-        }catch (DataAccessException e){
-            throw TagServiceException.builder()
-                    .dataRetrievalFailed("TAG","Lỗi truy vấn tag")
-                    .cause(e.getCause())
-                    .context("pageNum", tagQueryRequest.getPageNum())
-                    .build();
+                    tagRepository.getTagList()
+            );
         }
     }
 
     @Transactional
     @Override
     public Tag saveTag(String name, String color) {
-        try{
             Tag t =new Tag (name,color);
-            tagRepository.saveTag(t);
+            if(tagRepository.saveTag(t)==0)
+                throw SystemException.builder()
+                        .message("Thêm tag thất bại")
+                        .operate("insert")
+                        .build();
             return  t;
-        }catch (Exception e){
-            throw TagServiceException.builder()
-                    .operationTagUnsuccessful("TAG",
-                            "CREATE_TAG_UNSUCCESSFUL",
-                            HttpStatus.INTERNAL_SERVER_ERROR,
-                            "Tạo mới Tag không thành công!!")
-                    .msgCause(e.getMessage())
-                    .cause(e.getCause())
-                    .build();
-        }
-
     }
 
     @Override
     public Tag getTagById(Long id) {
         return tagRepository.getTagById(id).orElseThrow(() ->
-                TagServiceException.builder()
-                        .tagNotExist("BLOG", HttpStatus.BAD_REQUEST,"Tag không tồn tại")
-                        .build());
+                BusinessException.builder()
+                        .notFound("TAG")
+                        .message("Tag không tồn tại")
+                        .context("operate", "select")
+                        .build()
+        );
     }
 
     @Override
     public Tag getTagByName(String name) {
-        return tagRepository.getTagByName(name).orElseThrow(() ->
-                TagServiceException.builder()
-                        .tagNotExist("BLOG",HttpStatus.BAD_REQUEST,"Không thể thêm Tag hiện có !!")
-                        .build());
+        return tagRepository.getTagByName(name).get();
     }
 
     @Override
@@ -90,28 +77,22 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void deleteTagById(Long tagId) {
-        int r = tagRepository.deleteTagById(tagId);
-        if (r == 0)
-            throw TagServiceException.builder()
-                    .operationTagUnsuccessful("TAG",
-                            "DELETE_TAG_UNSUCCESSFUL",
-                            HttpStatus.INTERNAL_SERVER_ERROR,
-                            "Xóa tag không thành công!! [id:"+ tagId+"]")
-                    .entityId(tagId.toString())
+        if(tagRepository.deleteTagById(tagId) ==0)
+            throw SystemException.builder()
+                    .message("Xóa Tag thất bại")
+                    .context("tagId", tagId)
+                    .operate("delete")
                     .build();
     }
 
     @Override
     public void updateTag(String name, String color, Long id) {
-        int r = tagRepository.updateTag(name, color, id);
-        if (r == 0)
-            throw TagServiceException.builder()
-                    .operationTagUnsuccessful("TAG",
-                            "UPDATE_TAG_UNSUCCESSFUL",
-                            HttpStatus.INTERNAL_SERVER_ERROR,
-                            "Cập nhật tag không thành công!! [id:"+ id+"]")
-                    .entityId(id.toString())
-                    .build();
+       if(tagRepository.updateTag(name, color, id)==0)
+           throw SystemException.builder()
+                   .message("Cập nhật Tag thất bại")
+                   .context("tagId", id)
+                   .operate("update")
+                   .build();
     }
 
     @Override

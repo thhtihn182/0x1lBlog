@@ -19,7 +19,7 @@ public interface CategoryService {
 
     boolean categoryExist(String categoryName);
 
-    int deleteCategoryById(Long id);
+    void deleteCategoryById(Long id);
 
-    int updateCategory(Category category);
+    void updateCategory(Category category);
 }

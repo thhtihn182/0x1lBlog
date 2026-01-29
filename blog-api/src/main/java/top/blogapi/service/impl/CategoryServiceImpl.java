@@ -6,13 +6,12 @@ import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.category.CategoryQueryRequest;
+import top.blogapi.exception.business_exception.BusinessException;
+import top.blogapi.exception.system_exception.SystemException;
 import top.blogapi.model.entity.Category;
-import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
 import top.blogapi.repository.CategoryRepository;
 import top.blogapi.service.CategoryService;
 
@@ -34,34 +33,28 @@ public class CategoryServiceImpl implements CategoryService {
                 request.getSortBy() + " " + request.getSortOrder());){
             return new PageInfo<>(categoryRepository.getCategoryList()) ;
 
-        }catch (DataAccessException e) {
-            throw CategoryServiceException.builder()
-                    .dataRetrievalFailed("Lỗi lấy danh sách thể loại")
-                    .cause(e.getCause())
-                    .context("pageSize", request.getPageSize())
-                    .context("pageNum", request.getPageNum())
-                    .build();
         }
     }
 
     @Transactional
     @Override
     public Category saveCategory(String categoryName) {
-        Category category = new Category(categoryName);
-        int r = categoryRepository.saveCategory(category);
-        if(r == 1)
-            return category;
-        throw CategoryServiceException.builder()
-                .operationCategoryUnsuccessful("BLOG", HttpStatus.INTERNAL_SERVER_ERROR,"Thêm thể loại không thành công")
-                .build();
+        Category c = new Category(categoryName);
+        if(categoryRepository.saveCategory(c)==0)
+            throw SystemException.builder()
+                    .message("Không thể thêm thể loại!")
+                    .build();
+        return c;
     }
 
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.getCategoryById(id)
                 .orElseThrow(() ->
-                        CategoryServiceException.builder()
-                                .categoryNotExist("BLOG","Thể loại không tồn tại")
+                        BusinessException.builder()
+                                .notFound("CATEGORY")
+                                .message("Thể loại này không tồn tại")
+                                .context("categoryId", id)
                                 .build());
     }
 
@@ -69,9 +62,12 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getCategoryByName(String name) {
         return categoryRepository.getCategoryByName(name)
                 .orElseThrow(() ->
-                        CategoryServiceException.builder()
-                                .categoryNotExist("BLOG","Không thể thêm danh mục hiện có")
-                                .build());
+                        BusinessException.builder()
+                                .notFound("CATEGORY")
+                                .message("Thể loại này không tồn tại")
+                                .context("categoryName", name)
+                                .build()
+                );
     }
 
     @Override
@@ -80,17 +76,22 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public int deleteCategoryById(Long id) {
-        return categoryRepository.deleteCategoryById(id);
+    public void deleteCategoryById(Long id) {
+        if(categoryRepository.deleteCategoryById(id)==0)
+            throw BusinessException.builder()
+                    .notFound("CATEGORY")
+                    .message("Thể loại này không tồn tại")
+                    .context("categoryId", id)
+                    .build();
     }
 
     @Override
-    public int updateCategory(Category category) {
-        int r = categoryRepository.updateCategory(category);
-        if(r == 1)
-            return r;
-        throw CategoryServiceException.builder()
-                .operationCategoryUnsuccessful("CATEGORY",HttpStatus.INTERNAL_SERVER_ERROR,"Cập nhật thể loại không thành công !!")
-                .build();
+    public void updateCategory(Category category) {
+        if( categoryRepository.updateCategory(category)==0)
+            throw BusinessException.builder()
+                    .notFound("CATEGORY")
+                    .message("Thể loại này không tồn tại")
+                    .context("categoryId", category.getId())
+                    .build();
     }
 }

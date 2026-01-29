@@ -203,7 +203,8 @@ const getData = async () => {
       proxy.$msgError(res.msg)
     }
   } catch (error) {
-    proxy.$msgError('Yêu cầu thất bại')
+    console.error(error)
+    proxy.$msgError(error.response.data.message)
   }
 }
 
@@ -228,11 +229,8 @@ const submit = async (published) => {
       proxy.$msgError(res.msg)
 
   } catch (error) {
-    if (error?.errors) {
-      proxy.$msgError('Vui lòng điền các mục biểu mẫu bắt buộc')
-    } else {
-      proxy.$msgError('Yêu cầu thất bại')
-    }
+    console.error(error)
+    proxy.$msgError(error.response.data.msg)
   }
 }
 

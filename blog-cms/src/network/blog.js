@@ -18,7 +18,7 @@ export function getDataQuery(query = '', categoryId = null, pageNum = 1, pageSiz
 
 export function deleteBlogById(id){
     return axios({
-        url: `blogs/${id}`,
+        url: `blog/${id}`,
         method: "DELETE"
     })
 }

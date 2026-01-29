@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.category.CategoryQueryRequest;
 import top.blogapi.dto.response.category.CategoryResponse;
 import top.blogapi.model.entity.Category;
-import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
 import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.service.BlogService;
 import top.blogapi.service.CategoryService;
@@ -35,17 +34,16 @@ public class CategoryOrchestrator {
         return categoryService.getCategoryList(request);
     }
 
-    public String deleteCategoryById(Long id) {
-        if(blogService.countBlogByCategoryId(id)>0)
-            throw CategoryServiceException.builder()
-                    .categoryExistBlogs("CATEGORY","Thể vẫn tồn tại các Blog")
-                    .build();
-        if(categoryService.deleteCategoryById(id)==0)
-            throw CategoryServiceException.builder()
-                    .blogDoesntAddCategories("CATEGORY", HttpStatus.INTERNAL_SERVER_ERROR,"Xóa Blog không thành công !!!")
-                    .errorCode("DELETE_BLOG_UNSUCCESSFUL")
-                    .build();
-        return "Xóa thể loại thành công";
+    public void deleteCategoryById(Long id) {
+//        if(blogService.countBlogByCategoryId(id)>0)
+//            throw CategoryServiceException.builder()
+//                    .categoryExistBlogs("CATEGORY","Thể vẫn tồn tại các Blog")
+//                    .build();
+//        if(categoryService.deleteCategoryById(id)==0)
+//            throw CategoryServiceException.builder()
+//                    .blogDoesntAddCategories("CATEGORY", HttpStatus.INTERNAL_SERVER_ERROR,"Xóa Blog không thành công !!!")
+//                    .errorCode("DELETE_BLOG_UNSUCCESSFUL")
+//                    .build();
     }
 
     public String createCategory(String name) {

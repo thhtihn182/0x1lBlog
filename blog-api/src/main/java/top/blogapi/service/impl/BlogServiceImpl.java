@@ -13,9 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.request.blog.BlogUpdatePublishedRequest;
 import top.blogapi.dto.request.blog.BlogUpdateRecommendRequest;
+import top.blogapi.exception.business_exception.BusinessException;
+import top.blogapi.exception.system_exception.SystemException;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Tag;
-import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
 import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogDetail;
 import top.blogapi.model.vo.BlogInfo;
@@ -26,7 +27,6 @@ import top.blogapi.util.markdown.MarkdownUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -49,14 +49,6 @@ public class BlogServiceImpl implements BlogService {
                             blogQueryRequest.getCategoryId()
                     )
             );
-        }catch (DataAccessException e){
-            throw BlogServiceException.builder()
-                    .dataRetrievalFailed("getListByTitleOrCategory")
-                    .cause(e.getCause())
-                    .context("query", blogQueryRequest.getQuery())
-                    .context("categoryId", blogQueryRequest.getCategoryId())
-                    .context("pageNum", blogQueryRequest.getPageNum())
-                    .build();
         }
     }
 
@@ -64,48 +56,57 @@ public class BlogServiceImpl implements BlogService {
     @Transactional
     @Override
     public void deleteBlogById(Long id) {
+        if(blogRepository.deleteBlogById(id) == 0)
+            throw BusinessException.builder()
+                    .notFound("BLOG")
+                    .message("Blog này không tồn tại")
+                    .context("blogId", id)
+                    .context("delete","Xóa không thành công!!")
+                    .build();
+
+    }
+
+    @Transactional
+    @Override
+    public void deleteBlogTagByBlogId(Long id) {
         try {
-            if(blogRepository.deleteBlogById(id) == 0)
-                throw BlogServiceException.builder()
-                        .blogNotFound(id.toString())
-                        .message("Id không tồn tại để xóa")
-                        .build();
+            blogRepository.deleteBlogTagByBlogId(id);
         }catch (DataAccessException e){
-            throw BlogServiceException.builder()
-                    .blogServerError("Lỗi máy chủ !!, xóa blog không thành công", e)
+            throw SystemException.builder()
+                    .message("Lỗi liên kết Tag-Blog")
                     .build();
         }
     }
 
     @Transactional
     @Override
-    public int deleteBlogTagByBlogId(Long id) {
-        return blogRepository.deleteBlogTagByBlogId(id);
-    }
-
-    @Transactional
-    @Override
-    public int saveBlog(Blog blog) {
+    public void saveBlog(Blog blog) {
         LocalDateTime now = LocalDateTime.now();
         blog.setCreateTime(now);
         blog.setUpdateTime(now);
         blog.setViews(0);
-        return blogRepository.saveBlog(blog);
+        if(blogRepository.saveBlog(blog)==0)
+            throw SystemException.builder()
+                    .message("Lỗi liên kết Tag-Blog")
+                    .build();
     }
 
     @Transactional
     @Override
-    public int updateBlog(Blog blog) {
+    public void updateBlog(Blog blog) {
         blog.setUpdateTime(LocalDateTime.now());
-        return blogRepository.updateBlog(blog);
+        blogRepository.updateBlog(blog);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Blog getBlogById(Long id) {
         Blog blog = blogRepository.getBlogById(id)
-                .orElseThrow(() -> BlogServiceException.builder()
-                        .blogNotFound(id.toString())
+                .orElseThrow(() -> BusinessException.builder()
+                        .notFound("BLOG")
+                        .message("Blog này không tồn tại")
+                        .context("blogId", id)
+                        .context("select","Lấy blog không thành công")
                         .build());
         List<Tag> tags = blogRepository.findTagsByBlogId(id);
         blog.setTags(tags);
@@ -114,51 +115,60 @@ public class BlogServiceImpl implements BlogService {
 
     @Transactional
     @Override
-    public int saveBlogTag(Long blogId, Long tagId) {
-        return blogRepository.saveBlogTag(blogId, tagId);
+    public void saveBlogTag(Long blogId, List<Long> tagIds) {
+         try{
+             blogRepository.saveBlogTag(blogId, tagIds);
+         }catch (DataAccessException e){
+             throw SystemException.builder()
+                     .message("Lỗi liên kết bảng")
+                     .cause(e)
+                     .build();
+         }
     }
 
     @Transactional
     @Override
     public void updateBlogPublishedById(BlogUpdatePublishedRequest blogUpdatePublishedRequest) {
-         int r = blogRepository.updateBlogPublishedById(blogUpdatePublishedRequest.getId(),
-                 blogUpdatePublishedRequest.isPublished());
-         if(r != 1)
-             throw BlogServiceException.builder()
-                     .dataRetrievalFailed("updateBlogRecommendById")
-                     .build();
+        if(blogRepository.updateBlogPublishedById(blogUpdatePublishedRequest.getId(),
+                blogUpdatePublishedRequest.isPublished()) ==0)
+            throw SystemException.builder()
+                    .message("Thao tác thất bại")
+                    .operate("update")
+                    .build();
     }
 
     @Transactional
     @Override
     public void updateBlogRecommendById(BlogUpdateRecommendRequest blogUpdateRecommendRequest) {
-        int r  = blogRepository.updateBlogRecommendById(blogUpdateRecommendRequest.getId(), blogUpdateRecommendRequest.isRecommend());
-        if(r != 1)
-            throw BlogServiceException.builder()
-                    .dataRetrievalFailed("updateBlogRecommendById")
+        if(blogRepository.updateBlogRecommendById(blogUpdateRecommendRequest.getId(),
+                blogUpdateRecommendRequest.isRecommend())==0)
+            throw SystemException.builder()
+                    .message("Thao tác thất bại")
+                    .operate("update")
                     .build();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public int countBlogByCategoryId(Long categoryId) {
-        return blogRepository.countBlogByCategoryId(categoryId);
+    public void countBlogByCategoryId(Long categoryId) {
+         blogRepository.countBlogByCategoryId(categoryId);
     }
 
     @Transactional
     @Override
     public void updateBlogTopById(Long blogId, Boolean top) {
-        int r =  blogRepository.updateBlogTopById(blogId, top);
-        if(r != 1)
-            throw BlogServiceException.builder()
-                    .dataRetrievalFailed("updateBlogTopById")
+        if(blogRepository.updateBlogTopById(blogId, top)==0)
+            throw BusinessException.builder()
+                    .notFound("BLOG")
+                    .message("Blog này không tồn tại")
+                    .context("blogId", blogId)
                     .build();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public int countBlogByTagId(Long tagId) {
-        return blogRepository.countBlogByTagId(tagId);
+    public void countBlogByTagId(Long tagId) {
+        blogRepository.countBlogByTagId(tagId);
     }
 
     @Transactional(readOnly = true)
@@ -195,13 +205,14 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public BlogDetail getBlogByIdAndIsPublished(Long id) {
         BlogDetail blogDetail =  blogRepository.getBlogWithCategory(id)
-                .orElseThrow(() -> BlogServiceException.builder()
-                        .blogNotFound(id.toString())
+                .orElseThrow(() -> BusinessException.builder()
+                        .notFound("BLOG")
+                        .message("Blog này không tồn tại")
+                        .context("blogId", id)
                         .build());
         blogDetail.setTags(blogRepository.findTagsByBlogId(id));
         blogDetail.setContent(MarkdownUtils.markdownToHtmlExtensions(blogDetail.getContent()));
         return blogDetail;
     }
-
 
 }

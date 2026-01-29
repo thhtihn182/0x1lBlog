@@ -13,8 +13,7 @@ public abstract class BaseException extends RuntimeException {
     String errorCode;
     Map<String, Object> context;
     HttpStatus httpStatus;
-    String messageKey;
-    Object[] messageArgs;
+
 
     protected BaseException(Builder<?> builder ){
         super(builder.message, builder.cause);
@@ -22,8 +21,6 @@ public abstract class BaseException extends RuntimeException {
         this.context = builder.context != null ?
                 Map.copyOf(builder.context): Map.of();
         this.httpStatus = builder.httpStatus;
-        this.messageKey = builder.messageKey;
-        this.messageArgs = builder.messageArgs;
     }
 
     @FieldDefaults(level = AccessLevel.PROTECTED)
@@ -33,8 +30,6 @@ public abstract class BaseException extends RuntimeException {
         Throwable cause;
         Map<String, Object> context;
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        String messageKey;
-        Object[] messageArgs;
 
         public T errorCode(String errorCode){
             this.errorCode = errorCode;
@@ -60,11 +55,6 @@ public abstract class BaseException extends RuntimeException {
 
         public T httpStatus(HttpStatus httpStatus){
             this.httpStatus = httpStatus;
-            return this.self();
-        }
-        public T messageKey(String messageKey, Object[] messageArgs){
-            this.messageKey = messageKey;
-            this.messageArgs = messageArgs;
             return this.self();
         }
 

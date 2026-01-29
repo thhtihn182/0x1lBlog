@@ -1,4 +1,4 @@
-package top.blogapi.dto.response._common;
+package top.blogapi.exception.response_exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,16 +18,8 @@ public class ErrorResponse {
     Integer code;
     String errorCode;
     String msg;
-    String cause;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime timestamp;
     String httpMethod;
     String path;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    String domain;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    String entityId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    Map<String, Object> context;
-
 }

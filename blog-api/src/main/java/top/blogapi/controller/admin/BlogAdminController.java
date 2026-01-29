@@ -15,11 +15,9 @@ import top.blogapi.service.TagService;
 import top.blogapi.service.impl.orchestration.BlogOrchestrator;
 import top.blogapi.service.impl.orchestration.CategoryOrchestrator;
 import top.blogapi.model.vo.Result;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -43,11 +41,9 @@ public class BlogAdminController {
 
     @DeleteMapping("/blog/{id}")
     public Result<?> delete(@PathVariable Long id) {
+        blogOrchestrator.deleteBlogById(id);
+        return Result.ok("Xóa blog thành công");
 
-            int r1 = blogService.deleteBlogTagByBlogId(id);
-            if(r1 != 1)
-                return Result.error("Lỗi không duy trì được bảng liên kết thẻ blog");
-            return Result.ok(blogOrchestrator.deleteBlogById(id));
     }
 
     @PutMapping("/blog/top")

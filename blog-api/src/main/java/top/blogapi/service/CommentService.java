@@ -16,6 +16,4 @@ public interface CommentService {
     void deleteCommentById(Long id);
 
     void updateComment(CommentUpdateRequest request);
-
-    Map<Integer,Comment> getCommentMap();
 }

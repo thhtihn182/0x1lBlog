@@ -23,7 +23,8 @@ public class CategoryAdminController {
 
     @DeleteMapping("/category/{id}")
     public Result<?> deleteCategoryById(@PathVariable Long id) {
-        return Result.ok(categoryOrchestrator.deleteCategoryById(id));
+        categoryOrchestrator.deleteCategoryById(id);
+        return Result.ok("Xóa thể loại thành công");
     }
 
     @PostMapping("/categories")

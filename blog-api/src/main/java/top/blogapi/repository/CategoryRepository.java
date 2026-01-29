@@ -31,5 +31,8 @@ public interface CategoryRepository {
 
     @Select("SELECT * FROM category WHERE name = #{categoryName}")
     Optional<Category> categoryExist(String categoryName);
+//
+//    @Select()
+//    boolean existsBlogInCategory(@Param("id") Long categoryId);
 
 }

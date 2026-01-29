@@ -93,8 +93,16 @@ public interface BlogRepository {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int saveBlog(Blog blog);
 
-    @Insert("INSERT INTO blog_tag (blog_id, tag_id) VALUES (#{blogId},#{tagId})")
-    int saveBlogTag(Long blogId, Long tagId);
+    @Insert("""
+            <script>
+                INSERT INTO blog_tag (blog_id, tag_id) VALUES
+                <foreach collection="tagIds" item="tagId" separator=",">
+                    (#{blogId},#{tagId})
+                </foreach>
+            </script>
+
+            """)
+    void saveBlogTag(Long blogId, List<Long> tagIds);
 
     @Update("UPDATE blog SET is_top = #{top} WHERE id = #{id}")
     int updateBlogTopById(@Param("id") Long id, @Param("top") boolean top);

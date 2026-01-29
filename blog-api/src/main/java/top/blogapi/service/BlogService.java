@@ -17,25 +17,25 @@ public interface BlogService {
 
     void deleteBlogById(Long id);
 
-    int deleteBlogTagByBlogId(Long id);
+    void deleteBlogTagByBlogId(Long id);
 
-    int saveBlog(Blog blog);
+    void saveBlog(Blog blog);
 
-    int updateBlog(Blog blog);
+    void updateBlog(Blog blog);
 
     Blog getBlogById(Long id);
 
-    int saveBlogTag(Long blogId, Long tagId);
+    void saveBlogTag(Long blogId, List<Long> tagId);
 
     void updateBlogPublishedById(BlogUpdatePublishedRequest blogUpdatePublishedRequest);
 
     void updateBlogRecommendById(BlogUpdateRecommendRequest blogUpdateRecommendRequest);
 
-    int countBlogByCategoryId(Long categoryId);
+    void countBlogByCategoryId(Long categoryId);
 
     void updateBlogTopById(Long blogId, Boolean top);
 
-    int countBlogByTagId(Long tagId);
+    void countBlogByTagId(Long tagId);
 
     List<BlogIdAndTitle> getIdAndTitleList();
 

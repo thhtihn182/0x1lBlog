@@ -9,7 +9,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
@@ -18,10 +17,8 @@ import top.blogapi.dto.response.blog.BlogSummaryResponse;
 import top.blogapi.dto.response.category.CategoryResponse;
 import top.blogapi.dto.response._page.BlogListPageResponse;
 import top.blogapi.exception.business_exception.BusinessException;
+import top.blogapi.exception.system_exception.SystemException;
 import top.blogapi.model.entity.*;
-import top.blogapi.exception.business_exception.domain_exception.BlogServiceException;
-import top.blogapi.exception.business_exception.domain_exception.CategoryServiceException;
-import top.blogapi.exception.business_exception.domain_exception.TagServiceException;
 import top.blogapi.mapper.BlogMapper;
 import top.blogapi.mapper.CategoryMapper;
 import top.blogapi.model.vo.ArchiveBlog;
@@ -52,7 +49,6 @@ public class BlogOrchestrator {
     CategoryMapper categoryMapper;
 
 
-
     public BlogListPageResponse getListByTitleOrCategory(BlogQueryRequest blogQueryRequest) {
         validateBlogQuery(blogQueryRequest);
 
@@ -67,140 +63,111 @@ public class BlogOrchestrator {
     }
 
     private void validateBlogQuery(BlogQueryRequest request) {
-        if(request.getPageNum() <= 0)
-            throw BlogServiceException.builder()
-                    .errorCode("BLOG_INVALID_PAGE")
-                    .httpStatus(HttpStatus.BAD_REQUEST)
+        if (request.getPageNum() <= 0)
+            throw BusinessException.builder()
+                    .validate()
                     .message("Không thể chọn trang nhỏ hơn 1")
                     .context("providedPage", request.getPageNum())
                     .build();
-        if(request.getQuery() != null && request.getQuery().length() > 100)
-            throw BlogServiceException.builder()
-                    .invalidQuery(request.getQuery(),"Vướt quá độ dài tìm kiếm")
-                    .context("length",100)
-                    .context("actualLength",request.getQuery().length())
+        if (request.getQuery() != null && request.getQuery().length() > 100)
+            throw BusinessException.builder()
+                    .validate()
+                    .message("Độ dài vượt quá yêu cầu")
+                    .context("length", 100)
+                    .context("actualLength", request.getQuery().length())
                     .build();
     }
-    public String getResult(Map<String, Object> map , String type){
-        try{
-            Map<String, Object> blogMap = (Map<String, Object>) map.get("blog");
-            JSONObject blogJsonObject = new JSONObject(blogMap);
-            Blog blog = blogJsonObject.toJavaObject(Blog.class);
-            System.out.println(blog);
-            // Xác minh các thuộc tính
-            if(StringUtils.isEmpty(
-                    blog.getTitle(),
-                    blog.getContent(),
-                    blog.getDescription()
+
+    public String getResult(Map<String, Object> map, String type) {
+        Map<String, Object> blogMap = (Map<String, Object>) map.get("blog");
+        JSONObject blogJsonObject = new JSONObject(blogMap);
+        Blog blog = blogJsonObject.toJavaObject(Blog.class);
+        System.out.println(blog);
+        // Xác minh các thuộc tính
+        if (StringUtils.isEmpty(
+                blog.getTitle(),
+                blog.getContent(),
+                blog.getDescription()
 //                    , blog.getFlag()
-            )
-                    || blog.getWords() == null || blog.getWords() < 0){
-                throw BlogServiceException.builder()
-                        .invalidParameters("Các thông tin không được để trống")
-                        .build();
+        )
+                || blog.getWords() == null || blog.getWords() < 0) {
+            throw BusinessException.builder()
+                    .validate()
+                    .message("Các thông tin không được để trống")
+                    .build();
+        }
+        // Xử lý thể loại(category)
+        Object cate = blogMap.get("cate");
+        if (cate == null)
+            throw BusinessException.builder()
+                    .validate()
+                    .message("Thể loại không được để trống")
+                    .build();
+
+
+        if (cate instanceof Integer) { // Chọn danh mục hiện có
+            Category category = categoryService.getCategoryById(((Integer) cate).longValue());
+            blog.setCategory(category);
+        } else if (cate instanceof String) {
+            if (!categoryService.categoryExist((String) cate)) {
+                Category category = categoryService.saveCategory((String) cate);
+                blog.setCategory(category); // Thêm thể loại thành công
             }
-            // Xử lý thể loại(category)
-            Object cate = blogMap.get("cate");
-            if(cate == null)
-                throw BlogServiceException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message("Thể loại không được để trống")
-                        .build();
+        } else
+            throw SystemException.builder()
+                    .operate("insert")
+                    .message("Lỗi thêm thể loại")
+                    .build();
+        // Xử lý tags
+        List<Object> tagList = (List<Object>) blogMap.get("tagList");
+        List<Tag> tags = new ArrayList<>();
 
-
-            if(cate instanceof Integer) { // Chọn danh mục hiện có
-                Category category = categoryService.getCategoryById(((Integer) cate).longValue());
-                blog.setCategory(category);
-            }else if(cate instanceof String) {
-                if(!categoryService.categoryExist((String) cate)){
-                    Category category  = categoryService.saveCategory((String) cate);
-                    blog.setCategory(category); // Thêm thể loại thành công
-                }
-            }else
-                throw CategoryServiceException.builder()
-                        .blogDoesntAddCategories("BLOG",HttpStatus.BAD_REQUEST,"Lỗi thêm thể loại")
-                        .build();
-            // Xử lý tags
-            List<Object> tagList = (List<Object>) blogMap.get("tagList");
-            List<Tag> tags = new ArrayList<>();
-            for(Object t : tagList){
-                if(t instanceof Integer){
-                    Tag tag = tagService.getTagById(((Integer)t).longValue());
-                    tags.add(tag);
-                } else if (t instanceof String) {
-                    if (!tagService.tagExist(t.toString())){
-                        Tag tag = tagService.saveTag((String) t,"black");
-                        System.out.println(tag);
-                        if(tag.getId()!=null) // Thêm tag thành công
-                            tags.add(tag);
-                        else
-                            throw TagServiceException.builder()
-                                    .addTagNotSuccess("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Thêm tag không thành công")
-                                    .build();
-                    }
-                }else
-                    throw TagServiceException.builder()
-                            .nameTagIncorrect("BLOG",HttpStatus.BAD_REQUEST,"Tên Tag không chính xác")
-                            .build();
-            }
-
-
-            if(blog.getReadTime() == null || blog.getReadTime() < 0)
-                // Tính toán thời gian đọc với 200từ/phút + 5 phút ngoài(ảnh, code,...)
-                blog.setReadTime((int)Math.round(blog.getWords()/200.0) + 5);
-            if(blog.getViews() == null || blog.getViews() < 0)
-                blog.setViews(0);
-
-            if(type.equals("save")){
-                User user = new User();
-                user.setId(1L);
-                blog.setUser(user);
-
-                int r = blogService.saveBlog(blog);
-                if(r == 1 ){// Blog đã được insert thành công
-                    // Liên kết Blog và Tags thông qua blog_tag
-                    for(Tag tag: tags){
-                        int r1 = blogService.saveBlogTag(blog.getId(), tag.getId());
-                        if(r1 != 1)
-                            throw BlogServiceException.builder()
-                                    .blogTagException("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Lỗi liên kết bảng")
-                                    .build();
-                    }
-                }
-                else
-                    throw BlogServiceException.builder()
-                            .createBlogFailed("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Tạo Blog thất bại !!")
-                            .build();
-
-                return "Tạo Blog thành công !!";
-            }else{
-                int r = blogService.updateBlog(blog);
-                if(r == 1){
-                    int r1 = blogService.deleteBlogTagByBlogId(blog.getId());
-                    if (r1 != 0){
-                        for(Tag tag: tags){
-                            int r2 = blogService.saveBlogTag(blog.getId(), tag.getId());
-                            if (r2 != 1)
-                                throw BlogServiceException.builder()
-                                    .blogTagException("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Lỗi liên kết bảng")
-                                    .build();
-                        }
-                    }else
-                        throw BlogServiceException.builder()
-                                .createBlogFailed("BLOG",HttpStatus.INTERNAL_SERVER_ERROR,"Cập nhật Blog không thành công !!")
+        for (Object t : tagList) {
+            if (t instanceof Integer) {
+                Tag tag = tagService.getTagById(((Integer) t).longValue());
+                tags.add(tag);
+            } else if (t instanceof String) {
+                if (!tagService.tagExist(t.toString())) {
+                    Tag tag = tagService.saveTag((String) t, "black");
+                    System.out.println(tag);
+                    if (tag.getId() != null) // Thêm tag thành công
+                        tags.add(tag);
+                    else
+                        throw SystemException.builder()
+                                .message("Thêm tag không thành công")
+                                .operate("insert")
                                 .build();
                 }
-                return "Cập nhật Blog thành công !!";
-            }
-        }catch (Exception e){
-            e.printStackTrace();
+            } else
+                throw BusinessException.builder()
+                        .validate()
+                        .message("Tên Tag không chính xác")
+                        .build();
         }
-        return null;
-    }
 
-    public String deleteBlogById(Long id){
+        if (blog.getReadTime() == null || blog.getReadTime() < 0)
+            // Tính toán thời gian đọc với 200từ/phút + 5 phút ngoài(ảnh, code,...)
+            blog.setReadTime((int) Math.round(blog.getWords() / 200.0) + 5);
+        if (blog.getViews() == null || blog.getViews() < 0)
+            blog.setViews(0);
+        List<Long> tagIds = tags.stream().map(Tag::getId).toList();
+        if (type.equals("save")) {
+            User user = new User();
+            user.setId(1L);
+            blog.setUser(user);
+            blogService.saveBlog(blog);
+            blogService.saveBlogTag(blog.getId(), tagIds);
+            return "Tạo Blog thành công !!";
+        } else {
+            blogService.updateBlog(blog);
+            blogService.deleteBlogTagByBlogId(blog.getId());
+            blogService.saveBlogTag(blog.getId(), tagIds);
+        }
+        return "Cập nhật Blog thành công !!";
+    }
+    public void deleteBlogById(Long id){
+        blogService.deleteBlogTagByBlogId(id);
         blogService.deleteBlogById(id);
-        return "Xóa blog thành công !!";
     }
     public List<BlogIdAndTitle> getIdAndTitleList() {
         return blogService.getIdAndTitleList();
@@ -216,17 +183,7 @@ public class BlogOrchestrator {
     }
 
     public void updateBlogTopById(Long blogId, Boolean top){
-        try{
-            blogService.updateBlogTopById(blogId, top);
-        }catch (BlogServiceException e){
-            log.error("Service error updating blog top: {}", blogId, e);
-            throw  BusinessException.builder()
-                    .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .cause(e)
-                    .message("Không thể cập nhật trạng thái top cho blog")
-                    .build();
-
-        }
+        blogService.updateBlogTopById(blogId, top);
     }
 
     public List<BlogIdAndTitle> getIdAndTitleListByIsPublishedAndIsRecommend(){
@@ -258,3 +215,5 @@ public class BlogOrchestrator {
         return blogService.getBlogByIdAndIsPublished(id);
     }
 }
+
+

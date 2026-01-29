@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import top.blogapi.exception.business_exception.domain_exception.SiteSettingException;
 import top.blogapi.model.entity.SiteSetting;
 import top.blogapi.model.vo.Badge;
 import top.blogapi.model.vo.Copyright;
