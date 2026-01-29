@@ -21,6 +21,7 @@ const routes = [
         children: [
             {
                 path: '/home',
+                name: 'home',
                 component: Home,
                 meta:{
                     title: 'Trang chủ'
@@ -28,6 +29,7 @@ const routes = [
             },
             {
                 path: '/archives',
+                name: 'archives',
                 component: Archives,
                 meta: {
                     title: 'Lưu trữ'
@@ -35,6 +37,7 @@ const routes = [
             },
             {
                 path: '/blog/:id',
+                name: 'blog',
                 component: Blog,
                 meta: {
                     title: 'Blog'

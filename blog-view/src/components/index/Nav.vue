@@ -3,33 +3,37 @@
     <nav  ref="navRef" class="text-white" style="background-color: rgb(27, 28, 29); border: none;">
       <div class="container  ">
         <div class="flex-nav">
-            <router-link class="no-underline nav-line" to="/">
+            <router-link class="no-underline nav-line " to="/">
               <h3 class="m-blue text-base-c   "
                   style="margin: 0; padding: 0.900007143em ;font-size: 1.28571429rem;">{{ blogName }}
               </h3>
             </router-link>
-            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide', $route.name==='home'?'active':''"
                 class=" nav-line  md/:hidden no-underline p-3
                 hover:text-blue-300 text-base-c t-m-bold transition-colors
-                transition-duration-200" to="">
+                transition-duration-200" to="/home">
               <font-awesome-icon icon="home" class="mr-2" />Trang chủ
             </router-link>
-            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
+                $route.name===''?'active':'' "
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
                 t-m-bold transition-colors transition-duration-200 p-3" to="">
               <font-awesome-icon icon="lightbulb" class="mr-2" />Phân loại
             </router-link>
-          <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+          <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
+              $route.name==='archives'?'active':''"
                        class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
                 text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="/archives">
             <font-awesome-icon icon="archive" class="mr-2 pi" />Lưu trữ
           </router-link>
-            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
+                $route.name===''?'active':''"
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
                 text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="">
               <font-awesome-icon icon="tag" class="mr-2" />Tag
             </router-link>
-            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide'"
+            <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
+               $route.name===''?'active':''"
                 class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
                 t-m-bold transition-colors transition-duration-200 p-3" to="">
               <font-awesome-icon icon="info-circle" class="mr-2" />Về tôi
@@ -247,6 +251,11 @@ document.addEventListener('click', (e) => {
 
 .p-button-text:hover{
   background: #505050!important;
+}
+
+.active{
+  background: #021e30 !important;
+  color: #93c5fd!important;
 }
 
 .m-search.loading .search.icon::after {
