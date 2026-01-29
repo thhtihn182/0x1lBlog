@@ -1,30 +1,41 @@
-export function useScrollToTop(){
-    const scrollToTop = () => {
-        const cubic = value => Math.pow(value,3);
-        const easeInOuCubic = value =>
-            value < 0.5 ? cubic(value*2) / 2 : 1 - cubic((1-value) * 2) /2;
+export function useScrollToTop() {
+    const rAF = window.requestAnimationFrame
+        || (cb => setTimeout(cb, 16))
+    let animId = null
 
-        const el = document.documentElement;
-        const beginTime = Date.now();
-        const beginValue = el.scrollTop;
-        const duration = 500;
+    const scrollToTop = (options = {}) => {
+        const {
+            duration = 800,
+            element = document.documentElement
+        } = options
 
-        const rAF = window.requestAnimationFrame ||
-            (func => setTimeout(func,16));
+        if (animId) return ;
 
-        const frameFunc = () => {
-            const progress = (Date.now() - beginTime) / duration;
+        const start = performance.now()
+        const from = element.scrollTop
 
-            if(progress < 1){
-                el.scrollTop = beginValue * (1 - easeInOuCubic(progress));
-                rAF(frameFunc);
-            }else
-                el.scrollTop = 0;
-        };
-        rAF(frameFunc);
+        const animate = (now) => {
+            const time = Math.min(1, (now - start) / duration)
+            const eased = time < 0.5 ? 4 * time * time * time : 1 - Math.pow(-2 * time + 2, 3) / 2
+
+            element.scrollTop = from * (1 - eased)
+            if (time < 1) {
+                animId = rAF(animate)
+            } else {
+                animId = null
+            }
+        }
+
+        animId = rAF(animate)
     }
-    return {
-        scrollToTop
-    };
 
+    const stop = () => {
+        if (animId) {
+            const cancel = window.cancelAnimationFrame || clearTimeout
+            cancel(animId)
+            animId = null
+        }
+    }
+
+    return { scrollToTop, stop }
 }
