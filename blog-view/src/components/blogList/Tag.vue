@@ -1,9 +1,9 @@
 <template>
   <div class="tag-container">
-    <a
+    <router-link
         v-for="tag in listTag"
         :key="tag.id"
-        :href="`#${tag.id}`"
+        :to="`/tag/${tag.id}`"
         class="no-underline label tag m-text-500 m-1"
         :style="{
         background: `linear-gradient(
@@ -27,7 +27,7 @@
     >
       <span class="tag-content">{{ tag.name }}</span>
       <span class="tag-hover-effect"></span>
-    </a>
+    </router-link>
   </div>
 </template>
 

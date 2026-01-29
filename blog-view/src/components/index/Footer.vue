@@ -19,15 +19,15 @@
         <div>
           <h4 style="color: white; font-weight: 300">Bài viết mới nhất</h4>
           <div>
-            <a
+            <router-link
                 v-for="(item,index) in newBlogList"
-                :href="item.id"
+                :to="`/blog/${item.id}`"
                 :key="item.id"
                 class="m-padded-tb-small"
                 target="_blank"
                 style="color: rgba(255,255,255,0.8); display: block; padding: 0.5rem 0;">
               {{item.title}}
-            </a>
+            </router-link>
           </div>
         </div>
 
@@ -47,14 +47,14 @@
 
       <p class="m-opacity-tiny">
         <span style="margin-right: 10px" v-if="siteInfo.copyright">{{ siteInfo.copyright.title }}</span>
-        <a href="/" style="color:#ffe500" v-if="siteInfo.copyright">{{ siteInfo.copyright.siteName }}</a>
+        <router-link to="/" style="color:#ffe500" v-if="siteInfo.copyright">{{ siteInfo.copyright.siteName }}</router-link>
       </p>
 
       <div class="github-badges">
         <a
             v-for="(item, index) in badges"
             :key="index"
-            rel="external nofollow"
+            rel="noreferrer nofollow noopener"
             :href="item.url"
             target="_blank"
             :title="item.title"

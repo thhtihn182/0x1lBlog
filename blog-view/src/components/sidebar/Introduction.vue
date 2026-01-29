@@ -72,9 +72,8 @@
           </div>
 
         </div>
-        <div>
+        <div >
           <Accordion
-              class="favorite-accordion"
               :multiple="false"
               v-model:value="activeIndex"
 
@@ -181,6 +180,9 @@ let p = null
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 
+}
+:deep(.p-accordionheader){
+  border-radius: 0 !important;
 }
 :deep(.p-accordionheader .pi-angle-right){
   font-size: 17px;

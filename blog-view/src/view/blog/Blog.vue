@@ -64,7 +64,7 @@
         <ul style="list-style-type: disc; padding-left: 1.5em; margin: 0;">
           <li style="margin-bottom: 0.5em;">
             Tác giả: {{author}}
-            <a href="/about" class="blog-info-link" target="_blank">(Liên hệ tác giả)</a>
+            <router-link to="/about" class="blog-info-link" target="_blank">(Liên hệ tác giả)</router-link>
           </li>
           <li style="margin-bottom: 0.5em;">Ngày phát hành: {{ formatDate(blog.createTime,'YYYY-MM-DD HH:mm') }}</li>
           <li style="margin-bottom: 0.5em;">Cập nhật lần cuối: {{ formatDate(blog.updateTime,'YYYY-MM-DD HH:mm') }}</li>
@@ -83,7 +83,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, nextTick, computed} from 'vue'
+import {ref, onMounted, nextTick, computed, watch} from 'vue'
 import Tag from '@/components/blogList/Tag.vue'
 import { getBlogById } from '@/network/blog'
 import { formatDate } from "@/util/dateTimeFormatUtils.js";

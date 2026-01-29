@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed-nav">
+  <div class="fixed-nav" id="navR">
     <nav  ref="navRef" class="text-white" style="background-color: rgb(27, 28, 29); border: none;">
       <div class="container  ">
         <div class="flex-nav">
@@ -57,6 +57,7 @@
         <Button
             icon="pi pi-bars"
             class="p-button-text p-2 m-2 m-right-top md:hidden text-white"
+            style=""
             @click="toggle"
         />
       </div>
@@ -77,7 +78,11 @@ const mobileMenuOpen = ref(false);
 const toggle = () => {
   mobileMenuOpen.value = !mobileMenuOpen.value;
 };
-
+document.addEventListener('click', (e) => {
+  const el = document.getElementById('navR')
+  if(!el.contains(e.target))
+    mobileMenuOpen.value=false;
+})
 
 </script>
 
@@ -240,6 +245,9 @@ const toggle = () => {
   line-height: 1.4;
 }
 
+.p-button-text:hover{
+  background: #505050!important;
+}
 
 .m-search.loading .search.icon::after {
   content: "";
@@ -253,7 +261,5 @@ const toggle = () => {
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
-
-
 
 </style>

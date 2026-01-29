@@ -57,7 +57,7 @@
           <template #default="scope">
             <el-link
               type="success"
-              href=""
+              :href="'/blog/'+scope.row.blog.id"
               target="_blank"
               v-if="scope.row.page === 0"
             >
@@ -65,7 +65,7 @@
             </el-link>
             <el-link
               type="success"
-              href=""
+              :href="'/about'"
               target="_blank"
               v-if="scope.row.page === 1"
             >

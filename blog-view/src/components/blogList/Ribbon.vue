@@ -54,11 +54,11 @@ const props = defineProps({
 
 <template>
   <!-- Category button -->
-  <a :href="category.id" class="col-12 mb-3">
+  <router-link class="col-12 mb-3" :to="'/category/'+category.id">
     <Button
         :label="category.name"
         icon="pi pi-folder-open"
         class="ribbon-label m-text-500 text-base-ct "
     />
-  </a>
+  </router-link>
 </template>
