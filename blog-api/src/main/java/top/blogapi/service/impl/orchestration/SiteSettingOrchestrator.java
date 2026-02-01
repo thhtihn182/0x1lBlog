@@ -3,12 +3,16 @@ package top.blogapi.service.impl.orchestration;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.blogapi.client.zing_mp3.Mp3Service;
 import top.blogapi.model.entity.SiteSetting;
 import top.blogapi.model.vo.Badge;
 import top.blogapi.model.vo.Copyright;
@@ -27,11 +31,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SiteSettingOrchestrator {
     // Constants cho các loại setting
-    private static final int TYPE_SITE_INFO = 1;
-    private static final int TYPE_BADGE = 2;
-    private static final int TYPE_INTRODUCTION = 3;
+     static int TYPE_SITE_INFO = 1;
+     static int TYPE_BADGE = 2;
+     static int TYPE_INTRODUCTION = 3;
+     static int TYPE_MP3 = 36;
 
     SiteSettingService siteSettingService;
+    ObjectMapper objectMapper;
+    Mp3Service mp3Service;
 
    public Map<String, List<SiteSetting>> getList(){
        return siteSettingService.getList().stream()
@@ -49,6 +56,7 @@ public class SiteSettingOrchestrator {
        Map<String, Object> siteInfoMap = processSiteInfo(groupedByType.getOrDefault(TYPE_SITE_INFO, List.of()));
        List<Badge> badges = processBadges(groupedByType.getOrDefault(TYPE_BADGE, List.of()));
        Introduction introduction = processIntroduction(groupedByType.getOrDefault(TYPE_INTRODUCTION, List.of()));
+       processMp3 (groupedByType.getOrDefault(TYPE_MP3, List.of()));
        Map<String, Object> map = new HashMap<>();
        map.put("siteInfo", siteInfoMap);
        map.put("badges", badges);
@@ -87,6 +95,23 @@ public class SiteSettingOrchestrator {
         introduction.setFavorites(favorites);
         introduction.setRollText(rollTexts);
         return introduction;
+    }
+
+    private Map<String, Map<String, Object>> processMp3(List<SiteSetting> mp3Settings){
+        Map<String, Map<String, Object>> map = new HashMap<>();
+        mp3Settings.forEach((siteSetting) -> {
+            try {
+                JsonNode jsonNode = objectMapper.readTree(siteSetting.getValue());
+                Map<String, Object> nodeMap = objectMapper.convertValue(jsonNode, Map.class);
+                map.put(siteSetting.getNameEn(),nodeMap);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        System.out.println(map);
+        mp3Service.setConfigFromDb(map);
+
+        return map;
     }
 
     /// Xử lý từ Field trong Introduction
