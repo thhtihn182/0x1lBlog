@@ -104,6 +104,9 @@ public interface CommentRepository {
             </if>
     </script>
 """)
+    @Results({
+            @Result(property = "adminComment" , column = "is_admin_comment")
+    })
     List<CommentTree> findRootComments(@Param("blogId") Long blogId, @Param("page") Integer page);
 
     @Select("""
@@ -130,5 +133,8 @@ public interface CommentRepository {
         SELECT * FROM comment_tree
     </script>
 """)
+    @Results({
+            @Result(property = "adminComment" , column = "is_admin_comment")
+    })
     List<CommentTree> findRepliesByRootIds(List<Long> rootIds);
 }
