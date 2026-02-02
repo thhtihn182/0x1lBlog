@@ -12,6 +12,7 @@ import top.blogapi.model.vo.BlogInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.repository.CategoryRepository;
 import top.blogapi.repository.CommentRepository;
+import top.blogapi.service.CommentService;
 import top.blogapi.service.impl.orchestration.SiteSettingOrchestrator;
 
 import javax.sql.DataSource;
@@ -26,6 +27,8 @@ class BlogApiApplicationTests {
 	private DataSource dataSource;
 	@Autowired
 	private BlogMapper blogMapper;
+	@Autowired
+	CommentService commentService;
 
 	@Test
 	void testConnection() throws SQLException {
@@ -43,6 +46,21 @@ class BlogApiApplicationTests {
 	SiteSettingOrchestrator siteSettingOrchestrator;
 
 
+	@Test
+	void test14(){
+		System.out.println(commentService.commentChildTrees(List.of(1L)));
+
+	}
+	@Test
+	void test13(){
+		System.out.println(commentService.commentRootTrees(1, 2, 1L, 0).toString());
+
+	}
+
+	@Test
+	void test12(){
+		siteSettingOrchestrator.getSiteInfo();
+	}
 
 	@Test
 	void test11(){
@@ -79,10 +97,10 @@ class BlogApiApplicationTests {
 
 	}
 
-	@Test
-	void test9(){
-		System.out.println(commentRepository.commentTreeFlat().size());
-	}
+//	@Test
+//	void test9(){
+//		commentRepository.commentTreeFlat(1L,0).forEach(System.out::println);
+//	}
 	@Test
 	void test8(){
 		System.out.println(blogRepository.getIdAndTitleListByIsPublishedAndIsRecommend());

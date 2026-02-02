@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import top.blogapi.model.vo.BlogIdAndTitle;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Comment {
     String email; // Địa chỉ email
     String content; // Nội dung bình luận
     String avatar; // Ảnh đại diện (đường dẫn ảnh)
-    Date createTime; // Thời gian bình luận
+    LocalDateTime createTime; // Thời gian bình luận
     String ip; // Địa chỉ IP của người bình luận
     Boolean published; // Công khai hoặc đưa vào thùng rác
     Boolean adminComment; // Bình luận của quản trị viên (chủ blog)

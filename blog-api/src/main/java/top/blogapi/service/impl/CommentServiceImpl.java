@@ -1,5 +1,7 @@
 package top.blogapi.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -7,15 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.comment.CommentUpdateRequest;
+import top.blogapi.dto.response.comment.CommentByBlogIdResponse;
 import top.blogapi.exception.business_exception.BusinessException;
 import top.blogapi.exception.system_exception.SystemException;
+import top.blogapi.mapper.CommentMapper;
 import top.blogapi.model.entity.Comment;
+import top.blogapi.model.vo.CommentTree;
 import top.blogapi.repository.CommentRepository;
 import top.blogapi.service.CommentService;
 import top.blogapi.util.StringUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,8 @@ import java.util.Map;
 @Slf4j
 public class CommentServiceImpl implements CommentService {
     CommentRepository commentRepository;
+    CommentMapper commentMapper;
+
     @Override
     @Transactional(readOnly = true)
     public List<Comment> getListByPageAndParentCommentId(Integer page, Long parentCommentId, Long blogId) {
@@ -83,4 +89,23 @@ public class CommentServiceImpl implements CommentService {
                     .build();
     }
 
+    @SuppressWarnings("resource")
+    @Transactional(readOnly = true)
+    public PageInfo<CommentByBlogIdResponse.CommentNode> commentRootTrees (int pageNum, int pageSize,Long blogId, Integer page){
+        PageHelper.startPage(pageNum, pageSize, "id desc");
+        List<CommentTree> commentRootTrees = commentRepository.findRootComments(blogId,page);
+        return new PageInfo<>(commentRootTrees).convert(commentMapper::toCommentNode);
+    }
+
+    @Transactional(readOnly = true)
+    public Map<Long, List<CommentByBlogIdResponse.CommentNode>> commentChildTrees(List<Long> commentRootIds){
+        List<CommentTree> commentChildTrees = commentRepository.findRepliesByRootIds(commentRootIds);
+        System.out.println(commentChildTrees);
+        Map<Long, List<CommentByBlogIdResponse.CommentNode>> map = new HashMap<>();
+        for(int i = commentRootIds.size() ; i < commentChildTrees.size() ;i++)
+            map.computeIfAbsent(commentChildTrees.get(i).getThreadRoot(),
+                    key -> new LinkedList<>())
+                    .addFirst(commentMapper.toCommentNode(commentChildTrees.get(i)));
+        return map;
+    }
 }

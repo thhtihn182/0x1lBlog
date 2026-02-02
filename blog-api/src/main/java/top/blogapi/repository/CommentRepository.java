@@ -2,7 +2,7 @@ package top.blogapi.repository;
 
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-import top.blogapi.dto.internal.CommentTree;
+import top.blogapi.model.vo.CommentTree;
 import top.blogapi.model.entity.Comment;
 
 import java.util.List;
@@ -59,29 +59,76 @@ public interface CommentRepository {
     @Update("UPDATE comment SET nickname = #{nickname}, email = #{email}, content = #{content}, ip = #{ip} WHERE id =#{id}")
     int updateComment(Long id,String nickname, String email, String content, String ip);
 
-                @Select("""
-                        with recursive comment_tree as (
-                select
-                    *,
-                    id as thread_root,
-                    0 as is_reply
-                from comment
-                where parent_comment_id is null
-                union all
-                select
-                    c.*,
+    @Select("""
+            <script>
+            WITH RECURSIVE comment_tree AS (
+                SELECT
+                    id, nickname, content, avatar, create_time, is_admin_comment, parent_comment_id,
+                    id AS thread_root,
+                    1 AS depth
+                FROM comment
+                WHERE parent_comment_id IS NULL AND page = #{page} AND is_published
+                <if test="page==0 and blogId!=null">
+                    AND blog_id=#{blogId}
+                </if>
+                UNION ALL
+                SELECT
+                    c.id, c.nickname, c.content, c.avatar, c.create_time, c.is_admin_comment, c.parent_comment_id,
                     ct.thread_root,
-                    1 as is_reple
-                from comment c
-                inner join comment_tree ct
-                on  c.parent_comment_id = ct.id
+                    ct.depth + 1
+                FROM comment c
+                INNER JOIN comment_tree ct
+                ON c.parent_comment_id = ct.id
             )
-            select * from comment_tree
-        """)
+            SELECT * FROM comment_tree
+            </script>
+""")
     @Results({
             @Result(property = "published" , column = "is_published"),
-            @Result(property = "adminComment" , column = "is_admin_comment"),
-            @Result(property = "notice" , column = "is_notice")
+            @Result(property = "adminComment" , column = "is_admin_comment")
     })
-    List<CommentTree> commentTreeFlat();
+    List<CommentTree> commentTreeFlat(Long blogId, Integer page);
+
+    @Select("""
+    <script>
+        SELECT
+            id, nickname, content, avatar, create_time, is_admin_comment, parent_comment_id,
+            id AS thread_root,
+            1 AS depth
+        FROM comment
+        WHERE parent_comment_id IS NULL
+            AND page = #{page}
+            AND is_published
+            <if test="page==0 and blogId!=null">
+                AND blog_id=#{blogId}
+            </if>
+    </script>
+""")
+    List<CommentTree> findRootComments(@Param("blogId") Long blogId, @Param("page") Integer page);
+
+    @Select("""
+    <script>
+        WITH RECURSIVE comment_tree AS (
+            SELECT
+                id, nickname, content, avatar, create_time, is_admin_comment, parent_comment_id,
+                id AS thread_root,
+                1 AS depth
+            FROM comment
+            WHERE id IN
+            <foreach item="rootId" collection="rootIds" open="(" separator="," close=")">
+                #{rootId}
+            </foreach>
+            UNION ALL
+            SELECT
+                c.id, c.nickname, c.content, c.avatar, c.create_time, c.is_admin_comment, c.parent_comment_id,
+                ct.thread_root,
+                ct.depth + 1
+            FROM comment c
+            INNER JOIN  comment_tree ct
+            ON c.parent_comment_id = ct.id
+        )
+        SELECT * FROM comment_tree
+    </script>
+""")
+    List<CommentTree> findRepliesByRootIds(List<Long> rootIds);
 }

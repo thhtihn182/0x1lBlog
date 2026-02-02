@@ -1,7 +1,10 @@
 package top.blogapi.service;
 
+import com.github.pagehelper.PageInfo;
 import top.blogapi.dto.request.comment.CommentUpdateRequest;
+import top.blogapi.dto.response.comment.CommentByBlogIdResponse;
 import top.blogapi.model.entity.Comment;
+import top.blogapi.model.vo.CommentTree;
 
 import java.util.List;
 import java.util.Map;
@@ -16,4 +19,8 @@ public interface CommentService {
     void deleteCommentById(Long id);
 
     void updateComment(CommentUpdateRequest request);
+
+    PageInfo<CommentByBlogIdResponse.CommentNode> commentRootTrees (int pageNum, int pageSize, Long blogId, Integer page);
+
+    Map<Long, List<CommentByBlogIdResponse.CommentNode>> commentChildTrees(List<Long> commentRootIds);
 }
