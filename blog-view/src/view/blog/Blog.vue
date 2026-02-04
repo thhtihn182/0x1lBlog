@@ -42,6 +42,10 @@
 
           <Ribbon v-if="blog.category" :category="blog.category"/>
           <div class="px-3 py-2">
+            <button @click="toggleFixed">
+              {{ isFixed ? ' Hủy ghim ' : ' Ghim ' }}
+            </button>
+            <div ref="playerRef"/>
             <!-- Mô tả bài viết -->
             <div class="typo m-padded-tb-small px-3 line-numbers match-braces rainbow-braces" v-html="blog.content"></div>
             <!-- Divider -->
@@ -83,6 +87,8 @@
 </template>
 
 <script setup>
+import APlayer from 'aplayer'
+import 'aplayer/dist/APlayer.min.css'
 import {ref, onMounted, nextTick, computed, watch} from 'vue'
 import Tag from '@/components/blogList/Tag.vue'
 import { getBlogById } from '@/network/blog'
@@ -98,16 +104,55 @@ const route = useRoute()
 
 const {author} = storeToRefs(store)
 
+
 const blog = ref({})
+const playerRef = ref(null)
+let playerInstance = null
+const isFixed = ref(false)
+const playerOptions = ref({
+  lrcType: 3,
+  autoplay: true,
+  fixed: false,
+  audio: {}
+})
 
+const toggleFixed = () => {
+  if(!playerInstance) return;
 
+  isFixed.value = !isFixed.value
+
+  const currentTime = playerInstance.audio.currentTime;
+  const isCurrentlyPlaying = !playerInstance.audio.paused;
+
+  playerInstance.options.fixed = playerInstance.value
+
+  const container = playerInstance.container
+  const  playerFixedClass = 'aplayer-fixed'
+
+  if (isFixed.value) {
+    container.classList.add(playerFixedClass)
+  } else {
+    container.classList.remove(playerFixedClass)
+  }
+
+  if(isCurrentlyPlaying)
+    setTimeout(() => {
+      playerInstance.seek(currentTime);
+      playerInstance.play()
+    }, 10)
+}
+
+const init = () => {
+  playerOptions.value.container = playerRef.value;
+  return new APlayer(playerOptions.value)
+}
 
 const fetchBlog = async () => {
   try {
     const response = await getBlogById(route.params.id)
     if (response.code === 200) {
       blog.value = response.data
-
+      playerOptions.value.audio = response.data.musicInfo
     } else {
 
     }
@@ -121,6 +166,7 @@ const fetchBlog = async () => {
 
 onMounted(async () => {
   await fetchBlog();
+  playerInstance = init();
   await nextTick();
 
   // Sử dụng highlightAll để highlight tất cả code trong DOM
@@ -154,7 +200,12 @@ onMounted(async () => {
   text-decoration: none;
 }
 
-
+@media (max-width: 768px) {
+  .main-content{
+    padding-right: max((100vw - 421px)/25, 0px) !important;
+    padding-left: max((100vw - 421px)/25, 0px) !important;
+  }
+}
 .header{
   border: none;
   margin: 0 1rem;

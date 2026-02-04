@@ -28,7 +28,7 @@ public class Blog {
     Integer views; // Lượt xem
     Integer words; // Số lượng từ trong bài viết
     Integer readTime; // Thời gian đọc (phút)
-
+    String musicId;
     User user; // Tác giả bài viết (vì là blog cá nhân nên có thể bỏ, tạm thời giữ lại)
     Category category; // Thể loại bài viết
     List<Tag> tags = new ArrayList<>(); // Danh sách thẻ (tag) của bài viết

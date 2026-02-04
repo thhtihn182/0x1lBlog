@@ -34,7 +34,7 @@ public class Mp3Service {
         return Map.of(
                 "title", info.at("/data/title").asText(),
                 "name", info.at("/data/artists/0/name").asText(),
-                "thumbnail", info.at("/data/thumbnail").asText()
+                "thumbnail", info.at("/data/thumbnailM").asText()
         );
     }
 
@@ -42,30 +42,8 @@ public class Mp3Service {
         return zingMp3Client.getSongStreaming(songId).at("/data/128").asText();
     }
 
-    public List<String> getLyric(String songId) throws Exception {
+    public String getLyric(String songId) throws Exception {
         JsonNode lyric = zingMp3Client.getLyric(songId);
-        return readLRC(lyric.at("/data/file").asText());
-    }
-
-    private List<String> readLRC(String lrcUrl) throws Exception {
-        List<String> lrcList = new ArrayList<>();
-
-        HttpClient client = HttpClient.newHttpClient();
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(lrcUrl))
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request,
-                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-
-        if (response.statusCode() == 200) {
-            String content = response.body();
-            String[] lines = content.split("\\r?\\n");
-            lrcList.addAll(Arrays.asList(lines));
-        }
-
-        return lrcList;
+        return lyric.at("/data/file").asText();
     }
 }

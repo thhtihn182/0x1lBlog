@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.blogapi.client.zing_mp3.Mp3Service;
 import top.blogapi.dto.request.blog.BlogQueryRequest;
 import top.blogapi.dto.response.blog.ArchiveBlogResponse;
 import top.blogapi.dto.response.blog.BlogSummaryResponse;
@@ -33,6 +34,9 @@ import top.blogapi.model.vo.BlogIdAndTitle;
 import top.blogapi.util.markdown.MarkdownUtils;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @Service
@@ -44,7 +48,8 @@ public class BlogOrchestrator {
     CategoryService categoryService;
     TagService tagService;
     SiteSettingService siteSettingService;
-
+    Mp3Service mp3Service;
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
     BlogMapper blogMapper;
     CategoryMapper categoryMapper;
 
@@ -212,7 +217,45 @@ public class BlogOrchestrator {
     }
 
     public BlogDetail getBlogByIdAndIsPublished(Long id){
-        return blogService.getBlogByIdAndIsPublished(id);
+        BlogDetail blogDetail =  blogService.getBlogByIdAndIsPublished(id);
+        if(blogDetail.getMusicId() != null){
+            blogDetail.setMusicInfo(getCompleteSongData(blogDetail.getMusicId()));
+        }
+        return blogDetail;
+    }
+
+
+    private BlogDetail.MusicInfo getCompleteSongData(String songId) {
+        try {
+            CompletableFuture<Map<String, String>> infoFuture = CompletableFuture
+                    .supplyAsync(() -> mp3Service.getSongInfo(songId), executorService);
+
+            CompletableFuture<String> streamingFuture = CompletableFuture
+                    .supplyAsync(() -> mp3Service.getSongStreaming(songId), executorService);
+
+            CompletableFuture<String> lyricFuture = CompletableFuture
+                    .supplyAsync(() -> {
+                        try {
+                            return mp3Service.getLyric(songId);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, executorService);
+
+            CompletableFuture.allOf(infoFuture, streamingFuture, lyricFuture).join();
+            BlogDetail.MusicInfo musicInfo = new BlogDetail.MusicInfo(
+                    infoFuture.get().get("title"),
+                    lyricFuture.get(),
+                    infoFuture.get().get("name"),
+                    streamingFuture.get(),
+                    "#46718b",
+                    infoFuture.get().get("thumbnail")
+
+            );
+            return musicInfo;
+        } catch (Exception e) {
+            throw new RuntimeException("Lấy dữ liệu bài hát thất bại", e);
+        }
     }
 }
 

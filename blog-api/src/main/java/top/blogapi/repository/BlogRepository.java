@@ -224,7 +224,7 @@ public interface BlogRepository {
     List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths);
 
     @Select("""
-        SELECT b.id, b.title, b.content,  b.is_appreciation,
+        SELECT b.id, b.title, b.content,  b.is_appreciation, b.music_id,
                b.is_comment_enabled, b.is_top, b.create_time, b.update_time, b.views, b.words ,
                b.read_time,c.id AS category_id, c.name AS category_name
         FROM blog AS b
