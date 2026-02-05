@@ -13,4 +13,6 @@ public interface SiteSettingService {
     void deleteSettingById(Long id);
 
     void saveSiteSetting(SiteSetting siteSetting);
+
+    List<SiteSetting> getMp3Setting(int type);
 }

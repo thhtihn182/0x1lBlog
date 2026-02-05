@@ -22,4 +22,11 @@ public interface SiteSettingRepository {
             "VALUES (#{nameEn},#{nameVn},#{value},#{type})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int saveSiteSetting(SiteSetting siteSetting);
+
+    @Select("""
+        SELECT *
+        FROM site_setting
+        WHERE type = #{type}
+""")
+    List<SiteSetting> mp3Setting(int type);
 }

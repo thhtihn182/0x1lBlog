@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.exception.system_exception.SystemException;
+import top.blogapi.model.TypeSetting;
 import top.blogapi.model.entity.SiteSetting;
 import top.blogapi.repository.SiteSettingRepository;
 import top.blogapi.service.SiteSettingService;
@@ -56,5 +57,11 @@ public class SiteSettingServiceImpl implements SiteSettingService {
                     .context("siteSettingId", siteSetting.getId())
                     .context("operate", "insert")
                     .build();
+    }
+
+    @Override
+    public List<SiteSetting> getMp3Setting(int type) {
+        return siteSettingRepository.mp3Setting(type);
+
     }
 }
