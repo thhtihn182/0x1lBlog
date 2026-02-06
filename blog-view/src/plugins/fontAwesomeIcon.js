@@ -1,0 +1,40 @@
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import {
+    faHome,
+    faTags,
+    faArchive,
+    faTag,
+    faInfoCircle,
+    faCalendarAlt,
+    faEye,
+    faPencilAlt,
+    faClock,
+    faBars,
+    faSearch,
+    faCopy,
+    faFolderOpen,
+    faLightbulb,
+    faEnvelope,
+    faUser,
+} from '@fortawesome/free-solid-svg-icons'
+library.add(
+    faHome,
+    faTags,
+    faArchive,
+    faTag,
+    faInfoCircle,
+    faCalendarAlt,
+    faEye,
+    faPencilAlt,
+    faClock,
+    faBars,
+    faSearch,
+    faCopy,
+    faLightbulb,
+    faFolderOpen,
+    faEnvelope,
+    faUser,
+)
+
+export default FontAwesomeIcon
