@@ -100,12 +100,12 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public Map<Long, List<CommentByBlogIdResponse.CommentNode>> commentChildTrees(List<Long> commentRootIds){
         List<CommentTree> commentChildTrees = commentRepository.findRepliesByRootIds(commentRootIds);
-        System.out.println(commentChildTrees);
+
         Map<Long, List<CommentByBlogIdResponse.CommentNode>> map = new HashMap<>();
         for(int i = commentRootIds.size() ; i < commentChildTrees.size() ;i++)
             map.computeIfAbsent(commentChildTrees.get(i).getThreadRoot(),
                     key -> new LinkedList<>())
-                    .addFirst(commentMapper.toCommentNode(commentChildTrees.get(i)));
+                    .add(commentMapper.toCommentNode(commentChildTrees.get(i)));
         return map;
     }
 }

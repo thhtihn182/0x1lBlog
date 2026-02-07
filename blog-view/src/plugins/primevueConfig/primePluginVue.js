@@ -11,6 +11,7 @@ import 'primeflex/primeflex.css'
 
 // Import PrimeVue components
 import Textarea from 'primevue/textarea'
+import FloatLabel from 'primevue/floatlabel'
 import Toast from 'primevue/toast'
 import ConfirmDialog from 'primevue/confirmdialog'
 import DataTable from 'primevue/datatable'
@@ -33,6 +34,7 @@ import Badge from "primevue/badge"
 import Card from 'primevue/card'
 import Accordion from 'primevue/accordion'
 import AccordionPanel from 'primevue/accordionpanel'
+import Form from '@primevue/forms/form';
 import {SimplePreset} from "@/plugins/primevueConfig/primeThemeConfig.js";
 
 
@@ -66,6 +68,7 @@ const PrimeVuePlugin = {
             'FileUpload': FileUpload,
             'Message': Message,
             'Avatar': Avatar,
+            'FloatLabel': FloatLabel,
             'Badge': Badge,
             'Chip': Chip,
             'Skeleton': Skeleton,
@@ -74,6 +77,7 @@ const PrimeVuePlugin = {
             'Menubar': Menubar,
             'Card': Card,
             'AccordionPanel': AccordionPanel,
+            'Form': Form,
             'Accordion': Accordion
         }
 

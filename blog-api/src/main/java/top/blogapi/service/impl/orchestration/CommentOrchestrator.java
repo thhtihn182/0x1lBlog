@@ -64,12 +64,12 @@ public class CommentOrchestrator {
         List<Long> rootIds = pageInfo.getList().stream().map(CommentByBlogIdResponse.CommentNode::getId).toList();
         Map<Long, List<CommentByBlogIdResponse.CommentNode>> commentChildTrees =
                 commentService.commentChildTrees(rootIds);
-        System.out.println(commentChildTrees);
+
         int totalComments = 0;
         for(CommentByBlogIdResponse.CommentNode commentNode: pageInfo.getList()){
             List<CommentByBlogIdResponse.CommentNode> listChild = commentChildTrees.get(commentNode.getId());
             if(listChild==null ||  listChild.isEmpty()) continue;
-            System.out.println(1);
+
             commentNode.setReplyComment(listChild);
             totalComments += listChild.size();
         }

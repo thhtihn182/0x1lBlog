@@ -19,6 +19,7 @@ public class CommentTree {
     Long parentCommentId; // Bình luận cha (nếu là trả lời)
     Long threadRoot;
     Long depth;
+    String reply;
     List<CommentTree> replyComments; // Danh sách các bình luận trả lời bình luận này
 
     @Override
@@ -32,6 +33,7 @@ public class CommentTree {
                 ", avatar='" + avatar + '\'' +
                 ", parentCommentId=" + parentCommentId +
                 ", threadRoot=" + threadRoot +
+                ", reply=" + reply +
                 ", replyComments=" + replyComments +
                 '}';
     }

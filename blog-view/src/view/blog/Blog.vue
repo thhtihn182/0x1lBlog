@@ -45,7 +45,7 @@
             <button @click="toggleFixed">
               {{ isFixed ? ' Hủy ghim ' : ' Ghim ' }}
             </button>
-            <div ref="playerRef"/>
+            <div v-if="blog.musicInfo" ref="playerRef"/>
             <!-- Mô tả bài viết -->
             <div class="typo m-padded-tb-small px-3 line-numbers match-braces rainbow-braces" v-html="blog.content"></div>
             <!-- Divider -->
@@ -83,13 +83,15 @@
         </ul>
       </div>
     </div>
+    <CommentList :blog-id="blogId" :page="0"/>
+
   </div>
 </template>
 
 <script setup>
 import APlayer from 'aplayer'
 import 'aplayer/dist/APlayer.min.css'
-import {ref, onMounted, nextTick, computed, watch} from 'vue'
+import {ref, onMounted, onUnmounted ,nextTick, computed, watch} from 'vue'
 import Tag from '@/components/blogList/Tag.vue'
 import { getBlogById } from '@/network/blog'
 import { formatDate } from "@/util/dateTimeFormatUtils.js";
@@ -98,13 +100,14 @@ import {useAppStore} from "@/store/index.js";
 import {storeToRefs} from "pinia";
 import Ribbon from "@/components/blogList/Ribbon.vue";
 import PinTop from "@/components/blogList/PinTop.vue";
+import CommentList from "@/components/comments/CommentList.vue";
 
 const store = useAppStore()
 const route = useRoute()
 
 const {author} = storeToRefs(store)
 
-
+const blogId = computed(() => parseInt(route.params.id))
 const blog = ref({})
 const playerRef = ref(null)
 let playerInstance = null
@@ -149,9 +152,10 @@ const init = () => {
 
 const fetchBlog = async () => {
   try {
-    const response = await getBlogById(route.params.id)
+    const response = await getBlogById(blogId.value)
     if (response.code === 200) {
       blog.value = response.data
+      console.log(blog.value)
       playerOptions.value.audio = response.data.musicInfo
     } else {
 
@@ -172,6 +176,10 @@ onMounted(async () => {
   // Sử dụng highlightAll để highlight tất cả code trong DOM
   Prism.highlightAll();
 });
+onUnmounted(() => {
+  if(playerInstance)
+    playerInstance.destroy()
+})
 </script>
 
 <style scoped>

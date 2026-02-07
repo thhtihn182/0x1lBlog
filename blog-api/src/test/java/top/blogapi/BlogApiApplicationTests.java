@@ -47,9 +47,12 @@ class BlogApiApplicationTests {
 
 
 	@Test
+	void test15(){
+		commentRepository.findRepliesByRootIds(List.of(1L)).forEach(System.out::println);
+	}
+	@Test
 	void test14(){
 		System.out.println(commentService.commentChildTrees(List.of(1L)));
-
 	}
 	@Test
 	void test13(){
@@ -64,7 +67,7 @@ class BlogApiApplicationTests {
 
 	@Test
 	void test11(){
-		Optional<BlogDetail> blogDetail = blogRepository.getBlogWithCategory(36L);
+		Optional<BlogDetail> blogDetail = blogRepository.getBlogWithCategory(54L);
 		System.out.println(blogDetail.get());
 		blogDetail.ifPresent((blog) -> blog.setTags(blogRepository.findTagsByBlogId(blog.getId())));
 		System.out.println(blogDetail.get());

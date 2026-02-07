@@ -94,7 +94,8 @@ public interface CommentRepository {
         SELECT
             id, nickname, content, avatar, create_time, is_admin_comment, parent_comment_id,
             id AS thread_root,
-            1 AS depth
+            1 AS depth,
+            CAST('' AS char(100)) as reply
         FROM comment
         WHERE parent_comment_id IS NULL
             AND page = #{page}
@@ -115,7 +116,8 @@ public interface CommentRepository {
             SELECT
                 id, nickname, content, avatar, create_time, is_admin_comment, parent_comment_id,
                 id AS thread_root,
-                1 AS depth
+                1 AS depth,
+                CAST('' AS char(100)) as reply
             FROM comment
             WHERE id IN
             <foreach item="rootId" collection="rootIds" open="(" separator="," close=")">
@@ -125,7 +127,8 @@ public interface CommentRepository {
             SELECT
                 c.id, c.nickname, c.content, c.avatar, c.create_time, c.is_admin_comment, c.parent_comment_id,
                 ct.thread_root,
-                ct.depth + 1
+                ct.depth + 1,
+                CONCAT('@',ct.nickname) as reply
             FROM comment c
             INNER JOIN  comment_tree ct
             ON c.parent_comment_id = ct.id

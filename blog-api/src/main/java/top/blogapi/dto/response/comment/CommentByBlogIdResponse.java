@@ -32,7 +32,7 @@ public class CommentByBlogIdResponse {
         String avatar;
         LocalDateTime createTime;
         Boolean adminComment;
-
+        String reply;
         List<CommentNode> replyComment;
     }
     @Data

@@ -129,7 +129,12 @@ onMounted(() => {
   padding-right: 1rem;
   padding-bottom: 1rem;
 }
-
+@media (max-width: 768px) {
+  .main-content{
+    padding-right: max((100vw - 421px)/25, 0px) !important;
+    padding-left: max((100vw - 421px)/25, 0px) !important;
+  }
+}
 .scroll-top-btn img{
   width: 56px;
   height: 56px;
