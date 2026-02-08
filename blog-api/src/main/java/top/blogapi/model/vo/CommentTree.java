@@ -17,6 +17,7 @@ public class CommentTree {
     LocalDateTime createTime; // Thời gian bình luận
     Boolean adminComment; // Bình luận của quản trị viên (chủ blog)
     Long parentCommentId; // Bình luận cha (nếu là trả lời)
+    String website;
     Long threadRoot;
     Long depth;
     String reply;
@@ -31,6 +32,7 @@ public class CommentTree {
                 ", nickname='" + nickname + '\'' +
                 ", content='" + content + '\'' +
                 ", avatar='" + avatar + '\'' +
+                ", website='" + website + '\'' +
                 ", parentCommentId=" + parentCommentId +
                 ", threadRoot=" + threadRoot +
                 ", reply=" + reply +

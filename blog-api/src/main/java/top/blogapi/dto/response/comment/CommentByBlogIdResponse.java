@@ -22,9 +22,15 @@ public class CommentByBlogIdResponse {
         this.commentStats.totalComments = totalComments;
     }
 
+    public CommentByBlogIdResponse(PageInfo<CommentNode> comments){
+        this.comments = comments;
+        this.commentStats = new CommentStats(0,0);
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class CommentNode{
         Long id;
         String nickname;
@@ -33,11 +39,15 @@ public class CommentByBlogIdResponse {
         LocalDateTime createTime;
         Boolean adminComment;
         String reply;
+        Long threadRoot;
         List<CommentNode> replyComment;
     }
     @Data
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class CommentStats {
-        private Integer totalComments;
-        private Integer uniqueCommenters;
+        Integer totalComments;
+        Integer uniqueCommenters ;
     }
 }

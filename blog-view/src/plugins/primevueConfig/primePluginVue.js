@@ -35,6 +35,7 @@ import Card from 'primevue/card'
 import Accordion from 'primevue/accordion'
 import AccordionPanel from 'primevue/accordionpanel'
 import Form from '@primevue/forms/form';
+import FormField from '@primevue/forms/formfield';
 import {SimplePreset} from "@/plugins/primevueConfig/primeThemeConfig.js";
 
 
@@ -78,7 +79,8 @@ const PrimeVuePlugin = {
             'Card': Card,
             'AccordionPanel': AccordionPanel,
             'Form': Form,
-            'Accordion': Accordion
+            'Accordion': Accordion,
+            'FormField': FormField,
         }
 
         Object.entries(components).forEach(([name, component]) => {

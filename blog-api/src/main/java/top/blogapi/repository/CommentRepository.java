@@ -11,25 +11,33 @@ import java.util.List;
 @Repository
 public interface CommentRepository {
 
-    @Select("<script>" +
-                "SELECT c.id, c.nickname, c.email, c.content, c.avatar, c.create_time, c.ip, " +
-                "c.is_published, c.is_admin_comment, c.page, c.is_notice, c.blog_id , " +
-                "c.parent_comment_id, b.title as blog_title " +
-                "FROM comment c LEFT JOIN blog b "+
-                "ON c.blog_id = b.id " +
-            "<where> " +
-                "c.page = #{page} " +
-                "<if test=' page == 0 and blogId != null'> " +
-                    "AND c.blog_id = #{blogId} " +
-                "</if> " +
-                "<if test=' parentCommentId != null'> " +
-                    "AND c.parent_comment_id = #{parentCommentId} " +
-                "</if> " +
-                "<if test=' parentCommentId == null'> " +
-                    "AND c.parent_comment_id IS NULL " +
-                "</if> " +
-            "</where> " +
-            "</script>")
+    @Select("""
+        <script>
+            SELECT
+            c.id,
+            c.nickname,
+            c.email,
+            c.content,
+            c.avatar,
+            c.create_time,
+            c.website,
+            c.ip,
+            c.is_published,
+            c.is_admin_comment,
+            c.page,
+            c.is_notice,
+            c.blog_id,
+            c.parent_comment_id,
+            b.title as blog_title
+            FROM comment c
+            LEFT JOIN blog b ON c.blog_id=b.id
+            where c.page=#{page}
+                <if test="page==0 and blogId!=null">AND c.blog_id=#{blogId}</if>
+                <if test="parentCommentId!=null">AND c.parent_comment_id=#{parentCommentId}</if>
+                <if test="parentCommentId==null">AND c.parent_comment_id IS NULL</if>
+       
+        </script>
+""")
     @Results({
             @Result(property = "published" , column = "is_published"),
             @Result(property = "adminComment" , column = "is_admin_comment"),
@@ -56,7 +64,13 @@ public interface CommentRepository {
     @Delete("DELETE FROM comment WHERE id = #{id}")
     int deleteCommentById(Long id);
 
-    @Update("UPDATE comment SET nickname = #{nickname}, email = #{email}, content = #{content}, ip = #{ip} WHERE id =#{id}")
+    @Update("""
+        UPDATE comment SET nickname = #{nickname},
+                           email = #{email},
+                           content = #{content},
+                           website = #{website},
+                           ip = #{ip} WHERE id =#{id}
+""")
     int updateComment(Long id,String nickname, String email, String content, String ip);
 
     @Select("""

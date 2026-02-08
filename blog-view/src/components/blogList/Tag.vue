@@ -4,7 +4,7 @@
         v-for="tag in listTag"
         :key="tag.id"
         :to="`/tag/${tag.id}`"
-        class="no-underline label tag m-text-500 m-1"
+        class="no-underline label tag m-text-500"
         :style="{
         background: `linear-gradient(
           135deg,

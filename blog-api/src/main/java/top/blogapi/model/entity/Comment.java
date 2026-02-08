@@ -21,6 +21,7 @@ public class Comment {
     String content; // Nội dung bình luận
     String avatar; // Ảnh đại diện (đường dẫn ảnh)
     LocalDateTime createTime; // Thời gian bình luận
+    String website;
     String ip; // Địa chỉ IP của người bình luận
     Boolean published; // Công khai hoặc đưa vào thùng rác
     Boolean adminComment; // Bình luận của quản trị viên (chủ blog)

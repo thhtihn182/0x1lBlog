@@ -17,6 +17,8 @@ import {
     faLightbulb,
     faEnvelope,
     faUser,
+    faLocationArrow,
+    faLocationDot,
 } from '@fortawesome/free-solid-svg-icons'
 library.add(
     faHome,
@@ -35,6 +37,8 @@ library.add(
     faFolderOpen,
     faEnvelope,
     faUser,
+    faLocationArrow ,
+    faLocationDot,
 )
 
 export default FontAwesomeIcon

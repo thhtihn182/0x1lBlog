@@ -1,7 +1,9 @@
-<template>
-
+<template xmlns="http://www.w3.org/1999/html">
     <h3 class="dividing">Comments | Tổng {{ commentStats.totalComments }} bình luận</h3>
-    <CommentForm></CommentForm>
+    <CommentForm :reply-comment="{
+       threadRoot: null,
+       parentCommentId:null,
+    }"></CommentForm>
     <div class="comments-list">
       <div v-for="cm in comments"
            :key="cm.id"
@@ -13,12 +15,13 @@
                 :image="'/src/assets/img/comment-avatar/'+cm.avatar"
                 :size="'large'"
             />
-            <div class="comment">
+            <div class="comment"  :ref="el => setItemRef(el,cm.id)">
               <div class="comment-header">
                 <span class="nickname">{{cm.nickname}}</span>
                 <div class="metadata">
                   {{ ` ${formatDate(cm.createTime,'YYYY-MM-DD HH:mm')}`}}
                 </div>
+                <button type="button" @click="setReplyComment(cm.threadRoot,cm.id)">Trả lời</button>
               </div>
               <div>{{cm.content}}</div>
             </div>
@@ -35,18 +38,21 @@
                     :image="'/src/assets/img/comment-avatar/'+replyCm.avatar"
                     :size="'normal'"
                 />
-                <div class="comment">
+                <div class="comment" :ref="el => setItemRef(el,replyCm.id)">
                   <div class="comment-header">
                     <span class="nickname">{{replyCm.nickname}}</span>
                     <div class="metadata">
                       {{ ` ${formatDate(replyCm.createTime,'YYYY-MM-DD HH:mm')}`}}
                     </div>
+                    <button type="button" @click="setReplyComment(cm.threadRoot,replyCm.id)">Trả lời</button>
                   </div>
                   <div><span class="reply">{{`${replyCm.reply}`}}</span>{{ ` ${replyCm.content} `}}</div>
                 </div>
               </div>
-
             </div>
+          </div>
+          <div v-if="replyComment.threadRoot === cm.threadRoot" class="comment-item comment-reply">
+            <CommentForm :replyComment="replyComment"/>
           </div>
           <div class="thread-line"/>
         </div>
@@ -58,6 +64,7 @@
 <script setup>
 import {formatDate} from "@/util/dateTimeFormatUtils.js";
 import CommentForm from "@/components/comments/CommentForm.vue";
+import {ref, watch} from "vue";
 
 const props = defineProps({
   comments: {
@@ -69,7 +76,32 @@ const props = defineProps({
     required: true
   }
 })
+const replyComment = ref({
+  threadRoot: null,
+  parentCommentId:null,
+})
 
+const commentRefs = ref({})
+let currentEl = null
+const setReplyComment = (threadRoot,parentCommentId) => {
+  if(currentEl )
+    currentEl.classList.remove('is-reply')
+  currentEl = commentRefs.value[parentCommentId]
+  currentEl.classList.add('is-reply')
+  replyComment.value.parentCommentId = parentCommentId
+  replyComment.value.threadRoot = threadRoot
+}
+
+const setItemRef= (el, index) =>{
+  if(el&&!commentRefs.value[index])
+    commentRefs.value[index]=el
+}
+
+// khi đổi trang cần phải reset tránh truy cập id tồn tại
+// trong commentRefs nhưng không có trong Dom hiện tại
+watch(()=> props.comments , () =>{
+  commentRefs.value = {}
+})
 </script>
 
 <style scoped>
@@ -118,7 +150,7 @@ const props = defineProps({
   display: inline-block;
   margin-left: .5em;
   color: rgba(0, 0, 0, 0.51);
-  font-size: .875em;
+  font-size: 1em;
 }
 
 .comment-reply{
@@ -146,7 +178,28 @@ const props = defineProps({
 .dividing{
   border-bottom: 1px solid #e0e0e0;
 }
+.reply-1{
+  background: #00a7e0;
+}
 :deep(.p-avatar){
   flex-shrink: 0;
+}
+
+.is-reply {
+  border: 2px solid #00a7e0 !important;
+  animation: replyPulse 2s infinite;
+  position: relative;
+  border-radius: 8px;
+}
+
+@keyframes replyPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 167, 224, 0.4);
+    border-width: 2px;
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(0, 167, 224, 0);
+    border-width: 3px;
+  }
 }
 </style>

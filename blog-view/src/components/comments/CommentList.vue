@@ -45,7 +45,6 @@ const getCommentList = async (query) => {
 }
 
 const handlePageChange = (query) =>{
-  console.log('emi')
   getCommentList(query)
 }
 

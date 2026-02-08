@@ -36,7 +36,7 @@ const query = computed(() => ({
   page: props.page,
   blogId: props.blogId,
   pageNum: pageNum.value,
-  pageSize: 1,
+  pageSize: 5,
 }))
 
 const goToPage = (pageState) => {

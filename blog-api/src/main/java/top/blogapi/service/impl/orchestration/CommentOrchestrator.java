@@ -61,6 +61,9 @@ public class CommentOrchestrator {
 
     public CommentByBlogIdResponse listCommentByBlogId(int pageNum, int pageSize, Long blogId, Integer page){
         PageInfo<CommentByBlogIdResponse.CommentNode> pageInfo = commentService.commentRootTrees(pageNum,pageSize, blogId,page);
+        if(pageInfo.getList().isEmpty())
+            return new CommentByBlogIdResponse(pageInfo);
+
         List<Long> rootIds = pageInfo.getList().stream().map(CommentByBlogIdResponse.CommentNode::getId).toList();
         Map<Long, List<CommentByBlogIdResponse.CommentNode>> commentChildTrees =
                 commentService.commentChildTrees(rootIds);
