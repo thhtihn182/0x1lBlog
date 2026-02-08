@@ -23,7 +23,14 @@ Framework chính：Vue3.x、Vue Router、Pinia
 
 Dự án Vue được xây dựng dựa trên  Vite + Vue 3.
 
+### blog-cms (Admin)
+- Thư viện chính: [element-plus](https://element-plus.org/en-US/)
+
+### blog-view (Client)
+- Thư viện chính: [primevue](https://primevue.org/)
+
 Thư viện JS và CSS tham khảo：[axios](https://github.com/axios/axios)、[dayjs](https://github.com/iamkun/dayjs)、[nprogress](https://github.com/rstacruz/nprogress)、[prismjs](https://github.com/PrismJS/prism)、 [lodash-es](https://github.com/lodash/lodash)、[mavonEditor](https://github.com/hinesboy/mavonEditor) 
+
 ---
 
 # Một vài ảnh quá trình
