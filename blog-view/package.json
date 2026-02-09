@@ -8,8 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
@@ -34,8 +35,11 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/node": "^25.2.2",
     "@vitejs/plugin-vue": "^6.0.1",
+    "typescript": "^5.9.3",
     "vite": "^7.1.11",
-    "vite-plugin-vue-devtools": "^8.0.3"
+    "vite-plugin-vue-devtools": "^8.0.3",
+    "vue-tsc": "^3.2.4"
   }
 }

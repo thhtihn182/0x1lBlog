@@ -1,0 +1,96 @@
+{
+  "compilerOptions": {
+
+    "module": "ESNext",
+    // Cho phép giữ nguyên import/export để Vite bundle.
+    // Nếu đổi sang CommonJS → build lỗi ngay.
+
+    "moduleResolution": "Bundler",
+    // Giúp TS resolve module giống Vite/Rollup.
+    // Tránh bug alias + extension.
+
+    "target": "ESNext",
+
+    "lib": ["ESNext", "DOM"],
+    // Vue chạy browser → cần DOM types.
+    // Nếu thiếu, một số Web API sẽ bị TS báo lỗi.
+
+
+    /* TYPES */
+
+    "types": ["vite/client"],
+    // Giúp TS hiểu:
+    // import.meta.env
+    // asset import (png, svg...)
+
+
+    // "sourceMap": true,
+    // Production không nên expose source code.
+    // Nếu cần debug → bật trong vite config.
+
+    "declaration": false,
+    // App không cần generate .d.ts
+    // Chỉ library mới cần.
+
+    "declarationMap": false,
+    // Đi kèm declaration → đã tắt thì giữ false.
+
+
+    /* STRICT OPTIONS */
+
+    "strict": false,
+    // Không strict = TS gần như vô dụng.
+
+
+    "noUncheckedIndexedAccess": false,//TUỲ
+    // arr[0] => number | undefined
+    // Rất an toàn nhưng hơi khó chịu.
+
+
+    "exactOptionalPropertyTypes": false,
+    // Option này cực strict.
+    // 90% project Vue không bật.
+    // Dễ gây phiền khi làm API response.
+
+
+    /* VUE COMPATIBILITY */
+
+    "jsx": "preserve",
+    // Vue cần preserve JSX internally.
+
+
+    "isolatedModules": true,// QUAN TRỌNG
+    // Vue SFC yêu cầu.
+    // Thiếu dễ build fail.
+
+
+    "verbatimModuleSyntax": true,
+    // Không rewrite import → hợp với bundler hiện đại.
+
+
+    // "noUncheckedSideEffectImports": true,// OPTIONAL
+    // Bắt import chỉ để chạy side-effect.
+    // Tốt cho code sạch nhưng KHÔNG bắt buộc.
+
+
+    // "moduleDetection": "force",
+    // Không mang nhiều giá trị trong app Vue.
+    // Default TS đã đủ tốt.
+
+
+    "skipLibCheck": true,
+    // Tăng tốc type-check cực mạnh.
+    // Không ảnh hưởng runtime.
+
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+  // Nếu thiếu *.vue → vue-tsc vô dụng.
+}

@@ -10,11 +10,15 @@ import TagList from "@/view/tag/TagList.vue";
 import CommentList from "@/view/comment/CommentList.vue";
 import Site from "@/view/site/SiteSetting.vue";
 import SiteSetting from "@/view/site/SiteSetting.vue";
+import TsTest from "@/view/TsTest.vue";
 
 const routes = [
     {
         path: '/',
         redirect: '/login',
+    },{
+        path: '/ts',
+        component: TsTest
     },
     {
         path: '/login',
