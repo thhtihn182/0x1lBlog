@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div >
     <Comment :comment-stats="commentStats" :comments="comments"/>
     <Pagination :blog-id="blogId"
                 :page="page"
@@ -50,10 +50,5 @@ const handlePageChange = (query) =>{
 
 </script>
 <style scoped>
-.container{
-  margin-top: -1px;
-  padding: 0 15px;
-  background: #fff;
-  border: 1px solid #d4d4d5;
-}
+
 </style>

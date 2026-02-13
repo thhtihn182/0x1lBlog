@@ -4,42 +4,42 @@
       <div class="container  ">
         <div class="flex-nav">
             <router-link class="no-underline nav-line " to="/">
-              <h3 class="m-blue text-base-c   "
+              <h3 class="m-blue"
                   style="margin: 0; padding: 0.900007143em ;font-size: 1.28571429rem;">{{ blogName }}
               </h3>
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide', $route.name==='home'?'active':''"
-                class=" nav-line  md/:hidden no-underline p-3
-                hover:text-blue-300 text-base-c t-m-bold transition-colors
+                class=" nav-line  no-underline p-3
+                t-m-bold transition-colors
                 transition-duration-200" to="/home">
               <font-awesome-icon icon="home" class="mr-2" />Trang chủ
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
                 $route.name===''?'active':'' "
-                class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
-                t-m-bold transition-colors transition-duration-200 p-3" to="">
+                class=" nav-line no-underline t-m-bold
+                 transition-colors transition-duration-200 p-3" to="">
               <font-awesome-icon icon="lightbulb" class="mr-2" />Phân loại
             </router-link>
           <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
               $route.name==='archives'?'active':''"
-                       class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
-                text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="/archives">
+                       class=" nav-line  no-underline t-m-bold
+                  transition-colors transition-duration-200 p-3" to="/archives">
             <font-awesome-icon icon="archive" class="mr-2 pi" />Lưu trữ
           </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
                 $route.name===''?'active':''"
-                class=" nav-line text-white md/:hidden no-underline hover:text-blue-300
-                text-base-c t-m-bold transition-colors transition-duration-200 p-3" to="">
+                class=" nav-line  no-underline t-m-bold
+                 transition-colors transition-duration-200 p-3" to="">
               <font-awesome-icon icon="tag" class="mr-2" />Tag
             </router-link>
             <router-link :class="mobileMenuOpen? 'm-mobile-show':'m-mobile-hide',
                $route.name===''?'active':''"
-                class=" nav-line text-white md/:hidden no-underline hover:text-blue-300 text-base-c
-                t-m-bold transition-colors transition-duration-200 p-3" to="">
+                class=" nav-line no-underline t-m-bold
+                transition-colors transition-duration-200 p-3" to="">
               <font-awesome-icon icon="info-circle" class="mr-2" />Về tôi
             </router-link>
 
-          <div class="nav-line search-container" :class="mobileMenuOpen ? 'm-mobile-show' : 'm-mobile-hide'"
+          <div class=" search-container" :class="mobileMenuOpen ? 'm-mobile-show' : 'm-mobile-hide'"
                >
             <div >
               <div class="m-search">
@@ -94,27 +94,29 @@ document.addEventListener('click', (e) => {
 
 .fixed-nav {
   position: fixed;
-  top: 0;
+  top: -1px;
   left: 0;
   right: 0;
   z-index: 1000;
   width: 100%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
 }
 .t-m-bold{
   color: rgba(255, 255, 255, 0.8) !important;
   font-weight: 400;
 }
+
+.t-m-bold:hover{
+  background: #021e30 !important;
+  color: #a5cfff !important;
+}
 .container {
   max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
-
 }
 
-.fixed-nav {
-  transition: all 0.3s ease;
-}
 .fixed-nav.scrolled {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   background-color: rgba(27, 28, 29, 0.95) !important;
@@ -124,45 +126,50 @@ document.addEventListener('click', (e) => {
   align-items: center;
   position: relative;
 }
+
+.nav-line:before {
+  content: '';
+  position: absolute;
+  width: 1px;
+  background: rgba(255, 255, 255, .08);
+  top: 0;
+  right: 0;
+  height: 100%;
+}
+
+.search-container{
+  margin-left: auto;
+  border-left: 1px solid rgba(255, 255, 255, .08);
+  align-items: center;
+  position: relative;
+}
+
 @media (min-width: 768px) {
-  .nav-line:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 1px;
-    background: rgba(255, 255, 255, .08);
-  }
   .nav-line{
     display: flex !important;
   }
   .flex-nav{
-    display: flex; flex-direction: row;
+    display: flex;
   }
   .search-container{
-    margin-left: auto;
-    border-left: 1px solid rgba(255, 255, 255, .08) ;
-    border-right: none!important;
+    display: flex !important;
   }
 }
 @media (max-width: 767px) {
   .nav-line:before {
-    position: absolute;
-    content: '';
     top: auto;
     bottom: 0;
     left: 0;
     width: 100%;
     height: 1px;
-    background: rgba(255, 255, 255, .08);
+
   }
   .flex-nav{
     display: flex; flex-direction: column;
   }
   .search-container{
     margin-left: 0;
-    border-left: 1px solid rgba(255, 255, 255, .08) ;
+    border-left: none!important;
     border-right: none!important;
   }
 }
@@ -254,7 +261,7 @@ document.addEventListener('click', (e) => {
 }
 
 .active{
-  background: #021e30 !important;
+  background: #023d67 !important;
   color: #93c5fd!important;
 }
 

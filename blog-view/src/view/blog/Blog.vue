@@ -83,7 +83,10 @@
         </ul>
       </div>
     </div>
-    <CommentList :blog-id="blogId" :page="0"/>
+    <div class="comment-container">
+      <CommentList  v-if="blog.commentEnabled" :blog-id="blogId" :page="0"/>
+      <h3 style="text-align: center;" v-else>Chức năng bình luận đã bị tắt.</h3>
+    </div>
 
   </div>
 </template>
@@ -155,7 +158,6 @@ const fetchBlog = async () => {
     const response = await getBlogById(blogId.value)
     if (response.code === 200) {
       blog.value = response.data
-      console.log(blog.value)
       playerOptions.value.audio = response.data.musicInfo
     } else {
 
@@ -183,6 +185,12 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.comment-container{
+  margin-top: -1px;
+  padding: 0 15px;
+  background: #fff;
+  border: 1px solid #d4d4d5;
+}
 .blog-info-container {
   background: #fcfff5;
   color: #2c662d;

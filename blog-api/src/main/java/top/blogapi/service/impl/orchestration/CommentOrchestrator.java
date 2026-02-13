@@ -14,6 +14,7 @@ import top.blogapi.dto.response.comment.CommentByBlogIdResponse;
 import top.blogapi.mapper.CommentMapper;
 import top.blogapi.model.entity.Comment;
 import top.blogapi.model.vo.CommentTree;
+import top.blogapi.service.BlogService;
 import top.blogapi.service.CommentService;
 import top.blogapi.util.StringUtils;
 
@@ -27,6 +28,7 @@ import java.util.Map;
 public class CommentOrchestrator {
     CommentService commentService;
     CommentMapper commentMapper;
+    BlogService blogService;
 
     public PageInfo<Comment> getListByPageAndParentCommentId(CommentQueryRequest request) {
         try(Page<Object> page1 = PageHelper.startPage(request.getPageNum(), request.getPageSize(),
@@ -77,5 +79,12 @@ public class CommentOrchestrator {
             totalComments += listChild.size();
         }
         return new CommentByBlogIdResponse(pageInfo,totalComments+pageInfo.getList().size());
+    }
+
+    public boolean judgeCommentEnabled(Integer page, Long blogId) {
+        if (page == 0) { // blog bình thuường
+            return blogService.getCommentEnabledByBlogId(blogId);
+        }
+        return false;
     }
 }

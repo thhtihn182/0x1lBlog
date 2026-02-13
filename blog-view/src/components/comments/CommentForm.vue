@@ -1,29 +1,35 @@
 <template>
   <div class="comment-form-container">
-    <Form   v-slot="$form"  :resolver="resolver" class="form-container" @submit="onsubmitF" >
-       <div class="textarea-wrapper">
-         <Textarea
-             :auto-resize="true"
-             :rows="1"
-             class="custom-textarea"
-             :placeholder="'Viết bình luân'"
-             v-model="form.content"
-         ></Textarea>
+
+    <Form :ref="mainFormRef"  v-slot="$form"  :resolver="resolver" class="form-container" @submit="onsubmitF" >
+      <div class="textarea-wrapper">
+           <Textarea
+               :auto-resize="true"
+               :rows="1"
+               class="custom-textarea"
+               :placeholder="nicknameReply"
+               :class="{'textarea-custom' : props.replyComment.threadRoot}"
+               v-model="form.content"
+               name="content"
+           ></Textarea>
        </div>
-      <div v-if="!props.replyComment.threadRoot" class="dividing"/>
+        <Message v-if="$form.content?.invalid " severity="error" size="small" variant="simple">
+          {{ $form.content.error?.message}}</Message>
+
+<!--      <div  class="dividing"/>-->
       <div  >
-        <div v-if="!props.replyComment.threadRoot" class="flex justify-content-center flex-wrap align-items-center">
+        <div  class="flex justify-content-center flex-wrap align-items-center">
           <div  class="input-wrapper">
-            <FormField v-slot="$field" name="nickname">
+            <FormField v-slot="$field" name="nickname" initial-value="">
               <font-awesome-icon icon="user"  />
               <InputText  v-model="form.nickname"  type="text"
                           :placeholder="'Nickname (bắt buộc)'"/>
-              <Message v-if="$form.nickname?.invalid" severity="error" size="small" variant="simple">
-                {{ $form.nickname.error?.message }}</Message>
+              <Message v-if="$form.nickname?.invalid " severity="error" size="small" variant="simple">
+                {{ $form.nickname.error?.message  }}</Message>
             </FormField>
           </div>
           <div class="input-wrapper">
-            <FormField v-slot="$field" name="email">
+            <FormField v-slot="$field" name="email" initial-value="">
               <font-awesome-icon icon="envelope"/>
               <InputText id="on_email" v-model="form.email" name="email"  :placeholder="'Email (bắt buộc)'" />
               <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
@@ -32,7 +38,6 @@
             </FormField>
           </div>
           <div class="input-wrapper">
-
             <font-awesome-icon icon="location-dot"/>
             <InputText id="on_website" name="website" placeholder="https:// (tùy chọn)" />
           </div>
@@ -45,7 +50,7 @@
   </div>
 </template>
 <script setup>
-import { ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import {useToast} from "@/plugins/primevueConfig/primePluginVue.js";
@@ -57,6 +62,9 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['getPayload'])
+
+const mainFormRef = ref(null)
 const form = ref({
   content: '',
   nickname: '',
@@ -64,21 +72,36 @@ const form = ref({
   website: '',
   notice: true
 })
+const nicknameReply = ref('')
+watch(() => props.replyComment?.parentNickname , (newName,oldValue) =>{
+  if(newName)
+    nicknameReply.value ='@'+props.replyComment.parentNickname+ ' '
+  else
+    nicknameReply.value ='Viết bình luận'
+}, {deep:true, immediate:true})
 
-watch(() => form.value, (newValue, oldValue) => {
-}, { deep: true })
+const commentSchema = z.object({
+  content: z.string()
+      // .min(1, { message: 'Phải nhập nội dung bình luận' })
+      .max(255, { message: 'Nội dung bình luận quá dài!' }),
+  nickname: z.string()
+      .min(1, { message: 'Không được để trống Nickname' })
+      .max(50, { message: 'Nickname quá dài!' }),
+  email: z.string()
+      .max(100, { message: 'Email quá dài!' })
+      .regex(
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          { message: 'Email không hợp lệ' }
+      )
+});
+const resolver = ref(zodResolver(commentSchema));
 
-const resolver = ref(zodResolver(
-    z.object({
-      nickname: z.string().min(1, { message: 'Không được để trống Nickname' }),
-      email: z.string()
-          .regex(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              { message: 'Email không hợp lệ' })
-    })
-));
 const onsubmitF= (e) =>{
+  console.log(e)
   const fields = e.states
   if(!e.valid){
+    if(fields.content.invalid)
+      toast.error(fields.content.errors[0].message)
     if(fields.email.invalid)
       toast.error(fields.email.errors[0].message)
     if(fields.nickname.invalid)
@@ -144,6 +167,10 @@ const onsubmitF= (e) =>{
 :deep(.p-inputtext){
   border: none;
   width: 80%;
+}
+.textarea-custom::placeholder {
+  color:  #00a7e0;
+  opacity: 1;
 }
 
 </style>

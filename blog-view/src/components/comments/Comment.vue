@@ -1,9 +1,7 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template>
     <h3 class="dividing">Comments | Tổng {{ commentStats.totalComments }} bình luận</h3>
-    <CommentForm :reply-comment="{
-       threadRoot: null,
-       parentCommentId:null,
-    }"></CommentForm>
+    <CommentForm :reply-comment="replyComment"
+              v-if="!replyingComment.replyCmId"/>
     <div class="comments-list">
       <div v-for="cm in comments"
            :key="cm.id"
@@ -21,7 +19,9 @@
                 <div class="metadata">
                   {{ ` ${formatDate(cm.createTime,'YYYY-MM-DD HH:mm')}`}}
                 </div>
-                <button type="button" @click="setReplyComment(cm.threadRoot,cm.id)">Trả lời</button>
+                <span class="replying" :style="{background:  replyingComment.replyCmId ===cm.id? '#fa2745' : '#48a5ff'}"
+                      @click="setReplyComment(cm.threadRoot,cm.id,cm.nickname)">
+                  {{replyingComment.replyCmId ===cm.id ? 'Hủy': 'Trả lời'}}</span>
               </div>
               <div>{{cm.content}}</div>
             </div>
@@ -44,14 +44,16 @@
                     <div class="metadata">
                       {{ ` ${formatDate(replyCm.createTime,'YYYY-MM-DD HH:mm')}`}}
                     </div>
-                    <button type="button" @click="setReplyComment(cm.threadRoot,replyCm.id)">Trả lời</button>
+                    <span class="replying" :style="{background:  replyingComment.replyCmId ===replyCm.id? '#fa2745' : '#48a5ff'}"
+                            @click="setReplyComment(cm.threadRoot,replyCm.id,replyCm.nickname)">
+                      {{replyingComment.replyCmId ===replyCm.id ? 'Hủy': 'Trả lời'}}</span>
                   </div>
                   <div><span class="reply">{{`${replyCm.reply}`}}</span>{{ ` ${replyCm.content} `}}</div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="replyComment.threadRoot === cm.threadRoot" class="comment-item comment-reply">
+          <div v-if="replyComment.threadRoot === cm.threadRoot && replyingComment.replyCmId" class="comment-item comment-reply">
             <CommentForm :replyComment="replyComment"/>
           </div>
           <div class="thread-line"/>
@@ -79,17 +81,30 @@ const props = defineProps({
 const replyComment = ref({
   threadRoot: null,
   parentCommentId:null,
+  parentNickname: ''
 })
+
 
 const commentRefs = ref({})
 let currentEl = null
-const setReplyComment = (threadRoot,parentCommentId) => {
+const replyingComment = ref({
+  replyCmId: null
+})
+const setReplyComment = (threadRoot,parentCommentId ,parentNickname) => {
+  if(replyingComment.value.replyCmId === parentCommentId){
+    replyingComment.value = {}
+    replyComment.value = {}
+    currentEl.classList.remove('is-reply')
+    return;
+  }
+  replyingComment.value.replyCmId = parentCommentId
   if(currentEl )
     currentEl.classList.remove('is-reply')
   currentEl = commentRefs.value[parentCommentId]
   currentEl.classList.add('is-reply')
   replyComment.value.parentCommentId = parentCommentId
   replyComment.value.threadRoot = threadRoot
+  replyComment.value.parentNickname = parentNickname
 }
 
 const setItemRef= (el, index) =>{
@@ -159,6 +174,14 @@ watch(()=> props.comments , () =>{
 .reply{
   background: #8fede8;
 }
+
+.replying{
+  margin-left: 5px; padding: 4px 5px;
+  color: #FFF;
+  font-size: 12px;
+  border-radius: 3px;
+  cursor: pointer;
+}
 .avt-l{
   position: relative;
 }
@@ -178,13 +201,10 @@ watch(()=> props.comments , () =>{
 .dividing{
   border-bottom: 1px solid #e0e0e0;
 }
-.reply-1{
-  background: #00a7e0;
-}
+
 :deep(.p-avatar){
   flex-shrink: 0;
 }
-
 .is-reply {
   border: 2px solid #00a7e0 !important;
   animation: replyPulse 2s infinite;

@@ -23,6 +23,10 @@ public class CommentController {
                                                       @RequestParam(defaultValue = "") Long blogId,
                                                       @RequestParam(defaultValue = "1") Integer pageNum,
                                                       @RequestParam(defaultValue = "10") Integer pageSize){
+
+        if (!commentOrchestrator.judgeCommentEnabled(page, blogId)) {
+            return Result.create(403, "Chức năng bình luận đã bị tắt");
+        }
         return Result.ok("Yêu cầu thành công!",commentOrchestrator.listCommentByBlogId(pageNum, pageSize, blogId, page));
     }
 }

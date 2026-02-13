@@ -1,6 +1,7 @@
 package top.blogapi.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.apache.ibatis.logging.slf4j.Slf4jImpl;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -103,6 +104,7 @@ public class DataSourceConfig {
         // Prefix cho log messages (dễ dàng filter log)
         mybatisConfig.setLogPrefix("mybatis.");
 
+        mybatisConfig.setLogImpl(Slf4jImpl.class);
         // Áp dụng cấu hình MyBatis
         sessionFactory.setConfiguration(mybatisConfig);
 

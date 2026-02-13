@@ -239,4 +239,11 @@ public interface BlogRepository {
             @Result(property = "top", column = "is_top"),
     })
     Optional<BlogDetail> getBlogWithCategory(Long id);
+
+//    int getAmountOfCommentIs
+
+    @Select("""
+        SELECT is_comment_enabled from blog where id = #{blogId}
+""")
+    Boolean getCommentEnabledByBlogId(Long blogId);
 }

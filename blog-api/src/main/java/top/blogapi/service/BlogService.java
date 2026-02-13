@@ -48,4 +48,6 @@ public interface BlogService {
     List<ArchiveBlog> getArchiveBlogListByYearMonthAndIsPublished(List<String> yearMonths);
 
     BlogDetail getBlogByIdAndIsPublished(Long id);
+
+    Boolean getCommentEnabledByBlogId(Long blogId);
 }

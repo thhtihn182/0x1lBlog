@@ -215,4 +215,10 @@ public class BlogServiceImpl implements BlogService {
         return blogDetail;
     }
 
+    @Override
+    public Boolean getCommentEnabledByBlogId(Long blogId) {
+        return blogRepository.getCommentEnabledByBlogId(blogId);
+    }
+
+
 }
