@@ -5,6 +5,7 @@ import GridL from "@/view/GridL.vue";
 import {useAppStore} from "@/store/index.js";
 import Archives from "@/view/archives/Archives.vue";
 import Blog from "@/view/blog/Blog.vue";
+import Tag from "@/view/tag/Tag.vue";
 
 const routes = [
     {
@@ -41,6 +42,14 @@ const routes = [
                 component: Blog,
                 meta: {
                     title: 'Blog'
+                }
+            },
+            {
+                path: '/tag/:id',
+                name: 'tag',
+                component: Tag,
+                meta: {
+                    title: 'Tag'
                 }
             }
         ]

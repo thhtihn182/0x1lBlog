@@ -3,16 +3,20 @@ package top.blogapi;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import top.blogapi.dto.response.tag.TagIdGetBlogsResponse;
 import top.blogapi.mapper.BlogMapper;
 import top.blogapi.model.entity.Blog;
 import top.blogapi.model.entity.Comment;
 import top.blogapi.model.vo.ArchiveBlog;
 import top.blogapi.model.vo.BlogDetail;
 import top.blogapi.model.vo.BlogInfo;
+import top.blogapi.model.vo.BlogTagsInfo;
 import top.blogapi.repository.BlogRepository;
 import top.blogapi.repository.CategoryRepository;
 import top.blogapi.repository.CommentRepository;
+import top.blogapi.repository.TagRepository;
 import top.blogapi.service.CommentService;
+import top.blogapi.service.TagService;
 import top.blogapi.service.impl.orchestration.SiteSettingOrchestrator;
 
 import javax.sql.DataSource;
@@ -39,12 +43,21 @@ class BlogApiApplicationTests {
 	@Autowired
 	BlogRepository blogRepository;
 	@Autowired
+	TagRepository tagRepository;
+	@Autowired
 	CommentRepository commentRepository;
 	@Autowired
 	CategoryRepository categoryRepository;
 	@Autowired
 	SiteSettingOrchestrator siteSettingOrchestrator;
+	@Autowired
+	TagService tagService;
 
+//	@Test
+//	void test16() {
+//		List<TagIdGetBlogsResponse.BlogInfo> blogInfoList = tagService.getBlogInfoListByTagIdAndIsPublished(30L);
+//		System.out.println(blogInfoList);
+//	}
 
 	@Test
 	void test15(){

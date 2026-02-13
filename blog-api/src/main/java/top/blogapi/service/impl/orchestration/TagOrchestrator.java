@@ -1,6 +1,7 @@
 package top.blogapi.service.impl.orchestration;
 
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +12,11 @@ import top.blogapi.dto.request.tag.CreateTagRequest;
 import top.blogapi.dto.request.tag.TagQueryRequest;
 import top.blogapi.dto.request.tag.UpdateTagRequest;
 import top.blogapi.dto.response._page.TagListPageResponse;
+import top.blogapi.dto.response.tag.TagIdGetBlogsResponse;
 import top.blogapi.dto.response.tag.TagResponse;
 import top.blogapi.mapper.TagMapper;
 import top.blogapi.model.entity.Tag;
+import top.blogapi.model.vo.BlogTagsInfo;
 import top.blogapi.service.TagService;
 
 import java.util.List;
@@ -50,5 +53,18 @@ public class TagOrchestrator {
     public String updateTag(UpdateTagRequest request){
         tagService.updateTag(request.getTagName(), request.getTagColor(), request.getId());
         return "Cập nhật tag thành công!!";
+    }
+
+    @SuppressWarnings("resource")
+    public TagIdGetBlogsResponse tagIdGetBlogsResponse(Long tagId,Integer pageNum, Integer pageSize){
+        String orderBy = "is_top desc, create_time desc";
+        PageHelper.startPage(pageNum,pageSize,orderBy);
+        PageInfo<BlogTagsInfo>  blogTagsInfos =
+                new PageInfo<>(tagService.getBlogInfoListByTagIdAndIsPublished(tagId));
+        Tag tag = tagService.getTagById(tagId);
+        return new TagIdGetBlogsResponse(
+                tagMapper.toTagIdGetBlogsResponse_Tag(tag),
+                blogTagsInfos.convert(tagMapper::toTagIdGetBlogsResponse)
+        );
     }
 }

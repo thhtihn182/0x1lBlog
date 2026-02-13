@@ -11,6 +11,19 @@ export interface ApiResponse<T = any>{
     data: T,
 }
 
+export interface PageInfo<T = any> {
+    pageNum: number;          // Trang hiện tại (bắt đầu từ 1)
+    pageSize: number;         // Kích thước trang
+    size: number;             // Số phần tử trong trang hiện tại
+    startRow: number;         // Dòng bắt đầu
+    endRow: number;           // Dòng kết thúc
+    total: number;            // Tổng số phần tử
+    pages: number;            // Tổng số trang
+    list: T[];                // Danh sách dữ liệu
+    hasPreviousPage: boolean; // Có trang trước không
+    hasNextPage: boolean;     // Có trang sau không
+}
+
 export const request: AxiosInstance = axios.create({
     baseURL: 'http://localhost:8090/',
     timeout: 10000,

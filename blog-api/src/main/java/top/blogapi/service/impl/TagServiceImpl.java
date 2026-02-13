@@ -11,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.blogapi.dto.request.tag.TagQueryRequest;
+import top.blogapi.dto.response.tag.TagIdGetBlogsResponse;
 import top.blogapi.exception.business_exception.BusinessException;
 import top.blogapi.exception.system_exception.SystemException;
+import top.blogapi.mapper.TagMapper;
 import top.blogapi.model.entity.Tag;
+import top.blogapi.model.vo.BlogTagsInfo;
 import top.blogapi.repository.TagRepository;
 import top.blogapi.service.TagService;
 
@@ -24,13 +27,14 @@ import java.util.List;
 @FieldDefaults(makeFinal = true,level = AccessLevel.PRIVATE)
 public class TagServiceImpl implements TagService {
     TagRepository tagRepository;
-
     @Override
+    @Transactional(readOnly = true)
     public List<Tag> getTagList() {
         return tagRepository.getTagList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageInfo<Tag> getTagList(TagQueryRequest tagQueryRequest) {
         try(Page<Object> page = PageHelper.startPage(
                 tagQueryRequest.getPageNum(),
@@ -55,6 +59,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Tag getTagById(Long id) {
         return tagRepository.getTagById(id).orElseThrow(() ->
                 BusinessException.builder()
@@ -66,16 +71,19 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Tag getTagByName(String name) {
         return tagRepository.getTagByName(name).get();
     }
 
     @Override
+    @Transactional
     public boolean tagExist(String name) {
         return tagRepository.tagExist(name).isPresent();
     }
 
     @Override
+    @Transactional
     public void deleteTagById(Long tagId) {
         if(tagRepository.deleteTagById(tagId) ==0)
             throw SystemException.builder()
@@ -86,6 +94,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void updateTag(String name, String color, Long id) {
        if(tagRepository.updateTag(name, color, id)==0)
            throw SystemException.builder()
@@ -96,7 +105,14 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Tag> getTagListByBlogId(Long blogId) {
         return tagRepository.getTagListByBlogId(blogId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BlogTagsInfo> getBlogInfoListByTagIdAndIsPublished(Long tagId) {
+        return tagRepository.getBlogInfoListByTagIdAndIsPublished(tagId);
     }
 }

@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import top.blogapi.model.entity.Category;
 import top.blogapi.model.entity.Tag;
+import top.blogapi.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BlogInfo {
+public class BlogTagsInfo {
     Long id;
     String title;           // Tiêu đề bài viết
     String description;     // Mô tả
@@ -23,6 +24,8 @@ public class BlogInfo {
     Integer words;          // Số từ trong bài viết
     Integer readTime;       // Thời gian đọc (phút)
     Boolean top;
+    String allTagIds;
+    String allTagNames;
+    String allTagColors;
     Category category;      // Danh mục bài viết
-    List<Tag> tags = new ArrayList<>();  // Thẻ (tag) bài viết
 }
