@@ -153,7 +153,6 @@ const withAlpha = (hex, alpha) => {
   border-left: none;
 }
 
-
 .tag:after {
   position: absolute;
   content: '';

@@ -13,7 +13,10 @@ import top.blogapi.dto.request.tag.UpdateTagRequest;
 import top.blogapi.dto.response._page.TagListPageResponse;
 import top.blogapi.dto.response.tag.TagResponse;
 import top.blogapi.mapper.TagMapper;
+import top.blogapi.model.entity.Tag;
 import top.blogapi.service.TagService;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,6 +30,10 @@ public class TagOrchestrator {
         PageInfo<TagResponse> pageInfo = tagService.getTagList(tagQueryRequest)
                 .convert(tagMapper::tagToTagResponse);
         return new TagListPageResponse(pageInfo);
+    }
+
+    public List<Tag> getTagList(){
+        return tagService.getTagList();
     }
 
     public String createTag(CreateTagRequest request){
