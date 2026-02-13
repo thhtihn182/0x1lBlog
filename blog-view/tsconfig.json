@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-
+    "allowJs": true, // Cho phép import file .js
+    "checkJs": false, // Không check type trong file .js
     "module": "ESNext",
     // Cho phép giữ nguyên import/export để Vite bundle.
     // Nếu đổi sang CommonJS → build lỗi ngay.
@@ -92,6 +93,6 @@
     }
   },
 
-  "include": ["src/**/*.ts", "src/**/*.vue"]
+  "include": ["src/**/*.ts", "src/**/*.vue", "src/**/*.js"]
   // Nếu thiếu *.vue → vue-tsc vô dụng.
 }

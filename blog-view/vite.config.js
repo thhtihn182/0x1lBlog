@@ -16,6 +16,7 @@ export default defineConfig({
       'router': fileURLToPath(new URL('./src/router', import.meta.url)),
       'store': fileURLToPath(new URL('./src/store', import.meta.url))
     },
+    extensions: ['.ts', '.js', '.vue', '.json']
   },
   server: {
     host: true,
