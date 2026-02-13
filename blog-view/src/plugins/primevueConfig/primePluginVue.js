@@ -34,6 +34,7 @@ import Badge from "primevue/badge"
 import Card from 'primevue/card'
 import Accordion from 'primevue/accordion'
 import AccordionPanel from 'primevue/accordionpanel'
+import Popover from 'primevue/popover'
 import Form from '@primevue/forms/form';
 import FormField from '@primevue/forms/formfield';
 import {SimplePreset} from "@/plugins/primevueConfig/primeThemeConfig.js";
@@ -67,6 +68,7 @@ const PrimeVuePlugin = {
             'Checkbox': Checkbox,
             'RadioButton': RadioButton,
             'FileUpload': FileUpload,
+            'Popover': Popover,
             'Message': Message,
             'Avatar': Avatar,
             'FloatLabel': FloatLabel,

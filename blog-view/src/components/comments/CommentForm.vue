@@ -22,16 +22,24 @@
           <div  class="input-wrapper">
             <FormField v-slot="$field" name="nickname" initial-value="">
               <font-awesome-icon icon="user"  />
+
               <InputText  v-model="form.nickname"  type="text"
                           :placeholder="'Nickname (bắt buộc)'"/>
               <Message v-if="$form.nickname?.invalid " severity="error" size="small" variant="simple">
                 {{ $form.nickname.error?.message  }}</Message>
             </FormField>
-          </div>
+            </div>      <Popover>đafsdfdf
+        </Popover>
           <div class="input-wrapper">
             <FormField v-slot="$field" name="email" initial-value="">
               <font-awesome-icon icon="envelope"/>
-              <InputText id="on_email" v-model="form.email" name="email"  :placeholder="'Email (bắt buộc)'" />
+              <InputText id="on_email" v-model="form.email" name="email"
+                         :placeholder="'Email (bắt buộc)'"  @click="toggleEmail"/>
+              <Popover ref="opEmail">
+                <div class="flex flex-col gap-4">
+                  <h3>Được dùng để nhận email hồi đáp</h3>
+                </div>
+              </Popover>
               <Message v-if="$form.email?.invalid" severity="error" size="small" variant="simple">
                 {{$form.email.error?.message}}
               </Message>
@@ -39,7 +47,13 @@
           </div>
           <div class="input-wrapper">
             <font-awesome-icon icon="location-dot"/>
-            <InputText id="on_website" name="website" placeholder="https:// (tùy chọn)" />
+            <InputText id="on_website" name="website" placeholder="https:// (tùy chọn)"
+                       @click="toggleWebsite" />
+            <Popover ref="opWebsite">
+              <div class="flex flex-col gap-4">
+                <h3>Tôi có thể xem xung quanh được không? 😊</h3>
+              </div>
+            </Popover>
           </div>
         </div>
         <button class="icon-button" type="submit" >
@@ -61,6 +75,15 @@ const props = defineProps({
     required: true,
   },
 })
+
+const opEmail = ref();
+const opWebsite = ref();
+const toggleEmail = (event) => {
+  opEmail.value.toggle(event);
+}
+const toggleWebsite = (event) => {
+  opWebsite.value.toggle(event);
+}
 
 const emit = defineEmits(['getPayload'])
 
